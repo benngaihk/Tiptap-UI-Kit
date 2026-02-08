@@ -1,0 +1,127 @@
+/**
+ * Image Toolbar Styles
+ * @description 图片工具栏相关样式
+ */
+
+/* 图片选中时的样式 */
+.ProseMirror img {
+  cursor: pointer;
+  transition: outline 0.2s ease;
+}
+
+.ProseMirror img:hover {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.ProseMirror img[data-selected] {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* 图片包装器样式 */
+.ProseMirror .image-wrapper {
+  display: inline-block;
+  position: relative;
+  margin: 8px 0;
+}
+
+.ProseMirror .image-wrapper img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* 可调整大小的图片包装器 */
+.ProseMirror .resizable-image-wrapper {
+  display: inline-block;
+  position: relative;
+  margin: 8px 0;
+  vertical-align: middle;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.ProseMirror .resizable-image-wrapper img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  user-select: none;
+}
+
+/* 图片对齐样式 */
+.ProseMirror .resizable-image-wrapper[data-align] {
+  display: block;
+  width: fit-content;
+}
+
+.ProseMirror .resizable-image-wrapper[data-align] img {
+  display: block;
+}
+
+.ProseMirror .resizable-image-wrapper[data-align='left'] {
+  text-align: left;
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.ProseMirror .resizable-image-wrapper[data-align='center'] {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ProseMirror .resizable-image-wrapper[data-align='right'] {
+  text-align: right;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* 调整手柄样式 - 圆点模式（右下角） */
+.ProseMirror .resizable-image-wrapper .resize-handle {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border: 2px solid #3b82f6;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  pointer-events: auto;
+  cursor: nwse-resize;
+}
+
+.ProseMirror .resizable-image-wrapper:hover .resize-handle {
+  opacity: 0.8;
+}
+
+.ProseMirror .resizable-image-wrapper:hover .resize-handle:hover,
+.ProseMirror .resizable-image-wrapper.resizing .resize-handle {
+  opacity: 1;
+  transform: scale(1.15);
+  box-shadow: 0 3px 8px rgba(59, 130, 246, 0.4);
+}
+
+.ProseMirror .resizable-image-wrapper.resizing {
+  user-select: none;
+}
+
+.ProseMirror .resizable-image-wrapper.resizing img {
+  pointer-events: none;
+}
+
+/* 暗黑模式 */
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .resizable-image-wrapper .resize-handle {
+  background: #1f1f1f;
+  border-color: #4fc3f7;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .resizable-image-wrapper:hover .resize-handle:hover,
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .resizable-image-wrapper.resizing .resize-handle {
+  box-shadow: 0 3px 8px rgba(79, 195, 247, 0.5);
+}

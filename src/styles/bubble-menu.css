@@ -1,0 +1,73 @@
+/**
+ * Bubble Menu 样式
+ * @description 悬浮气泡菜单（依赖 base.css）
+ */
+
+/* 气泡菜单容器 */
+.bubble-menu {
+  z-index: 1010;
+  display: flex;
+  padding: 4px;
+  background: var(--tp-menu-bg, #fff);
+  border-radius: var(--tp-menu-radius, 8px);
+  box-shadow: var(--tp-menu-shadow, 0 4px 12px rgb(0 0 0 / 15%));
+}
+
+/* 暗黑模式 - 气泡菜单 */
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .bubble-menu {
+  background: #1f1f1f;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 40%);
+  border: 1px solid #434343;
+}
+
+/* 气泡菜单按钮 */
+.bubble-btn {
+  color: var(--tp-color-text, #333);
+}
+
+/* 暗黑模式 - 按钮 */
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .bubble-btn {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* 标题按钮 */
+.heading-btn {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* 颜色选择面板（使用公共样式） */
+.color-panel {
+  display: grid;
+  grid-template-columns: repeat(8, 24px);
+  gap: 8px;
+  padding: 12px;
+  background: var(--tp-menu-bg, #fff);
+  border-radius: 4px;
+}
+
+.color-item {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  border: 1px solid var(--tp-color-border, #ddd);
+  border-radius: 4px;
+  transition: transform var(--tp-transition-normal, 0.2s ease);
+}
+
+.color-item:hover {
+  box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+  transform: scale(1.2);
+}
+
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .color-item:hover {
+  box-shadow: 0 2px 8px rgb(0 0 0 / 50%);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .bubble-menu-content {
+    gap: 2px;
+  }
+}

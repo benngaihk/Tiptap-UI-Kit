@@ -1,0 +1,72 @@
+/* TiptapPro 缩放工具栏样式 */
+
+/* 缩放控制条 */
+.zoom-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #d0d0d0;
+
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
+    background: #262626;
+    border-bottom-color: #434343;
+  }
+}
+
+/* 缩放显示数字 */
+.zoom-level {
+  min-width: 50px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  text-align: center;
+
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
+    color: #f0f0f0;
+  }
+}
+
+/* 页数信息 */
+.page-info {
+  margin-left: 8px;
+  font-size: 13px;
+  color: #666;
+
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
+    color: #d0d0d0;
+  }
+}
+
+/* 字数统计 */
+.char-count {
+  padding-left: 12px;
+  margin-left: 8px;
+  font-size: 13px;
+  color: #666;
+  border-left: 1px solid #d0d0d0;
+
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
+    color: #d0d0d0;
+    border-left-color: #434343;
+  }
+}
+
+/* 变体：底部位置（固定在编辑器容器底部） */
+.zoom-controls--bottom {
+  flex-shrink: 0;
+  width: 100%;
+  z-index: 10;
+  border-top: 1px solid #d0d0d0;
+  border-bottom: none;
+  background: #f5f5f5;
+  box-shadow: 0 -2px 8px rgb(0 0 0 / 5%);
+
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
+    background: #262626;
+    border-top-color: #434343;
+    box-shadow: 0 -2px 8px rgb(0 0 0 / 20%);
+  }
+}

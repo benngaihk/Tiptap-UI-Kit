@@ -1,0 +1,121 @@
+/**
+ * Device Responsive Styles
+ * Applies layout constraints based on data-device attribute
+ */
+
+/* ===== Device View Container Styles ===== */
+
+/* PC 视图 - 全宽 */
+[data-device="pc"] .tiptap-pro-editor {
+  max-width: 100%;
+}
+
+/* Pad 视图 - 平板宽度 */
+[data-device="pad"] .tiptap-pro-editor {
+  max-width: 768px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+[data-device="pad"] .word-document-container {
+  padding: 16px;
+}
+
+[data-device="pad"] .continuous-pages {
+  max-width: 100%;
+}
+
+/* Mobile 视图 - 手机宽度 */
+[data-device="mobile"] .tiptap-pro-editor {
+  max-width: 375px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+[data-device="mobile"] .word-document-container {
+  padding: 8px;
+}
+
+[data-device="mobile"] .continuous-pages {
+  max-width: 100%;
+  box-shadow: none;
+}
+
+/* ===== Toolbar Adaptations ===== */
+
+/* Pad 视图 - 工具栏调整 */
+[data-device="pad"] .word-toolbar {
+  padding: 4px 8px;
+}
+
+/* Mobile 视图 - 工具栏紧凑布局 */
+[data-device="mobile"] .word-toolbar {
+  padding: 2px 4px;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+[data-device="mobile"] .word-toolbar .ant-btn,
+[data-device="mobile"] .word-toolbar button {
+  min-width: 28px;
+  height: 28px;
+  padding: 0 4px;
+}
+
+/* ===== Content Adaptations ===== */
+
+/* Pad 视图 - 内容区域 */
+[data-device="pad"] .word-content-multi .ProseMirror {
+  padding: 60px 48px;
+  font-size: 15px;
+}
+
+/* Mobile 视图 - 内容区域紧凑 */
+[data-device="mobile"] .word-content-multi .ProseMirror {
+  padding: 32px 16px;
+  font-size: 14px;
+  min-height: auto;
+}
+
+[data-device="mobile"] .word-content-multi .ProseMirror h1 {
+  font-size: 22px;
+  margin: 16px 0 8px;
+}
+
+[data-device="mobile"] .word-content-multi .ProseMirror h2 {
+  font-size: 18px;
+  margin: 14px 0 6px;
+}
+
+[data-device="mobile"] .word-content-multi .ProseMirror h3 {
+  font-size: 16px;
+  margin: 12px 0 6px;
+}
+
+[data-device="mobile"] .word-content-multi .ProseMirror p {
+  margin-bottom: 10px;
+}
+
+/* ===== Footer Nav Adaptations ===== */
+
+[data-device="mobile"] .footer-nav-container {
+  padding: 4px 8px;
+}
+
+[data-device="mobile"] .zoom-bar {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* ===== 过渡动画 ===== */
+
+.tiptap-pro-editor {
+  transition: max-width 0.3s ease;
+}
+
+.word-document-container,
+.continuous-pages,
+.word-content-multi .ProseMirror {
+  transition: padding 0.3s ease, max-width 0.3s ease;
+}

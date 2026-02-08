@@ -1,0 +1,278 @@
+/**
+ * TableInsertPlus 样式 - Umo Editor 风格（优化版）
+ */
+
+/* ========== CSS 变量 ========== */
+:root {
+  --table-border-color: #ddd;
+  --table-border-color-active: #1677ff;
+  --table-header-bg: #fafafa;
+  --table-cell-bg: #fff;
+  --table-selected-bg: rgba(22, 119, 255, 0.1);
+
+  --handle-size: 20px;
+  --handle-bg: #f5f5f5;
+  --handle-bg-hover: #e8e8e8;
+  --handle-border: #e0e0e0;
+  --handle-border-hover: #d0d0d0;
+  --handle-z-index: 0;  /* 远低于 bubble menu (1000+)，避免遮挡 */
+
+  --button-primary-bg: #1677ff;
+  --button-primary-shadow: rgba(22, 119, 255, 0.3);
+  --button-primary-shadow-hover: rgba(22, 119, 255, 0.5);
+
+  --menu-bg: #fff;
+  --menu-border: #e0e0e0;
+  --menu-shadow: rgba(0, 0, 0, 0.12);
+  --menu-item-hover-bg: #f5f5f5;
+  --menu-item-danger-color: #ff4d4f;
+  --menu-item-danger-bg: #fff1f0;
+  --menu-z-index: 0;
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.2s ease;
+  --transition-smooth: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========== 基础表格 ========== */
+.ProseMirror table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 1em 0;
+  overflow: hidden;
+  border: 1px solid var(--table-border-color);
+}
+
+.ProseMirror th,
+.ProseMirror td {
+  min-width: 1em;
+  border: 1px solid var(--table-border-color);
+  padding: 8px 12px;
+  vertical-align: top;
+  box-sizing: border-box;
+  position: relative;
+  background: var(--table-cell-bg);
+}
+
+.ProseMirror th {
+  font-weight: 600;
+  background: var(--table-header-bg);
+}
+
+.ProseMirror .selectedCell {
+  background: var(--table-selected-bg);
+  border-color: var(--table-border-color-active);
+}
+
+/* ========== 公共 Mixin 样式 ========== */
+.umo-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ========== 表格操作手柄（公共样式）========== */
+.umo-table-handle {
+  position: absolute;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: var(--handle-bg);
+  border: 1px solid var(--handle-border);
+  cursor: pointer;
+  z-index: var(--handle-z-index);
+  transition: background var(--transition-normal);
+  user-select: none;
+}
+
+.umo-table-handle.visible {
+  display: flex;
+}
+
+.umo-table-handle:hover {
+  background: var(--handle-bg-hover);
+  border-color: var(--handle-border-hover);
+}
+
+/* 列手柄特定样式 */
+.umo-column-handle {
+  border-bottom: none;
+}
+
+/* 行手柄特定样式 */
+.umo-row-handle {
+  border-right: none;
+}
+
+/* ========== 操作按钮 ========== */
+.umo-table-more-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #999;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+  opacity: 0;
+  z-index: 0;
+}
+
+.umo-table-handle:hover .umo-table-more-btn {
+  opacity: 1;
+  color: #666;
+}
+
+.umo-table-more-btn:hover {
+  color: var(--button-primary-bg);
+  transform: scale(1.1);
+}
+
+/* ========== 顶部加号按钮 ========== */
+.umo-table-plus-btn {
+  position: absolute;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--button-primary-bg);
+  color: #fff;
+  cursor: pointer;
+  z-index: var(--handle-z-index);
+  transition: all var(--transition-smooth);
+  box-shadow: 0 2px 8px var(--button-primary-shadow);
+  user-select: none;
+}
+
+.umo-table-plus-btn.visible {
+  display: flex;
+}
+
+.umo-table-plus-btn:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px var(--button-primary-shadow-hover);
+}
+
+.umo-table-plus-btn:active {
+  transform: scale(0.95);
+}
+
+.umo-table-plus-btn .anticon {
+  font-size: 14px;
+}
+
+/* ========== 下拉菜单 ========== */
+.umo-table-menu {
+  position: absolute;
+  display: none;
+  min-width: 150px;
+  background: var(--menu-bg);
+  border: 1px solid var(--menu-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px var(--menu-shadow);
+  padding: 6px;
+  z-index: var(--menu-z-index);
+  user-select: none;
+  animation: menuFadeIn var(--transition-fast);
+}
+
+.umo-table-menu.visible {
+  display: block;
+}
+
+@keyframes menuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.umo-menu-item {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all var(--transition-fast);
+}
+
+.umo-menu-item:hover {
+  background: var(--menu-item-hover-bg);
+}
+
+.umo-menu-item-danger {
+  color: var(--menu-item-danger-color);
+}
+
+.umo-menu-item-danger:hover {
+  background: var(--menu-item-danger-bg);
+}
+
+.umo-menu-divider {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--menu-border);
+}
+
+/* ========== 选中效果 ========== */
+.ProseMirror td.selectedCell,
+.ProseMirror th.selectedCell {
+  background: var(--table-selected-bg);
+  border-color: var(--table-border-color-active);
+}
+
+/* ========== 公共隐藏类 ========== */
+.umo-table-element-hidden {
+  display: none !important;
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 768px) {
+  .ProseMirror {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .umo-table-handle,
+  .umo-table-plus-btn {
+    display: none !important;
+  }
+
+  .umo-table-menu {
+    min-width: 130px;
+    font-size: 13px;
+  }
+
+  .umo-menu-item {
+    padding: 6px 10px;
+  }
+}
+
+/* ========== 打印隐藏 ========== */
+@media print {
+  .umo-table-handle,
+  .umo-table-plus-btn,
+  .umo-table-menu {
+    display: none !important;
+  }
+}
+
+/* ========== 旧样式清理 ========== */
+.table-insert-plus,
+.table-edge-rail,
+.table-handle-item,
+.table-row-headers,
+.table-column-headers,
+.table-row-header,
+.table-column-header,
+.table-header-btn,
+.table-operation-menu {
+  display: none !important;
+}

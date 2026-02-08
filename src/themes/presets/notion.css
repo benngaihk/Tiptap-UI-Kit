@@ -1,0 +1,316 @@
+/**
+ * Notion Theme Preset
+ * 仿 Tiptap 官方 Notion-like 模板的视觉样式
+ */
+
+/* ===== Notion 主题变量 ===== */
+.theme-notion {
+  --tiptap-bg: #ffffff;
+  --tiptap-bg-secondary: #ffffff;
+  --tiptap-bg-hover: rgba(55, 53, 47, 0.08);
+  --tiptap-toolbar-bg: #ffffff;
+  
+  --tiptap-text: #37352f;
+  --tiptap-text-secondary: #787774;
+  --tiptap-text-muted: #9b9a97;
+  
+  --tiptap-border: rgba(55, 53, 47, 0.09);
+  --tiptap-border-hover: rgba(55, 53, 47, 0.16);
+  --tiptap-border-focus: #2eaadc;
+  
+  --tiptap-radius-sm: 4px;
+  --tiptap-radius-md: 6px;
+  --tiptap-radius-lg: 8px;
+  
+  --tiptap-primary: #2eaadc;
+  --tiptap-primary-hover: #2596be;
+  
+  --tiptap-code-bg: rgba(135, 131, 120, 0.15);
+  --tiptap-code-text: #eb5757;
+  
+  --tiptap-blockquote-border: rgba(55, 53, 47, 0.16);
+  --tiptap-blockquote-bg: transparent;
+  
+  --tiptap-link: rgb(35, 131, 226);
+  
+  --tiptap-font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI Variable Display', 'Segoe UI', Helvetica, 'Apple Color Emoji', Arial, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
+  --tiptap-font-size: 16px;
+  --tiptap-line-height: 1.5;
+}
+
+/* ===== Notion 风格 - 全宽无纸张边框布局 ===== */
+.theme-notion .tiptap-pro-editor.word-mode {
+  background: #ffffff;
+}
+
+.theme-notion .word-document-container {
+  background: #ffffff;
+  padding: 0;
+}
+
+/* 隐藏纸张阴影和边框 */
+.theme-notion .continuous-pages {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 96px;
+  box-shadow: none;
+  border-radius: 0;
+  background: #ffffff;
+}
+
+/* ===== Notion 风格 - 极简工具栏 ===== */
+.theme-notion .word-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px 12px;
+  background: #ffffff !important;
+  border-bottom: 1px solid rgba(55, 53, 47, 0.09) !important;
+  box-shadow: none;
+}
+
+/* 工具栏按钮 */
+.theme-notion .tt-toolbar-button,
+.theme-notion .tt-dropdown-btn {
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  font-size: 14px;
+  color: rgba(55, 53, 47, 0.65);
+  background: transparent;
+  border-radius: 4px;
+}
+
+.theme-notion .tt-toolbar-button:hover,
+.theme-notion .tt-dropdown-btn:hover {
+  background: rgba(55, 53, 47, 0.08);
+  color: #37352f;
+}
+
+.theme-notion .tt-toolbar-button.is-active,
+.theme-notion .tt-dropdown-btn.is-active {
+  background: rgba(35, 131, 226, 0.12);
+  color: rgb(35, 131, 226);
+}
+
+/* ===== Notion 风格 - 编辑器内容区域 ===== */
+.theme-notion .word-content-multi .ProseMirror {
+  padding: 32px 0 100px 0;
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI Variable Display', 'Segoe UI', Helvetica, 'Apple Color Emoji', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #37352f;
+  background: #ffffff;
+  min-height: calc(100vh - 100px);
+}
+
+/* ===== Notion 风格 - 大标题 ===== */
+.theme-notion .ProseMirror h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 4px;
+  color: #37352f;
+}
+
+.theme-notion .ProseMirror h1:first-child {
+  margin-top: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.theme-notion .ProseMirror h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 1.5rem;
+  margin-bottom: 4px;
+  color: #37352f;
+}
+
+.theme-notion .ProseMirror h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 1rem;
+  margin-bottom: 4px;
+  color: #37352f;
+}
+
+/* ===== Notion 风格 - 段落 ===== */
+.theme-notion .ProseMirror p {
+  margin: 0;
+  padding: 3px 0;
+}
+
+.theme-notion .ProseMirror p + p {
+  margin-top: 0;
+}
+
+/* ===== Notion 风格 - 列表 ===== */
+.theme-notion .ProseMirror ul,
+.theme-notion .ProseMirror ol {
+  padding-left: 1.5rem;
+  margin: 0;
+}
+
+.theme-notion .ProseMirror li {
+  padding: 3px 0;
+}
+
+.theme-notion .ProseMirror li::marker {
+  color: var(--tiptap-text);
+}
+
+/* ===== Notion 风格 - 代码 ===== */
+.theme-notion .ProseMirror code {
+  font-family: 'SFMono-Regular', Menlo, Consolas, 'PT Mono', 'Liberation Mono', Courier, monospace;
+  font-size: 85%;
+  padding: 0.2em 0.4em;
+  background: rgba(135, 131, 120, 0.15);
+  border-radius: 3px;
+  color: #eb5757;
+}
+
+.theme-notion .ProseMirror pre {
+  font-family: 'SFMono-Regular', Menlo, Consolas, 'PT Mono', 'Liberation Mono', Courier, monospace;
+  font-size: 85%;
+  padding: 32px 16px 32px 32px;
+  background: #f7f6f3;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 8px 0;
+}
+
+.theme-notion .ProseMirror pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+/* ===== Notion 风格 - 引用 ===== */
+.theme-notion .ProseMirror blockquote {
+  border-left: 3px solid currentColor;
+  margin: 8px 0;
+  padding-left: 14px;
+  color: var(--tiptap-text);
+}
+
+/* ===== Notion 风格 - 链接 ===== */
+.theme-notion .ProseMirror a {
+  color: var(--tiptap-link);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.theme-notion .ProseMirror a:hover {
+  opacity: 0.8;
+}
+
+/* ===== Notion 风格 - 分割线 ===== */
+.theme-notion .ProseMirror hr {
+  border: none;
+  border-top: 1px solid rgba(55, 53, 47, 0.09);
+  margin: 24px 0;
+}
+
+/* ===== Notion 风格 - 表格 ===== */
+.theme-notion .ProseMirror table {
+  border-collapse: collapse;
+  margin: 8px 0;
+  width: 100%;
+}
+
+.theme-notion .ProseMirror th,
+.theme-notion .ProseMirror td {
+  border: 1px solid rgba(55, 53, 47, 0.09);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.theme-notion .ProseMirror th {
+  background: rgba(55, 53, 47, 0.04);
+  font-weight: 600;
+}
+
+/* ===== Notion 风格 - 图片 ===== */
+.theme-notion .ProseMirror img {
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+/* ===== Notion 深色模式 ===== */
+.theme-notion[data-theme="dark"] {
+  --tiptap-bg: #191919;
+  --tiptap-bg-secondary: #191919;
+  --tiptap-bg-hover: rgba(255, 255, 255, 0.055);
+  --tiptap-toolbar-bg: #191919;
+  
+  --tiptap-text: rgba(255, 255, 255, 0.9);
+  --tiptap-text-secondary: rgba(255, 255, 255, 0.6);
+  --tiptap-text-muted: rgba(255, 255, 255, 0.4);
+  
+  --tiptap-border: rgba(255, 255, 255, 0.09);
+  --tiptap-border-hover: rgba(255, 255, 255, 0.16);
+  
+  --tiptap-code-bg: rgba(135, 131, 120, 0.15);
+  --tiptap-code-text: #ff7369;
+  
+  --tiptap-blockquote-border: rgba(255, 255, 255, 0.15);
+  
+  --tiptap-link: rgb(82, 156, 202);
+}
+
+.theme-notion[data-theme="dark"] .tiptap-pro-editor.word-mode,
+.theme-notion[data-theme="dark"] .word-document-container,
+.theme-notion[data-theme="dark"] .continuous-pages {
+  background: #191919;
+}
+
+.theme-notion[data-theme="dark"] .word-toolbar {
+  background: #191919 !important;
+  border-bottom-color: rgba(255, 255, 255, 0.09) !important;
+}
+
+.theme-notion[data-theme="dark"] .word-content-multi .ProseMirror {
+  background: #191919;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.theme-notion[data-theme="dark"] .ProseMirror h1,
+.theme-notion[data-theme="dark"] .ProseMirror h2,
+.theme-notion[data-theme="dark"] .ProseMirror h3 {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.theme-notion[data-theme="dark"] .tt-toolbar-button,
+.theme-notion[data-theme="dark"] .tt-dropdown-btn {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.theme-notion[data-theme="dark"] .tt-toolbar-button:hover,
+.theme-notion[data-theme="dark"] .tt-dropdown-btn:hover {
+  background: rgba(255, 255, 255, 0.055);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.theme-notion[data-theme="dark"] .ProseMirror pre {
+  background: #2f2f2f;
+}
+
+.theme-notion[data-theme="dark"] .ProseMirror th {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.theme-notion[data-theme="dark"] .ProseMirror th,
+.theme-notion[data-theme="dark"] .ProseMirror td {
+  border-color: rgba(255, 255, 255, 0.09);
+}
+
+.theme-notion[data-theme="dark"] .ProseMirror hr {
+  border-top-color: rgba(255, 255, 255, 0.09);
+}

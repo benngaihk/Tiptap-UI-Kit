@@ -1,0 +1,434 @@
+/* TiptapPro Word 模式样式 */
+/* 基于原 tiptap 样式，适配 tiptap-pro-editor 类名 */
+
+/* ===== Word 文档模式编辑器容器 ===== */
+.tiptap-pro-editor.word-mode {
+  /* 布局与尺寸 */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0; /* 允许 flex 子元素收缩 */
+  overflow: hidden; /* 容器不滚动，由内部 word-document-container 滚动 */
+
+  /* 统一色彩与变量（引用主题预设变量，由 themes/presets/*.css 定义） */
+  --color-text: var(--tiptap-text, #000);
+  --color-bg: var(--tiptap-bg, #fff);
+  --color-bg-gray: var(--tiptap-bg-secondary, #f5f5f5);
+  --color-shadow: rgb(0 0 0 / 15%);
+  --color-border: var(--tiptap-border, #d0d0d0);
+  --color-link: var(--tiptap-link, #0563c1);
+  --page-cut-line-color: var(--tiptap-border, #d9d9d9);
+
+  /* 统一菜单与表格主题色（供各样式文件复用） */
+  --menu-bg: var(--tiptap-bg, #fff);
+  --menu-border-color: var(--tiptap-border, rgb(0 0 0 / 6%));
+  --menu-shadow: 0 4px 16px rgb(0 0 0 / 15%), 0 2px 8px rgb(0 0 0 / 10%);
+  --menu-btn-color: var(--tiptap-text, #333);
+  --menu-btn-hover-bg: var(--tiptap-bg-hover, #f5f5f5);
+  --menu-primary: var(--tiptap-primary, #1890ff);
+  --danger-color: #ff4d4f;
+
+  --table-border-color: var(--tiptap-border, #d0d0d0);
+  --table-header-bg: var(--tiptap-bg-secondary, #f0f0f0);
+  --gray-1: var(--tiptap-bg-secondary, #f5f5f5);
+  --gray-2: rgba(0, 0, 0, 0.1);
+  --gray-3: var(--tiptap-border, #d0d0d0);
+  --purple: var(--tiptap-primary, #1890ff);
+
+  --font-family: var(--tiptap-font-family, PMingLiU, 'Microsoft YaHei', SimSun, serif);
+  --font-size-base: var(--tiptap-font-size, 14px);
+  --line-height-base: var(--tiptap-line-height, 1.5);
+
+  /* 页面高度占满视口，便于内部滚动 */
+  background: var(--tiptap-bg-secondary, #e8e8e8);
+}
+
+/* 深色模式下的编辑器容器 */
+.dark .tiptap-pro-editor.word-mode,
+[data-theme="dark"] .tiptap-pro-editor.word-mode {
+  --color-text: #f0f0f0;
+  --color-bg: #1f1f1f;
+  --color-bg-gray: #262626;
+  --color-shadow: rgb(0 0 0 / 40%);
+  --color-border: #434343;
+  --color-link: #4fc3f7;
+  --page-cut-line-color: #434343;
+  --menu-bg: #1f1f1f;
+  --menu-border-color: rgb(255 255 255 / 10%);
+  --menu-shadow: 0 4px 16px rgb(0 0 0 / 40%), 0 2px 8px rgb(0 0 0 / 30%);
+  --menu-btn-color: #f0f0f0;
+  --menu-btn-hover-bg: #303030;
+  --menu-primary: #4fc3f7;
+  --danger-color: #ff7875;
+  --table-border-color: #434343;
+  --table-header-bg: #262626;
+  --gray-1: #262626;
+  --gray-2: rgba(255, 255, 255, 0.1);
+  --gray-3: #434343;
+  --purple: #4fc3f7;
+  background: #141414;
+}
+
+/* Word 文档区域容器 - 这是唯一可滚动的区域 */
+.word-document-container {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0; /* 关键：允许 flex 子元素收缩 */
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px 0;
+}
+
+/* 文档页面区域 */
+.document-pages {
+  flex: 1;
+  transform-origin: top center;
+  transition: transform 0.2s ease;
+}
+
+/* 连续页面容器 */
+.continuous-pages {
+  --page-cut-height: 16px;
+  position: relative;
+  max-width: var(--a4-width-px, 794px);
+  margin: 0 auto;
+  background: var(--color-bg);
+  box-shadow: 0 2px 8px var(--color-shadow);
+}
+
+/* ===== Word 文档内容样式（多页模式）===== */
+.word-content-multi .ProseMirror {
+  min-height: var(--page-content-height-px, 939px);
+  padding: var(--padding-top-px, 96px) 92px var(--padding-bottom-px, 88px) 92px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text);
+  outline: none;
+  background: var(--color-bg);
+}
+
+/* 格式刷激活态光标 */
+.word-content-multi.cursor-format-painter,
+.word-content-multi .ProseMirror.cursor-format-painter {
+  cursor:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g transform="rotate(-30 12 12)"><rect x="8" y="2" width="8" height="10" rx="1" fill="%233b82f6" stroke="%232563eb" stroke-width="0.5"/><rect x="7" y="11" width="10" height="8" rx="1" fill="%239ca3af" stroke="%236b7280" stroke-width="0.5"/><path d="M8 19 L8 22 L16 22 L16 19" fill="%234b5563"/></g></svg>')
+      12 12,
+    pointer;
+}
+
+/* Word 标题样式 */
+.word-content-multi .ProseMirror h1,
+.word-content-multi .ProseMirror h2,
+.word-content-multi .ProseMirror h3 {
+  font-weight: bold;
+  line-height: 1.3;
+  color: var(--color-text);
+}
+.word-content-multi .ProseMirror h1 { margin: 24px 0 12px; font-size: 26px; }
+.word-content-multi .ProseMirror h2 { margin: 18px 0 10px; font-size: 20px; }
+.word-content-multi .ProseMirror h3 { margin: 14px 0 8px;  font-size: 16px; }
+
+/* Word 段落样式 */
+.word-content-multi .ProseMirror p {
+  margin: 0 0 14px;
+}
+
+/* Word 列表样式 */
+.word-content-multi .ProseMirror ul,
+.word-content-multi .ProseMirror ol {
+  padding-left: 14px;
+  margin: 0 0 14px;
+}
+.word-content-multi .ProseMirror ul li,
+.word-content-multi .ProseMirror ol li { margin: 4px 0; }
+.word-content-multi .ProseMirror ul li { list-style-type: disc; }
+.word-content-multi .ProseMirror ol li { list-style-type: decimal; }
+
+/* Word 图片样式 */
+.word-content-multi .ProseMirror img { 
+  display: block; 
+  max-width: 100%; 
+  height: auto; 
+  margin: 10px 0; 
+}
+
+/* Word 表格样式 */
+.word-content-multi .ProseMirror table {
+  border-collapse: collapse;
+  margin: 14px 0;
+  overflow: hidden;
+  table-layout: fixed;
+  width: 100%;
+  max-width: 100%;
+  font-size: 12px;
+
+  td,
+  th {
+    border: 1px solid var(--table-border-color);
+    box-sizing: border-box;
+    min-width: 1em;
+    padding: 6px 8px;
+    position: relative;
+    vertical-align: top;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+
+    > * {
+      margin-bottom: 0;
+    }
+  }
+
+  th {
+    background-color: var(--table-header-bg);
+    font-weight: bold;
+    text-align: left;
+  }
+
+  /* 选中单元格样式 */
+  .selectedCell:after {
+    background: var(--gray-2);
+    content: '';
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 2;
+  }
+
+  /* 列调整大小手柄 */
+  .column-resize-handle {
+    background-color: var(--purple);
+    bottom: -2px;
+    pointer-events: none;
+    position: absolute;
+    right: -2px;
+    top: 0;
+    width: 4px;
+  }
+}
+
+.word-content-multi .ProseMirror .tableWrapper {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* 表格调整大小光标 */
+.word-content-multi .ProseMirror.resize-cursor {
+  cursor: ew-resize;
+  cursor: col-resize;
+}
+
+/* Word 代码块样式 */
+.word-content-multi .ProseMirror pre {
+  padding: 12px;
+  margin: 14px 0;
+  overflow-x: auto;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  background: var(--color-bg-gray);
+  border: 1px solid var(--color-border);
+}
+.word-content-multi .ProseMirror pre code { 
+  padding: 0; 
+  color: var(--color-text); 
+  background: none; 
+}
+
+/* Word 行内代码样式 - 参考邮件效果，浅灰背景+边框 */
+.word-content-multi .ProseMirror code.inline-code,
+.word-content-multi .ProseMirror code:not(pre code) {
+  display: inline;
+  padding: 2px 6px !important;
+  margin: 0 1px !important;
+  font-family: 'Courier New', Courier, 'Consolas', 'Monaco', 'Menlo', monospace !important;
+  font-size: 0.9em !important;
+  line-height: 1.5 !important;
+  color: var(--color-text, #000) !important;
+  background: #f5f5f5 !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 3px !important;
+  white-space: pre !important;
+  word-break: break-word !important;
+  vertical-align: baseline !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
+    color: var(--color-text, #f0f0f0) !important;
+    background: #2a2a2a !important;
+    border-color: #404040 !important;
+  }
+}
+
+/* 确保行内代码在段落、列表、表格、标题中正确显示 */
+.word-content-multi .ProseMirror p code.inline-code,
+.word-content-multi .ProseMirror p code:not(pre code),
+.word-content-multi .ProseMirror li code.inline-code,
+.word-content-multi .ProseMirror li code:not(pre code),
+.word-content-multi .ProseMirror td code.inline-code,
+.word-content-multi .ProseMirror td code:not(pre code),
+.word-content-multi .ProseMirror th code.inline-code,
+.word-content-multi .ProseMirror th code:not(pre code),
+.word-content-multi .ProseMirror h1 code.inline-code,
+.word-content-multi .ProseMirror h1 code:not(pre code),
+.word-content-multi .ProseMirror h2 code.inline-code,
+.word-content-multi .ProseMirror h2 code:not(pre code),
+.word-content-multi .ProseMirror h3 code.inline-code,
+.word-content-multi .ProseMirror h3 code:not(pre code),
+.word-content-multi .ProseMirror h4 code.inline-code,
+.word-content-multi .ProseMirror h4 code:not(pre code),
+.word-content-multi .ProseMirror h5 code.inline-code,
+.word-content-multi .ProseMirror h5 code:not(pre code),
+.word-content-multi .ProseMirror h6 code.inline-code,
+.word-content-multi .ProseMirror h6 code:not(pre code) {
+  display: inline !important;
+  padding: 2px 6px !important;
+  margin: 0 1px !important;
+  font-family: 'Courier New', Courier, 'Consolas', 'Monaco', 'Menlo', monospace !important;
+  font-size: 0.9em !important;
+  line-height: 1.5 !important;
+  color: var(--color-text, #000) !important;
+  background: #f5f5f5 !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 3px !important;
+  white-space: pre !important;
+  word-break: break-word !important;
+  vertical-align: baseline !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
+    color: var(--color-text, #f0f0f0) !important;
+    background: #2a2a2a !important;
+    border-color: #404040 !important;
+  }
+}
+
+/* 行内代码在链接中的样式 */
+.word-content-multi .ProseMirror a code.inline-code,
+.word-content-multi .ProseMirror a code:not(pre code) {
+  color: var(--color-link, #0563c1) !important;
+  
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
+    color: var(--color-link, #4fc3f7) !important;
+  }
+}
+
+/* 行内代码在强调文本中的样式 */
+.word-content-multi .ProseMirror strong code.inline-code,
+.word-content-multi .ProseMirror strong code:not(pre code),
+.word-content-multi .ProseMirror em code.inline-code,
+.word-content-multi .ProseMirror em code:not(pre code) {
+  font-weight: 600 !important;
+}
+
+/* Word 链接样式 */
+.word-content-multi .ProseMirror a { 
+  color: var(--color-link); 
+  word-break: break-word; 
+  text-decoration: underline;
+  cursor: pointer; /* 确保链接显示为可点击状态 */
+  pointer-events: auto; /* 确保链接可以接收点击事件 */
+}
+
+/* ===== Gapcursor 样式（表格光标效果）===== */
+.word-content-multi .ProseMirror-gapcursor {
+  display: none;
+  pointer-events: none;
+  position: absolute;
+  margin: 0;
+}
+
+.word-content-multi .ProseMirror-gapcursor:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: -2px;
+  width: 20px;
+  border-top: 1px solid var(--color-text, #000);
+  animation: ProseMirror-cursor-blink 1.1s steps(2, start) infinite;
+}
+
+@keyframes ProseMirror-cursor-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+.word-content-multi .ProseMirror-focused .ProseMirror-gapcursor {
+  display: block;
+}
+
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .word-content-multi .ProseMirror-gapcursor:after {
+  border-top-color: var(--color-text, #f0f0f0);
+}
+
+/* 编辑器占位 */
+.editor-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--page-content-height-px, 939px);
+  font-size: 14px;
+  color: #999;
+  background: #fff;
+
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
+    color: #666;
+    background: #1f1f1f;
+  }
+}
+
+/* ===== 预览模式样式 ===== */
+.tiptap-pro-editor.word-mode.is-preview-mode {
+  /* 预览模式下禁止选中文本 */
+  user-select: none;
+}
+
+.tiptap-pro-editor.word-mode.is-preview-mode .word-document-container {
+  /* 容器保持可滚动 */
+  overflow: auto;
+  cursor: default;
+}
+
+.tiptap-pro-editor.word-mode.is-preview-mode .ProseMirror {
+  /* 预览模式下隐藏光标 */
+  caret-color: transparent;
+  /* 内容区域禁止点击交互，但不影响容器滚动 */
+  pointer-events: none;
+}
+
+.tiptap-pro-editor.word-mode.is-preview-mode .ProseMirror * {
+  /* 预览模式下禁止选中 */
+  user-select: none !important;
+  cursor: default !important;
+}
+
+/* 预览模式下链接保持视觉样式但不可点击 */
+.tiptap-pro-editor.word-mode.is-preview-mode .ProseMirror a {
+  pointer-events: none;
+  cursor: default;
+}
+
+/* 预览模式下图片不显示调整手柄 */
+.tiptap-pro-editor.word-mode.is-preview-mode .ProseMirror img {
+  resize: none;
+}
+
+/* 预览模式下隐藏所有可调整大小的手柄 */
+.tiptap-pro-editor.word-mode.is-preview-mode .resize-handle,
+.tiptap-pro-editor.word-mode.is-preview-mode .image-resizer {
+  display: none !important;
+}

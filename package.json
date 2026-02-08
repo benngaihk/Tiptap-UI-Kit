@@ -1,0 +1,147 @@
+{
+  "name": "tiptap-ui-kit",
+  "version": "0.1.0",
+  "description": "Beautiful Tiptap 3 + Vue 3 rich-text editor theme with AI support",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js"
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:demo": "vite build --config vite.config.demo.ts",
+    "build:types": "vue-tsc --emitDeclarationOnly",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "pnpm build",
+    "release": "pnpm build && pnpm publish",
+    "moltbook": "node scripts/moltbook-bot.cjs",
+    "moltbook:post": "node scripts/moltbook-bot.cjs post",
+    "moltbook:status": "node scripts/moltbook-bot.cjs status",
+    "moltbook:auto": "node scripts/moltbook-bot.cjs auto",
+    "moltbook:smart": "node scripts/moltbook-smart-bot.cjs run",
+    "moltbook:smart:auto": "node scripts/moltbook-smart-bot.cjs auto",
+    "moltbook:feedback": "node scripts/moltbook-smart-bot.cjs feedback",
+    "moltbook:monitor": "node scripts/moltbook-monitor.cjs",
+    "moltbook:watch": "node scripts/moltbook-monitor.cjs watch"
+  },
+  "peerDependencies": {
+    "@tiptap/core": "^3.0.0",
+    "@tiptap/pm": "^3.0.0",
+    "@tiptap/starter-kit": "^3.0.0",
+    "@tiptap/vue-3": "^3.0.0",
+    "vue": "^3.4.0"
+  },
+  "peerDependenciesMeta": {
+    "ant-design-vue": {
+      "optional": true
+    },
+    "@ant-design/icons-vue": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
+    "@tiptap/core": "^3.7.2",
+    "@tiptap/extension-bubble-menu": "^3.7.2",
+    "@tiptap/extension-character-count": "^3.0.0",
+    "@tiptap/extension-code-block-lowlight": "^3.7.1",
+    "@tiptap/extension-collaboration": "^3.13.0",
+    "@tiptap/extension-collaboration-cursor": "^2.26.2",
+    "@tiptap/extension-color": "^3.0.0",
+    "@tiptap/extension-font-family": "^3.7.2",
+    "@tiptap/extension-highlight": "^3.0.0",
+    "@tiptap/extension-image": "^3.0.0",
+    "@tiptap/extension-link": "^3.0.0",
+    "@tiptap/extension-placeholder": "^3.0.0",
+    "@tiptap/extension-subscript": "^3.7.2",
+    "@tiptap/extension-superscript": "^3.7.2",
+    "@tiptap/extension-table": "^3.0.0",
+    "@tiptap/extension-table-cell": "^3.13.0",
+    "@tiptap/extension-table-header": "^3.13.0",
+    "@tiptap/extension-table-row": "^3.13.0",
+    "@tiptap/extension-task-item": "^3.7.1",
+    "@tiptap/extension-task-list": "^3.7.1",
+    "@tiptap/extension-text-align": "^3.0.0",
+    "@tiptap/extension-text-style": "^3.0.0",
+    "@tiptap/extension-typography": "^3.7.2",
+    "@tiptap/extension-underline": "^3.0.0",
+    "@tiptap/extensions": "^3.11.1",
+    "@tiptap/pm": "^3.7.2",
+    "@tiptap/starter-kit": "^3.7.2",
+    "@tiptap/vue-3": "^3.7.2",
+    "@types/katex": "^0.16.8",
+    "@types/node": "^25.0.2",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vitest/ui": "^4.0.18",
+    "@vue/test-utils": "^2.4.6",
+    "ant-design-vue": "^4.2.6",
+    "happy-dom": "^20.4.0",
+    "lowlight": "^3.3.0",
+    "lucide-vue-next": "^0.507.0",
+    "rollup-plugin-obfuscator": "^1.1.0",
+    "sass-embedded": "^1.96.0",
+    "terser": "^5.44.1",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3",
+    "vite-plugin-dts": "^4.3.0",
+    "vitest": "^4.0.18",
+    "vue": "^3.5.13",
+    "vue-tsc": "^2.1.10",
+    "vue-types": "^3.0.2",
+    "y-websocket": "^3.0.0",
+    "yjs": "^13.6.27"
+  },
+  "keywords": [
+    "tiptap",
+    "vue3",
+    "vue",
+    "rich-text-editor",
+    "wysiwyg",
+    "editor",
+    "theme",
+    "ui-kit",
+    "ai",
+    "collaboration",
+    "markdown",
+    "prosemirror",
+    "contenteditable",
+    "text-editor",
+    "word-processor",
+    "notion",
+    "document-editor"
+  ],
+  "author": "benngaihk",
+  "license": "Commercial",
+  "homepage": "https://github.com/benngaihk/Tiptap-UI-Kit#readme",
+  "bugs": {
+    "url": "https://github.com/benngaihk/Tiptap-UI-Kit/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benngaihk/Tiptap-UI-Kit.git"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "dependencies": {
+    "katex": "^0.16.28"
+  }
+}

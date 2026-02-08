@@ -1,0 +1,43 @@
+# Development files
+demo/
+.github/
+.vscode/
+node_modules/
+*.log
+*.md
+!README.md
+!LICENSE
+
+# Config files
+.editorconfig
+.eslintrc*
+.prettierrc*
+tsconfig.json
+vite.config.ts
+vercel.json
+
+# Build artifacts
+.DS_Store
+.env*
+!.env.example
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Test files
+tests/
+*.test.ts
+*.spec.ts
+coverage/
+
+# Documentation (except README)
+docs/
+CONTRIBUTING.md
+CHANGELOG.md
+DEPLOYMENT.md
+plan.md
+
+# CI/CD
+.github/

@@ -1,0 +1,146 @@
+/**
+ * FloatingMenu 样式
+ * @description 浮动菜单（依赖 base.css）
+ */
+
+/* 浮动菜单容器 */
+.floating-menu {
+  z-index: 999;
+  display: flex;
+  padding: 4px;
+  background: var(--tp-menu-bg, #fff);
+  border-radius: var(--tp-menu-radius, 8px);
+  box-shadow: var(--tp-menu-shadow, 0 4px 12px rgb(0 0 0 / 15%));
+}
+
+/* 浮动菜单按钮 */
+.floating-btn {
+  color: var(--tp-color-text, #333);
+}
+
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .floating-btn {
+  color: var(--tp-color-text, #f0f0f0);
+}
+
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .floating-btn:hover {
+  color: #fff;
+  background: var(--tp-color-bg-hover, #303030);
+}
+
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .floating-btn.active {
+  color: var(--tp-color-primary, #4fc3f7);
+  background: var(--tp-color-primary-bg, #1a4d6e);
+}
+
+/* 标题按钮 */
+.floating-menu .heading-btn {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* 通用菜单样式 */
+.menu-content {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.menu-group {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  padding: 0 4px;
+  border-right: 1px solid var(--tp-color-border, #e0e0e0);
+}
+
+.menu-group:last-child {
+  border-right: none;
+}
+
+.menu-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--tp-color-text-secondary, #666);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  transition: all var(--tp-transition-normal, 0.2s ease);
+}
+
+.menu-btn:hover {
+  color: var(--tp-color-text, #333);
+  background: var(--tp-color-bg-hover, #f0f0f0);
+}
+
+.menu-btn.active {
+  color: var(--tp-color-primary, #1890ff);
+  background: var(--tp-color-primary-bg, #e6f7ff);
+}
+
+.menu-btn .anticon {
+  font-size: 16px;
+}
+
+/* 浮动菜单动画 */
+.ProseMirror-floatingmenu {
+  animation: tp-slide-in 0.2s ease-in-out;
+}
+
+/* Tippy 样式重置 */
+.tippy-box[data-theme~='light'] {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.tippy-box[data-theme~='light'] .tippy-content {
+  padding: 0;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .floating-menu,
+  .ProseMirror-floatingmenu {
+    display: none !important;
+  }
+
+  .menu-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .menu-btn .anticon {
+    font-size: 14px;
+  }
+}
+
+/* 深色模式 */
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .floating-menu {
+  background: var(--tp-menu-bg, #1f1f1f);
+  box-shadow: var(--tp-menu-shadow, 0 4px 12px rgb(0 0 0 / 40%));
+}
+
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .floating-group,
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .menu-group {
+  border-right-color: var(--tp-color-border, #434343);
+}
+
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .menu-btn {
+  color: var(--tp-color-text-secondary, #d0d0d0);
+}
+
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .menu-btn:hover {
+  color: var(--tp-color-text, #f0f0f0);
+  background: var(--tp-color-bg-hover, #303030);
+}
+
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .menu-btn.active {
+  color: var(--tp-color-primary, #4fc3f7);
+  background: var(--tp-color-primary-bg, #1a4d6e);
+}

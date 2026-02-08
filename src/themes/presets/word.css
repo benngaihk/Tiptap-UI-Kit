@@ -1,0 +1,117 @@
+/**
+ * Word Theme Preset
+ * 类似 Microsoft Word 的专业文档风格
+ */
+
+.theme-word {
+  --tiptap-bg: #ffffff;
+  --tiptap-bg-secondary: #f2f2f2;
+  --tiptap-bg-hover: #e6e6e6;
+  --tiptap-toolbar-bg: #f3f3f3;
+  
+  --tiptap-text: #000000;
+  --tiptap-text-secondary: #444444;
+  --tiptap-text-muted: #888888;
+  
+  --tiptap-border: #d4d4d4;
+  --tiptap-border-hover: #b3b3b3;
+  --tiptap-border-focus: #0078d4;
+  
+  --tiptap-radius-sm: 2px;
+  --tiptap-radius-md: 3px;
+  --tiptap-radius-lg: 4px;
+  
+  --tiptap-primary: #0078d4;
+  --tiptap-primary-hover: #106ebe;
+  
+  --tiptap-code-bg: #f4f4f4;
+  --tiptap-code-text: #333333;
+  
+  --tiptap-blockquote-border: #d4d4d4;
+  --tiptap-blockquote-bg: #f9f9f9;
+  
+  --tiptap-link: #0563c1;
+  
+  --tiptap-font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+  --tiptap-font-size: 11pt;
+  --tiptap-line-height: 1.5;
+}
+
+/* Word 风格 - 厚重工具栏 (sticky 定位) */
+.theme-word .word-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: linear-gradient(180deg, #ffffff 0%, #f3f3f3 100%) !important;
+  border-bottom: 1px solid #d4d4d4 !important;
+  padding: 4px 8px;
+}
+
+/* Word 风格 - A4 纸张 */
+.theme-word .continuous-pages {
+  max-width: 816px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 0;
+}
+
+/* Word 风格 - 专业标题 */
+.theme-word .ProseMirror h1 {
+  font-size: 26pt;
+  font-weight: bold;
+  color: var(--tiptap-text);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.theme-word .ProseMirror h2 {
+  font-size: 18pt;
+  font-weight: bold;
+  color: #2e74b5;
+  margin-top: 18px;
+  margin-bottom: 10px;
+}
+
+.theme-word .ProseMirror h3 {
+  font-size: 14pt;
+  font-weight: bold;
+  color: #2e74b5;
+  margin-top: 14px;
+  margin-bottom: 8px;
+}
+
+/* Word 风格 - 段落缩进 */
+.theme-word .ProseMirror p {
+  text-indent: 0;
+  margin-bottom: 8pt;
+}
+
+/* Word 深色模式 */
+.theme-word[data-theme="dark"] {
+  --tiptap-bg: #1e1e1e;
+  --tiptap-bg-secondary: #252525;
+  --tiptap-bg-hover: #3e3e3e;
+  --tiptap-toolbar-bg: #2d2d2d;
+  
+  --tiptap-text: #d4d4d4;
+  --tiptap-text-secondary: #9e9e9e;
+  --tiptap-text-muted: #6e6e6e;
+  
+  --tiptap-border: #3e3e3e;
+  --tiptap-border-hover: #4e4e4e;
+  
+  --tiptap-code-bg: #2d2d2d;
+  
+  --tiptap-blockquote-bg: #2d2d2d;
+  
+  --tiptap-link: #4fc3f7;
+}
+
+.theme-word[data-theme="dark"] .word-toolbar {
+  background: linear-gradient(180deg, #2d2d2d 0%, #252525 100%) !important;
+  border-bottom-color: #3e3e3e !important;
+}
+
+.theme-word[data-theme="dark"] .ProseMirror h2,
+.theme-word[data-theme="dark"] .ProseMirror h3 {
+  color: #6db3f2;
+}

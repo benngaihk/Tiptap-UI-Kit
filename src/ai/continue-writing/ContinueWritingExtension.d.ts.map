@@ -1,0 +1,1 @@
+{"version":3,"file":"ContinueWritingExtension.d.ts","sourceRoot":"","sources":["ContinueWritingExtension.ts"],"names":[],"mappings":"AAOA,OAAO,EAAE,SAAS,EAAE,MAAM,cAAc,CAAC;AAkBzC,MAAM,WAAW,sBAAsB;CAAG;AAE1C,OAAO,QAAQ,cAAc,CAAC;IAC5B,UAAU,QAAQ,CAAC,UAAU;QAC3B,eAAe,EAAE;YACf;;eAEG;YACH,eAAe,EAAE,MAAM,UAAU,CAAC;SACnC,CAAC;KACH;CACF;AAED;;;GAGG;AACH,eAAO,MAAM,wBAAwB,wCAwDjC,CAAC"}

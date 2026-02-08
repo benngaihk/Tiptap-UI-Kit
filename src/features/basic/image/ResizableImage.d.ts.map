@@ -1,0 +1,1 @@
+{"version":3,"file":"ResizableImage.d.ts","sourceRoot":"","sources":["ResizableImage.ts"],"names":[],"mappings":"AAAA;;;;;;;GAOG;AAIH,MAAM,WAAW,qBAAqB;IACpC,cAAc,CAAC,EAAE,MAAM,CAAC,MAAM,EAAE,GAAG,CAAC,CAAA;IACpC,MAAM,CAAC,EAAE,OAAO,CAAA;IAChB,WAAW,CAAC,EAAE,OAAO,CAAA;IACrB,iCAAiC;IACjC,YAAY,CAAC,EAAE,OAAO,CAAA;CACvB;AAED,eAAO,MAAM,cAAc,yDAgUzB,CAAA"}

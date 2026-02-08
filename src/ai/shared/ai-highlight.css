@@ -1,0 +1,75 @@
+/* AI Highlight Styles */
+.ai-highlight {
+  position: relative;
+  padding: 2px 0;
+  cursor: pointer;
+  background-color: #fff7e6;
+  border-bottom: 2px solid #ffa940;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+/* Hide AI highlights in readonly/preview mode */
+.ProseMirror[contenteditable='false'] .ai-highlight {
+  padding: 0;
+  cursor: default;
+  background-color: transparent;
+  border-bottom: none;
+}
+
+.ProseMirror[contenteditable='false'] .ai-highlight:hover::after {
+  display: none;
+}
+
+.ai-highlight:hover {
+  background-color: #ffe7ba;
+  border-bottom-color: #f80;
+}
+
+.ai-highlight:hover::after {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  z-index: 1000;
+  padding: 4px 8px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: white;
+  white-space: nowrap;
+  pointer-events: none;
+  background-color: rgb(0 0 0 / 75%);
+  border-radius: 4px;
+  opacity: 0;
+  transform: translateX(-50%);
+  animation: tooltip-fade-in 0.2s ease 0.5s forwards;
+}
+
+@keyframes tooltip-fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Optional: Add animation for better visual feedback */
+@keyframes ai-highlight-fade-in {
+  0% {
+    background-color: transparent;
+    border-bottom-color: transparent;
+  }
+
+  100% {
+    background-color: #fff7e6;
+    border-bottom-color: #ffa940;
+  }
+}
+
+.ai-highlight {
+  animation: ai-highlight-fade-in 0.3s ease;
+}
+

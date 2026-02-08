@@ -1,0 +1,67 @@
+/**
+ * 协同编辑光标和选区样式
+ * Collaboration cursor and selection styles
+ */
+
+/* 协同编辑用户光标 */
+.collaboration-cursor__caret {
+  position: relative;
+  margin-right: -1px;
+  margin-left: -1px;
+  word-break: normal;
+  pointer-events: none;
+  border-right: 1px solid #0d0d0d;
+  border-left: 1px solid #0d0d0d;
+
+  :where(.dark, .dark *) & {
+    border-right-color: #f0f0f0;
+    border-left-color: #f0f0f0;
+  }
+}
+
+/* 用户名标签 */
+.collaboration-cursor__label {
+  position: absolute;
+  top: -1.4em;
+  left: -1px;
+  z-index: 1000;
+  padding: 0.1rem 0.3rem;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  color: #fff;
+  white-space: nowrap;
+  user-select: none;
+  border-radius: 3px 3px 3px 0;
+}
+
+/* 用户选区高亮 */
+.ProseMirror .collaboration-cursor__selection {
+  /* 由 CollaborationCursor 扩展动态设置背景色 */
+}
+
+/* 光标动画 */
+.collaboration-cursor__caret {
+  animation: blink 1.2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 只读模式下隐藏所有协同光标 */
+.readonly-mode .collaboration-cursor__caret,
+.readonly-mode .collaboration-cursor__label,
+.readonly-mode .collaboration-cursor__selection {
+  display: none;
+}
+

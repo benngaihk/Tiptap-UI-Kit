@@ -1,0 +1,127 @@
+/**
+ * GitHub Theme Preset
+ * 类似 GitHub 的简洁技术风格
+ */
+
+.theme-github {
+  --tiptap-bg: #ffffff;
+  --tiptap-bg-secondary: #f6f8fa;
+  --tiptap-bg-hover: #f3f4f6;
+  --tiptap-toolbar-bg: #f6f8fa;
+  
+  --tiptap-text: #24292f;
+  --tiptap-text-secondary: #57606a;
+  --tiptap-text-muted: #8b949e;
+  
+  --tiptap-border: #d0d7de;
+  --tiptap-border-hover: #afb8c1;
+  --tiptap-border-focus: #0969da;
+  
+  --tiptap-radius-sm: 6px;
+  --tiptap-radius-md: 6px;
+  --tiptap-radius-lg: 6px;
+  
+  --tiptap-primary: #0969da;
+  --tiptap-primary-hover: #0550ae;
+  
+  --tiptap-code-bg: rgba(175, 184, 193, 0.2);
+  --tiptap-code-text: #24292f;
+  
+  --tiptap-blockquote-border: #d0d7de;
+  --tiptap-blockquote-bg: transparent;
+  
+  --tiptap-link: #0969da;
+  
+  --tiptap-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+  --tiptap-font-size: 16px;
+  --tiptap-line-height: 1.5;
+}
+
+/* GitHub 风格 - 边框工具栏 */
+.theme-github .word-toolbar {
+  background: #f6f8fa !important;
+  border-bottom: 1px solid #d0d7de !important;
+  padding: 8px 16px;
+}
+
+/* GitHub 风格 - 全宽无阴影 */
+.theme-github .continuous-pages {
+  max-width: 980px;
+  box-shadow: none;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+}
+
+/* GitHub 风格 - Markdown 风格标题 */
+.theme-github .ProseMirror h1 {
+  font-size: 32px;
+  font-weight: 600;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #d0d7de;
+  margin-bottom: 16px;
+}
+
+.theme-github .ProseMirror h2 {
+  font-size: 24px;
+  font-weight: 600;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #d0d7de;
+  margin-bottom: 16px;
+}
+
+.theme-github .ProseMirror h3 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* GitHub 风格 - 代码块 */
+.theme-github .ProseMirror pre {
+  background: #f6f8fa !important;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+}
+
+/* GitHub 深色模式 */
+.theme-github[data-theme="dark"] {
+  --tiptap-bg: #0d1117;
+  --tiptap-bg-secondary: #161b22;
+  --tiptap-bg-hover: #21262d;
+  --tiptap-toolbar-bg: #161b22;
+  
+  --tiptap-text: #c9d1d9;
+  --tiptap-text-secondary: #8b949e;
+  --tiptap-text-muted: #484f58;
+  
+  --tiptap-border: #30363d;
+  --tiptap-border-hover: #484f58;
+  --tiptap-border-focus: #58a6ff;
+  
+  --tiptap-primary: #58a6ff;
+  --tiptap-primary-hover: #79c0ff;
+  
+  --tiptap-code-bg: rgba(110, 118, 129, 0.4);
+  --tiptap-code-text: #c9d1d9;
+  
+  --tiptap-blockquote-border: #30363d;
+  
+  --tiptap-link: #58a6ff;
+}
+
+.theme-github[data-theme="dark"] .word-toolbar {
+  background: #161b22 !important;
+  border-bottom-color: #30363d !important;
+}
+
+.theme-github[data-theme="dark"] .continuous-pages {
+  border-color: #30363d;
+}
+
+.theme-github[data-theme="dark"] .ProseMirror h1,
+.theme-github[data-theme="dark"] .ProseMirror h2 {
+  border-bottom-color: #30363d;
+}
+
+.theme-github[data-theme="dark"] .ProseMirror pre {
+  background: #161b22 !important;
+  border-color: #30363d;
+}

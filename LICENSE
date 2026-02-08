@@ -1,0 +1,71 @@
+# Tiptap UI Kit - Commercial License
+
+Copyright © 2024. All rights reserved.
+
+## License Terms
+
+This software and associated documentation files (the "Software") are proprietary and confidential. 
+
+### Usage Rights
+
+The Software requires a valid commercial license for use. You may only use this Software if you have purchased a license.
+
+### Restrictions
+
+Unless you have purchased a license, you may NOT:
+
+- Use the Software in any production environment
+- Copy, modify, merge, publish, distribute, sublicense, or sell copies of the Software
+- Reverse engineer, decompile, or disassemble the Software
+- Remove or alter any proprietary notices or labels on the Software
+
+### Warranty Disclaimer
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
+
+### Trial License
+
+A 30-day trial license is available for evaluation purposes:
+- May be used in development environment only
+- Cannot be used in production environment
+- Full feature access for evaluation
+- After 30 days, a valid commercial license is required
+
+### Commercial Licenses
+
+Commercial licenses are available in multiple tiers:
+- **Solo Developer License** - For individual developers ($99)
+- **Team License** - For teams up to 10 developers ($499)
+- **Enterprise License** - For unlimited developers (Custom pricing)
+
+See [PRICING.md](PRICING.md) for detailed pricing and license comparison.
+
+### Special Licenses
+
+- **Education License** - 50% discount for students and educational institutions
+- **Open Source License** - Free for qualifying open source projects
+- **Non-Profit License** - 40% discount for registered non-profit organizations
+
+### Support
+
+Support is provided based on license tier:
+- Trial: Community support via GitHub Issues
+- Solo: Email support
+- Team: Priority email support
+- Enterprise: Dedicated support channel
+
+### Updates
+
+- Solo & Team licenses include all v1.x updates
+- Enterprise licenses include lifetime updates (all versions)
+
+### Contact
+
+For licensing inquiries and purchases:
+- **Email**: licensing@example.com (update with actual contact)
+- **GitHub**: https://github.com/benngaihk/Tiptap-UI-Kit/issues
+- **Pricing**: See [PRICING.md](PRICING.md)
+
+### Attribution
+
+Solo licenses must retain the "Powered by Tiptap UI Kit" attribution. Team and Enterprise licenses may remove attribution.

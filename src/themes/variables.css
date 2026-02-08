@@ -1,0 +1,106 @@
+/**
+ * Theme Variables
+ * Base CSS variables for theming
+ */
+
+:root {
+  /* ===== 背景 ===== */
+  --tiptap-bg: #ffffff;
+  --tiptap-bg-secondary: #f9fafb;
+  --tiptap-bg-hover: #f3f4f6;
+  --tiptap-toolbar-bg: #fafafa;
+  
+  /* ===== 文字 ===== */
+  --tiptap-text: #1f2937;
+  --tiptap-text-secondary: #6b7280;
+  --tiptap-text-muted: #9ca3af;
+  
+  /* ===== 边框 ===== */
+  --tiptap-border: #e5e7eb;
+  --tiptap-border-hover: #d1d5db;
+  --tiptap-border-focus: #3b82f6;
+  
+  /* ===== 圆角 ===== */
+  --tiptap-radius-sm: 4px;
+  --tiptap-radius-md: 8px;
+  --tiptap-radius-lg: 12px;
+  
+  /* ===== 阴影 ===== */
+  --tiptap-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --tiptap-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --tiptap-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  
+  /* ===== 字体 ===== */
+  --tiptap-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --tiptap-font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  --tiptap-font-size: 16px;
+  --tiptap-line-height: 1.75;
+  
+  /* ===== 主题色 ===== */
+  --tiptap-primary: #3b82f6;
+  --tiptap-primary-hover: #2563eb;
+  --tiptap-primary-light: rgba(59, 130, 246, 0.1);
+  
+  /* ===== 代码 ===== */
+  --tiptap-code-bg: #f3f4f6;
+  --tiptap-code-text: #e11d48;
+  
+  /* ===== 引用 ===== */
+  --tiptap-blockquote-border: #3b82f6;
+  --tiptap-blockquote-bg: #f9fafb;
+  
+  /* ===== 链接 ===== */
+  --tiptap-link: #3b82f6;
+  --tiptap-link-hover: #2563eb;
+  
+  /* ===== 表格 ===== */
+  --tiptap-table-border: #e5e7eb;
+  --tiptap-table-header-bg: #f9fafb;
+  --tiptap-table-selected-bg: rgba(59, 130, 246, 0.1);
+  
+  /* ===== 工具栏 ===== */
+  --tiptap-toolbar-button-bg: transparent;
+  --tiptap-toolbar-button-hover: #f3f4f6;
+  --tiptap-toolbar-button-active: #e5e7eb;
+  --tiptap-toolbar-divider: #e5e7eb;
+  
+  /* ===== Device View ===== */
+  --tiptap-device-width-pc: 100%;
+  --tiptap-device-width-pad: 768px;
+  --tiptap-device-width-mobile: 375px;
+  
+  /* ===== Z-index ===== */
+  --tiptap-z-dropdown: 100;
+  --tiptap-z-bubble: 200;
+  --tiptap-z-modal: 300;
+}
+
+/* ===== Dark Mode ===== */
+[data-theme="dark"] {
+  --tiptap-bg: #1f2937;
+  --tiptap-bg-secondary: #111827;
+  --tiptap-bg-hover: #374151;
+  --tiptap-toolbar-bg: #111827;
+  
+  --tiptap-text: #f9fafb;
+  --tiptap-text-secondary: #d1d5db;
+  --tiptap-text-muted: #9ca3af;
+  
+  --tiptap-border: #374151;
+  --tiptap-border-hover: #4b5563;
+  
+  --tiptap-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --tiptap-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --tiptap-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  
+  --tiptap-code-bg: #374151;
+  --tiptap-code-text: #fb7185;
+  
+  --tiptap-blockquote-bg: #111827;
+  
+  --tiptap-table-header-bg: #111827;
+  
+  --tiptap-toolbar-button-hover: #374151;
+  --tiptap-toolbar-button-active: #4b5563;
+  --tiptap-toolbar-divider: #374151;
+}

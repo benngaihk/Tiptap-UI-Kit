@@ -1,0 +1,1 @@
+{"version":3,"file":"SummarizeExtension.d.ts","sourceRoot":"","sources":["SummarizeExtension.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,SAAS,EAAE,MAAM,cAAc,CAAC;AASzC,MAAM,WAAW,gBAAgB;CAAG;AAEpC,OAAO,QAAQ,cAAc,CAAC;IAC5B,UAAU,QAAQ,CAAC,UAAU;QAC3B,SAAS,EAAE;YACT,SAAS,EAAE,MAAM,UAAU,CAAC;SAC7B,CAAC;KACH;CACF;AAED,eAAO,MAAM,kBAAkB,kCA6B7B,CAAC"}

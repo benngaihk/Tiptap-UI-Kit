@@ -1,0 +1,128 @@
+/**
+ * Tiptap UI Kit - CSS Variables System
+ * 
+ * Light theme (default) and Dark theme variables
+ * Users can override these variables to customize the theme
+ */
+
+:root {
+  /* ===== Color Palette ===== */
+  --tiptap-primary: #3b82f6;
+  --tiptap-primary-hover: #2563eb;
+  --tiptap-primary-light: rgba(59, 130, 246, 0.1);
+  
+  /* ===== Editor Core ===== */
+  --tiptap-bg: #ffffff;
+  --tiptap-text: #1a1a1a;
+  --tiptap-text-secondary: #666666;
+  --tiptap-text-muted: #999999;
+  
+  /* ===== Borders ===== */
+  --tiptap-border: #e5e5e5;
+  --tiptap-border-hover: #d0d0d0;
+  --tiptap-border-focus: var(--tiptap-primary);
+  
+  /* ===== Selection & Caret ===== */
+  --tiptap-selection: rgba(59, 130, 246, 0.2);
+  --tiptap-caret: var(--tiptap-primary);
+  
+  /* ===== Toolbar ===== */
+  --tiptap-toolbar-bg: #fafafa;
+  --tiptap-toolbar-border: var(--tiptap-border);
+  --tiptap-toolbar-btn-bg: transparent;
+  --tiptap-toolbar-btn-hover: #f0f0f0;
+  --tiptap-toolbar-btn-active: #e5e5e5;
+  --tiptap-toolbar-btn-disabled: #cccccc;
+  --tiptap-toolbar-btn-text: var(--tiptap-text);
+  
+  /* ===== Bubble Menu ===== */
+  --tiptap-bubble-bg: #ffffff;
+  --tiptap-bubble-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --tiptap-bubble-border: var(--tiptap-border);
+  
+  /* ===== Code Block ===== */
+  --tiptap-code-bg: #f5f5f5;
+  --tiptap-code-text: #e11d48;
+  --tiptap-codeblock-bg: #1e1e1e;
+  --tiptap-codeblock-text: #d4d4d4;
+  
+  /* ===== Table ===== */
+  --tiptap-table-border: #d0d0d0;
+  --tiptap-table-header-bg: #f5f5f5;
+  --tiptap-table-selected: rgba(59, 130, 246, 0.1);
+  
+  /* ===== Blockquote ===== */
+  --tiptap-blockquote-border: var(--tiptap-primary);
+  --tiptap-blockquote-bg: #f9fafb;
+  
+  /* ===== Link ===== */
+  --tiptap-link: var(--tiptap-primary);
+  --tiptap-link-hover: var(--tiptap-primary-hover);
+  
+  /* ===== Typography ===== */
+  --tiptap-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --tiptap-font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  --tiptap-font-size: 16px;
+  --tiptap-line-height: 1.75;
+  
+  /* ===== Spacing ===== */
+  --tiptap-spacing-xs: 4px;
+  --tiptap-spacing-sm: 8px;
+  --tiptap-spacing-md: 16px;
+  --tiptap-spacing-lg: 24px;
+  --tiptap-spacing-xl: 32px;
+  
+  /* ===== Border Radius ===== */
+  --tiptap-radius-sm: 4px;
+  --tiptap-radius-md: 8px;
+  --tiptap-radius-lg: 12px;
+  --tiptap-radius-full: 9999px;
+  
+  /* ===== Shadows ===== */
+  --tiptap-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --tiptap-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --tiptap-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  
+  /* ===== Transitions ===== */
+  --tiptap-transition-fast: 0.1s ease;
+  --tiptap-transition-normal: 0.2s ease;
+  --tiptap-transition-slow: 0.3s ease;
+  
+  /* ===== Z-Index ===== */
+  --tiptap-z-toolbar: 100;
+  --tiptap-z-bubble: 200;
+  --tiptap-z-modal: 300;
+}
+
+/* ===== Dark Theme ===== */
+[data-theme="dark"],
+.dark {
+  --tiptap-primary: #60a5fa;
+  --tiptap-primary-hover: #93c5fd;
+  --tiptap-primary-light: rgba(96, 165, 250, 0.15);
+  
+  --tiptap-bg: #1a1a1a;
+  --tiptap-text: #e5e5e5;
+  --tiptap-text-secondary: #a3a3a3;
+  --tiptap-text-muted: #737373;
+  
+  --tiptap-border: #333333;
+  --tiptap-border-hover: #444444;
+  
+  --tiptap-selection: rgba(96, 165, 250, 0.25);
+  
+  --tiptap-toolbar-bg: #262626;
+  --tiptap-toolbar-btn-hover: #333333;
+  --tiptap-toolbar-btn-active: #404040;
+  
+  --tiptap-bubble-bg: #262626;
+  --tiptap-bubble-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  
+  --tiptap-code-bg: #2a2a2a;
+  --tiptap-code-text: #f472b6;
+  --tiptap-codeblock-bg: #0d0d0d;
+  
+  --tiptap-table-header-bg: #2a2a2a;
+  
+  --tiptap-blockquote-bg: #262626;
+}

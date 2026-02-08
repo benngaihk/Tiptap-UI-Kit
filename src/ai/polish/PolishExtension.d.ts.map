@@ -1,0 +1,1 @@
+{"version":3,"file":"PolishExtension.d.ts","sourceRoot":"","sources":["PolishExtension.ts"],"names":[],"mappings":"AAOA,OAAO,EAAE,SAAS,EAAE,MAAM,cAAc,CAAC;AAkBzC,MAAM,WAAW,aAAa;CAAG;AAEjC,OAAO,QAAQ,cAAc,CAAC;IAC5B,UAAU,QAAQ,CAAC,UAAU;QAC3B,MAAM,EAAE;YACN;;eAEG;YACH,MAAM,EAAE,MAAM,UAAU,CAAC;SAC1B,CAAC;KACH;CACF;AAED;;;GAGG;AACH,eAAO,MAAM,eAAe,+BAiD1B,CAAC"}
