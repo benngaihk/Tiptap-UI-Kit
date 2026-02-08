@@ -1,6 +1,16 @@
 <template>
   <a-config-provider :theme="antdTheme">
-  <div class="demo-app" :data-theme="theme">
+  <div class="demo-app" :data-theme="theme" :class="{ 'editor-mode': !showLanding }">
+    <!-- Landing Page -->
+    <LandingPage
+      v-if="showLanding"
+      :theme="theme"
+      @start-demo="handleStartDemo"
+      @toggle-theme="toggleTheme"
+    />
+
+    <!-- Editor Demo (shown after clicking "Try Demo") -->
+    <template v-else>
     <!-- Header -->
     <header class="demo-header">
       <div class="demo-header__content">
@@ -55,6 +65,7 @@
           </div>
         </DeviceFrame>
     </main>
+    </template>
   </div>
   </a-config-provider>
 </template>
@@ -63,6 +74,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { theme as antTheme } from 'ant-design-vue'
 import TiptapProEditor from '../src/core/TiptapProEditor.vue'
+import LandingPage from './LandingPage.vue'
 import { createI18n, type LocaleCode } from '../src/locales'
 import { PRESET_CONFIGS } from '../src/core/editorConfig'
 import type { FeatureFlags, ThemePreset } from '../src/core/editorConfig'
@@ -75,6 +87,13 @@ import '../src/themes/presets/notion.css'
 import '../src/themes/presets/github.css'
 import '../src/themes/presets/typora.css'
 import '../src/styles/device-responsive.css'
+
+// Landing page state
+const showLanding = ref(true)
+
+const handleStartDemo = () => {
+  showLanding.value = false
+}
 
 // Theme mode (light/dark)
 const theme = ref<'light' | 'dark'>('light')
@@ -202,13 +221,18 @@ const copyJson = async () => {
 
 /* App Container */
 .demo-app {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #1a1a1a;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   transition: background 0.3s ease;
+}
+
+/* Editor mode: fixed height with overflow hidden */
+.demo-app.editor-mode {
+  height: 100vh;
   overflow: hidden;
 }
 

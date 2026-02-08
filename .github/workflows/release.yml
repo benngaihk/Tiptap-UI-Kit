@@ -61,7 +61,7 @@ jobs:
             ## Installation
 
             ```bash
-            npm install tiptap-ui-kit@${{ steps.get_version.outputs.VERSION }}
+            npm install benngaihk/Tiptap-UI-Kit#v${{ steps.get_version.outputs.VERSION }}
             ```
 
             See [CHANGELOG.md](https://github.com/benngaihk/Tiptap-UI-Kit/blob/main/CHANGELOG.md) for full details.

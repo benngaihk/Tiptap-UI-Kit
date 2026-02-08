@@ -112,22 +112,17 @@ Perfect for building modern document editors, content management systems, note-t
 
 ## 📦 Installation
 
-### Using npm
+### From GitHub
 
 ```bash
-npm install tiptap-ui-kit
-```
+# Using npm
+npm install benngaihk/Tiptap-UI-Kit
 
-### Using pnpm (recommended)
+# Using pnpm (recommended)
+pnpm add benngaihk/Tiptap-UI-Kit
 
-```bash
-pnpm add tiptap-ui-kit
-```
-
-### Using yarn
-
-```bash
-yarn add tiptap-ui-kit
+# Using yarn
+yarn add benngaihk/Tiptap-UI-Kit
 ```
 
 ### Peer Dependencies
