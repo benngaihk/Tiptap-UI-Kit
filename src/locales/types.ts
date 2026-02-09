@@ -254,6 +254,20 @@ export interface TiptapLocale {
     clickOrDragUpload: string
     onlySupportImage: string
 
+    // Word 导入/导出
+    word: string
+    importWord: string
+    exportWord: string
+    clickOrDragUploadWord: string
+    onlySupportDocx: string
+    importing: string
+    exporting: string
+    exportFilenamePlaceholder: string
+    importSuccess: string
+    exportSuccess: string
+    importFailed: string
+    exportFailed: string
+
     // 更多
     more: string
     aiTool: string

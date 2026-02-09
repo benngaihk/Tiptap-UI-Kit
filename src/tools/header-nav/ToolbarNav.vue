@@ -72,7 +72,12 @@
           <SubscriptSuperscriptButton :editor="editor" />
         </div>
 
-        <!-- 第十一组：AI工具 -->
+        <!-- 第十一组：Word 导入/导出 -->
+        <div v-if="config.word" class="tool-group">
+          <WordButton :editor="editor" />
+        </div>
+
+        <!-- 第十二组：AI工具 -->
         <div v-if="config.ai && editor" class="tool-group">
           <AiMenuButton
             :editor="editor"
@@ -121,6 +126,7 @@ import { TableButton } from '@/features/advanced/table'
 import { SubscriptSuperscriptButton } from '@/features/advanced/subscript-superscript'
 import { UndoRedoButton } from '@/features/advanced/undo-redo'
 import { FormatPainterButton } from '@/features/advanced/format-painter'
+import { WordButton } from '@/features/advanced/word'
 import { AiMenuButton } from '@/ai'
 
 import { createCommandRunner } from '@/utils/editorCommands'

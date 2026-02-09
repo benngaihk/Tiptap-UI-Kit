@@ -241,6 +241,20 @@ export const enUS: TiptapLocale = {
     clickOrDragUpload: 'Click or drag file to this area to upload',
     onlySupportImage: 'Only image formats are supported',
 
+    // Word Import/Export
+    word: 'Word',
+    importWord: 'Import Word',
+    exportWord: 'Export Word',
+    clickOrDragUploadWord: 'Click or drag Word file to this area',
+    onlySupportDocx: 'Only .docx format is supported',
+    importing: 'Importing...',
+    exporting: 'Exporting...',
+    exportFilenamePlaceholder: 'Enter file name',
+    importSuccess: 'Word file imported successfully',
+    exportSuccess: 'Word file exported successfully',
+    importFailed: 'Word file import failed',
+    exportFailed: 'Word file export failed',
+
     // More
     more: 'More',
     aiTool: 'AI Tool',
