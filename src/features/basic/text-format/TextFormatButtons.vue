@@ -5,7 +5,7 @@
       :key="format.name"
       :icon="format.icon"
       :title="format.title"
-      :active="isActive(format.name)"
+      :active="format.activeCheck ? format.activeCheck() : isActive(format.name)"
       @click="format.action"
     />
   </ToolbarGroup>
@@ -48,8 +48,16 @@ const runCommand = createCommandRunner(editor)
 const { isActive } = createStateCheckers(editor)
 
 // ===== 文本格式配置 =====
+interface TextFormat {
+  name: string
+  icon: typeof BoldOutlined
+  title: string
+  activeCheck?: () => boolean
+  action: () => void
+}
+
 const textFormats = computed(() => {
-  const formats = [
+  const formats: TextFormat[] = [
     {
       name: 'bold',
       icon: BoldOutlined,
@@ -76,13 +84,40 @@ const textFormats = computed(() => {
     },
   ]
 
-  // 可选的行内代码按钮
+  // 可选的行内代码按钮（多行选中时自动切换为代码块）
   if (props.showCode) {
     formats.push({
       name: 'code',
       icon: CodeOutlined,
       title: t('editor.inlineCode'),
-      action: () => runCommand((chain) => chain.toggleCode())(),
+      activeCheck: () => isActive('code') || isActive('codeBlock'),
+      action: () => {
+        const e = editor.value
+        if (!e) return
+
+        // 如果当前已在代码块中，退出代码块
+        if (e.isActive('codeBlock')) {
+          runCommand((chain) => chain.setParagraph())()
+          return
+        }
+
+        // 检查选区是否跨越多个文本块
+        const { from, to } = e.state.selection
+        let blockCount = 0
+        e.state.doc.nodesBetween(from, to, (node) => {
+          if (node.isTextblock) {
+            blockCount++
+          }
+        })
+
+        if (blockCount > 1) {
+          // 多行选中：使用代码块
+          runCommand((chain) => chain.setCodeBlock({ language: 'plaintext' }))()
+        } else {
+          // 单行选中：使用行内代码
+          runCommand((chain) => chain.toggleCode())()
+        }
+      },
     })
   }
 
