@@ -241,6 +241,20 @@ export const zhTW: TiptapLocale = {
     clickOrDragUpload: '點擊或拖拽檔案到此區域上傳',
     onlySupportImage: '僅支援圖片格式',
 
+    // Word 匯入/匯出
+    word: 'Word',
+    importWord: '匯入 Word',
+    exportWord: '匯出 Word',
+    clickOrDragUploadWord: '點擊或拖拽 Word 檔案到此區域',
+    onlySupportDocx: '僅支援 .docx 格式',
+    importing: '正在匯入...',
+    exporting: '正在匯出...',
+    exportFilenamePlaceholder: '請輸入檔案名稱',
+    importSuccess: 'Word 檔案匯入成功',
+    exportSuccess: 'Word 檔案匯出成功',
+    importFailed: 'Word 檔案匯入失敗',
+    exportFailed: 'Word 檔案匯出失敗',
+
     // 更多
     more: '更多',
     aiTool: 'AI 工具',

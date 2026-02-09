@@ -41,6 +41,8 @@ export interface ToolbarToolsConfig {
   formatPainter?: boolean
   /** 是否禁用格式刷工具（协作模式多人时需要禁用） */
   formatPainterDisabled?: boolean
+  /** 是否显示 Word 导入/导出工具 */
+  word?: boolean
   /** 是否显示AI工具 */
   ai?: boolean
 }
@@ -108,6 +110,7 @@ export const ADVANCED_TOOLBAR_CONFIG: ToolbarToolsConfig = {
   lineHeight: true,
   subscriptSuperscript: true,
   formatPainter: true,
+  word: true,
   ai: true,
 }
 

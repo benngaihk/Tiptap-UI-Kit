@@ -21,6 +21,7 @@ export type ToolbarFeature =
   | 'math'
   | 'subSup'
   | 'formatClear'
+  | 'word'
   | 'ai'
 
 /** Toolbar configuration */
@@ -64,6 +65,7 @@ export const FULL_TOOLBAR_CONFIG: ToolbarConfig = {
     'math',
     'subSup',
     'formatClear',
+    'word',
     'ai',
   ],
   dividers: true,

@@ -36,3 +36,7 @@ export * from './zoom'
 
 // Math
 export { MathButton } from './math'
+
+// Word Import/Export
+export { WordButton } from './word'
+export { importWordFile, convertWordToHtml, exportToWord } from './word'
