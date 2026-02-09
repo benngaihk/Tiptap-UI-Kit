@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>请作者喝杯咖啡 ☕ | Tiptap UI Kit</title>
+  <meta name="description" content="您的支持是我创作的动力，请作者喝杯咖啡吧！">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #6366f1;
+      --primary-light: #818cf8;
+      --accent-green: #22c55e;
+      --accent-blue: #3b82f6;
+      --accent-orange: #f97316;
+      --crypto-bg: linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%);
+      --crypto-border: #fecaca;
+      --crypto-text: #dc2626;
+      --card-bg: #ffffff;
+      --card-shadow: 0 4px 32px rgba(99, 102, 241, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+      --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 50%, #f0fdf4 100%);
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      --border-color: #e2e8f0;
+      --hover-bg: #f8fafc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      line-height: 1.6;
+      color: var(--text-primary);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      box-shadow: var(--card-shadow);
+      padding: 40px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-green), var(--primary-light));
+    }
+
+    /* Language Toggle */
+    .lang-toggle {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      display: flex;
+      gap: 4px;
+      background: var(--hover-bg);
+      padding: 4px;
+      border-radius: 8px;
+    }
+
+    .lang-btn {
+      padding: 6px 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .lang-btn.active {
+      background: white;
+      color: var(--primary-color);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .lang-btn:hover:not(.active) {
+      color: var(--text-primary);
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .header-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: inline-block;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Payment Methods */
+    .payment-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .payment-btn {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: white;
+      border: 1.5px solid var(--border-color);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .payment-btn:hover {
+      border-color: var(--primary-light);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.12);
+      transform: translateX(4px);
+    }
+
+    .payment-btn .icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      font-size: 20px;
+    }
+
+    .payment-btn.wechat .icon {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+    }
+
+    .payment-btn.alipay .icon {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+    }
+
+    .payment-btn .text {
+      flex: 1;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .payment-btn .arrow {
+      color: var(--text-muted);
+      font-size: 18px;
+      transition: transform 0.2s ease;
+    }
+
+    .payment-btn:hover .arrow {
+      transform: translateX(4px);
+    }
+
+    /* Crypto Section */
+    .crypto-section {
+      background: var(--crypto-bg);
+      border: 1.5px solid var(--crypto-border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+    }
+
+    .crypto-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--crypto-text);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .crypto-address {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 13px;
+      color: var(--text-primary);
+      word-break: break-all;
+      cursor: pointer;
+      padding: 8px 12px;
+      background: white;
+      border-radius: 8px;
+      margin-top: 8px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .crypto-address:hover {
+      background: #f8fafc;
+    }
+
+    .crypto-address .copy-icon {
+      margin-left: auto;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .crypto-address.copied {
+      background: #dcfce7;
+    }
+
+    .crypto-address.copied .copy-icon {
+      color: var(--accent-green);
+    }
+
+    /* Recent Supporters */
+    .supporters-section {
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .section-title::before,
+    .section-title::after {
+      content: '';
+      height: 1px;
+      width: 40px;
+      background: var(--border-color);
+    }
+
+    .supporters-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .supporter-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-radius: 10px;
+      transition: background 0.2s ease;
+    }
+
+    .supporter-item:hover {
+      background: var(--hover-bg);
+    }
+
+    .supporter-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .supporter-name {
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .supporter-message {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .supporter-amount {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .supporter-amount.trx { color: #dc2626; }
+    .supporter-amount.cny { color: #2563eb; }
+    .supporter-amount.usd { color: #16a34a; }
+
+    /* Social Links */
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-color);
+      margin-bottom: 20px;
+    }
+
+    .social-link {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: var(--hover-bg);
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.25s ease;
+      font-size: 20px;
+    }
+
+    .social-link:hover {
+      background: var(--text-primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* QR Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      padding: 24px;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 320px;
+      width: 100%;
+      text-align: center;
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+    }
+
+    .qr-container {
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qr-image {
+      max-width: 240px;
+      max-height: 280px;
+      border-radius: 16px;
+      object-fit: contain;
+    }
+
+    .modal-close {
+      padding: 10px 24px;
+      background: var(--text-primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: var(--primary-color);
+      transform: scale(1.02);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--text-primary);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 1001;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .card {
+        padding: 32px 24px;
+      }
+      
+      .header h1 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <!-- Language Toggle -->
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="zh">中文</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+
+      <!-- Header -->
+      <div class="header">
+        <span class="header-icon">☕</span>
+        <h1 data-i18n="title">请作者喝杯咖啡</h1>
+        <p data-i18n="subtitle">您的支持是我创作的动力</p>
+      </div>
+
+      <!-- Payment Methods -->
+      <div class="payment-methods">
+        <button class="payment-btn wechat" onclick="openModal('wechat')">
+          <span class="icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-1.142-3.486-4.914-6.348-9.586-6.348zm-2.74 6.18a.96.96 0 1 1 0-1.92.96.96 0 0 1 0 1.92zm5.48 0a.96.96 0 1 1 0-1.92.96.96 0 0 1 0 1.92z"/>
+              <path d="M23.988 14.328c0-3.469-3.465-6.285-7.74-6.285-4.275 0-7.74 2.816-7.74 6.285s3.465 6.285 7.74 6.285c.79 0 1.551-.11 2.27-.304a.688.688 0 0 1 .571.078l1.517.888a.26.26 0 0 0 .133.043.234.234 0 0 0 .23-.235c0-.058-.023-.114-.038-.17l-.311-1.18a.47.47 0 0 1 .17-.53c1.461-1.072 2.198-2.655 2.198-4.875zM14.12 13.59a.77.77 0 1 1 0-1.54.77.77 0 0 1 0 1.54zm4.253 0a.77.77 0 1 1 0-1.54.77.77 0 0 1 0 1.54z"/>
+            </svg>
+          </span>
+          <span class="text" data-i18n="wechat">微信支付</span>
+          <span class="arrow">›</span>
+        </button>
+        
+        <button class="payment-btn alipay" onclick="openModal('alipay')">
+          <span class="icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21.422 15.358c-.574-.264-3.067-1.269-5.013-2.095.557-1.2.996-2.556 1.249-3.992h-3.46v-1.429h4.197V6.9h-4.197V4.715h-2.143c-.158 0-.286.129-.286.287V6.9H7.286v.942h4.483v1.429H8.143v.942h6.833c-.211 1.047-.555 2.04-.999 2.93-2.464-.999-5.227-1.783-6.932-1.175-2.047.728-3.09 2.543-2.363 4.41.727 1.868 2.903 2.8 5.203 2.108 1.586-.48 2.941-1.514 4.086-2.856 1.997.992 5.054 2.208 5.693 2.464.256.1.537.152.817.152a2.14 2.14 0 0 0 2.143-2.143c0-.406-.116-.793-.316-1.121l-.107-.146c-.217-.173-.458-.32-.779-.478zM8.873 17.13c-1.587.477-3.088-.173-3.484-1.191-.396-1.018.494-2.283 2.081-2.76.46-.139.894-.191 1.296-.191 1.09 0 2.036.38 2.92.784-.939 1.545-1.896 2.94-2.813 3.358z"/>
+            </svg>
+          </span>
+          <span class="text" data-i18n="alipay">支付宝</span>
+          <span class="arrow">›</span>
+        </button>
+      </div>
+
+      <!-- Social Links -->
+      <div class="social-links">
+        <a href="https://github.com/benngaihk/Tiptap-UI-Kit" class="social-link" target="_blank" title="GitHub">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+          </svg>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- QR Modal -->
+  <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-title" id="modalTitle">微信支付</div>
+      <div class="qr-container" id="qrContainer">
+        <img src="IMG_8528.JPG" alt="微信赞赏码" id="wechatQR" class="qr-image">
+        <img src="IMG_8529.JPG" alt="支付宝收款码" id="alipayQR" class="qr-image" style="display: none;">
+      </div>
+      <button class="modal-close" onclick="closeModal()" data-i18n="close">关闭</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <span>✓</span>
+    <span data-i18n="copied">已复制到剪贴板</span>
+  </div>
+
+  <script>
+    // i18n translations
+    const translations = {
+      zh: {
+        title: '请作者喝杯咖啡',
+        subtitle: '您的支持是我创作的动力',
+        wechat: '微信支付',
+        alipay: '支付宝',
+        recent_thanks: '最近鸣谢',
+        rights: '保留所有权利',
+        qr_hint: '请添加二维码图片',
+        close: '关闭',
+        copied: '已复制到剪贴板'
+      },
+      en: {
+        title: 'Buy Me a Coffee',
+        subtitle: 'Your support motivates my creation',
+        wechat: 'WeChat Pay',
+        alipay: 'Alipay',
+        recent_thanks: 'Recent Supporters',
+        rights: 'All Rights Reserved',
+        qr_hint: 'Add QR Code Image',
+        close: 'Close',
+        copied: 'Copied to clipboard'
+      }
+    };
+
+    let currentLang = 'zh';
+
+    // Language toggle
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lang = btn.dataset.lang;
+        if (lang === currentLang) return;
+        
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentLang = lang;
+        
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.dataset.i18n;
+          if (translations[lang][key]) {
+            el.textContent = translations[lang][key];
+          }
+        });
+      });
+    });
+
+    // Modal functions
+    function openModal(type) {
+      const modal = document.getElementById('modal');
+      const title = document.getElementById('modalTitle');
+      const wechatQR = document.getElementById('wechatQR');
+      const alipayQR = document.getElementById('alipayQR');
+      
+      if (type === 'wechat') {
+        title.textContent = currentLang === 'zh' ? '微信赞赏' : 'WeChat Pay';
+        wechatQR.style.display = 'block';
+        alipayQR.style.display = 'none';
+      } else {
+        title.textContent = currentLang === 'zh' ? '支付宝' : 'Alipay';
+        wechatQR.style.display = 'none';
+        alipayQR.style.display = 'block';
+      }
+      
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(event) {
+      if (event && event.target !== event.currentTarget) return;
+      document.getElementById('modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Copy address
+    function copyAddress(el) {
+      const address = el.querySelector('span').textContent;
+      navigator.clipboard.writeText(address).then(() => {
+        el.classList.add('copied');
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        
+        setTimeout(() => {
+          el.classList.remove('copied');
+          toast.classList.remove('show');
+        }, 2000);
+      });
+    }
+
+    // Keyboard accessibility
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>
