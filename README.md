@@ -345,9 +345,17 @@ If you find Tiptap UI Kit useful, please consider:
 
 - ⭐ **Star the repository** - It helps others discover the project!
 - 🐦 **Share on social media** - Spread the word!
-- 💰 **Sponsor on GitHub** - Help sustain development
+- ☕ **Buy me a coffee** - Your support keeps me motivated!
 
-[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-❤-red?style=for-the-badge&logo=github)](https://github.com/sponsors/benngaihk)
+<div align="center">
+
+### ☕ 请作者喝杯咖啡 | Buy Me a Coffee
+
+[![Sponsor](https://img.shields.io/badge/☕_Sponsor_Me-FF813F?style=for-the-badge&logo=buy-me-a-coffee&logoColor=white)](https://tiptap-ui-kit.vercel.app/sponsor.html)
+
+**您的支持是我创作的动力！Your support motivates my creation!**
+
+</div>
 
 ---
 

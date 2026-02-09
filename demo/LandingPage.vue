@@ -235,6 +235,12 @@
 
     <!-- Footer -->
     <footer class="footer">
+      <div class="footer__sponsor">
+        <a href="sponsor.html" class="sponsor-btn">
+          <span class="sponsor-btn__icon">☕</span>
+          <span>请作者喝杯咖啡 | Buy Me a Coffee</span>
+        </a>
+      </div>
       <p class="footer__text">
         Made with ❤️ by the open source community
       </p>
@@ -777,6 +783,40 @@ const copyInstallCommand = () => {
 
 .footer__links a:hover {
   color: var(--accent);
+}
+
+.footer__sponsor {
+  margin-bottom: 24px;
+}
+
+.sponsor-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #ff813f 0%, #ff6b35 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 129, 63, 0.3);
+}
+
+.sponsor-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 129, 63, 0.4);
+}
+
+.sponsor-btn__icon {
+  font-size: 20px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
 }
 
 /* Responsive */

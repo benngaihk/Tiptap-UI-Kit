@@ -6,6 +6,10 @@
   "framework": null,
   "rewrites": [
     {
+      "source": "/sponsor.html",
+      "destination": "/sponsor.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
