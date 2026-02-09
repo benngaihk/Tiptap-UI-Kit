@@ -257,18 +257,6 @@ Full API documentation is available in the [API.md](API.md) file.
 
 ---
 
-## 🎨 Screenshots
-
-### Notion Theme (Light)
-![Notion Light](./screenshots/notion-light.png)
-
-### Word Theme (Dark)
-![Word Dark](./screenshots/word-dark.png)
-
-### AI Features
-![AI Features](./screenshots/ai-features.png)
-
----
 
 ## 🛠️ Development
 
