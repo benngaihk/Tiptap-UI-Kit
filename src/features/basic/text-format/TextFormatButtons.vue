@@ -112,7 +112,19 @@ const textFormats = computed(() => {
 
         if (blockCount > 1) {
           // 多行选中：使用代码块
-          runCommand((chain) => chain.setCodeBlock({ language: 'plaintext' }))()
+          // 获取选中的文本内容（保留换行）
+          const selectedText = e.state.doc.textBetween(from, to, '\n')
+          
+          // 删除选中内容并插入代码块
+          e.chain()
+            .focus()
+            .deleteSelection()
+            .insertContent({
+              type: 'codeBlock',
+              attrs: { language: 'plaintext' },
+              content: selectedText ? [{ type: 'text', text: selectedText }] : undefined
+            })
+            .run()
         } else {
           // 单行选中：使用行内代码
           runCommand((chain) => chain.toggleCode())()

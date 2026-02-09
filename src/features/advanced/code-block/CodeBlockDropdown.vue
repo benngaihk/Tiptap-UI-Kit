@@ -41,16 +41,40 @@ const isCodeBlockActive = computed(() => {
 
 /**
  * 插入代码块（使用默认语言）
+ * 处理多行选择：将所有选中的文本合并到一个代码块中
  */
 function insertCodeBlock() {
-  runCommand((chain) => {
-    // 如果当前已经是代码块，则退出代码块模式
-    if (isCodeBlockActive.value) {
-      return chain.setParagraph()
-    }
-    // 否则插入新的代码块（使用默认语言 javascript）
-    return chain.setCodeBlock({ language: 'javascript' })
-  })()
+  const e = editor.value
+  if (!e) return
+
+  // 如果当前已经是代码块，则退出代码块模式
+  if (isCodeBlockActive.value) {
+    runCommand((chain) => chain.setParagraph())()
+    return
+  }
+
+  // 获取选区
+  const { from, to, empty } = e.state.selection
+
+  // 如果没有选中任何内容，直接插入空代码块
+  if (empty) {
+    runCommand((chain) => chain.setCodeBlock({ language: 'javascript' }))()
+    return
+  }
+
+  // 获取选中的文本内容（保留换行）
+  const selectedText = e.state.doc.textBetween(from, to, '\n')
+
+  // 删除选中内容并插入代码块
+  e.chain()
+    .focus()
+    .deleteSelection()
+    .insertContent({
+      type: 'codeBlock',
+      attrs: { language: 'javascript' },
+      content: selectedText ? [{ type: 'text', text: selectedText }] : undefined
+    })
+    .run()
 }
 </script>
 
