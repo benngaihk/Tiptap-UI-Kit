@@ -32,10 +32,20 @@
  * DeviceSwitcher - 设备视图切换组件
  * @description 在 PC、Pad、Mobile 三种设备视图之间切换，支持横竖屏
  */
-import { computed, h, type FunctionalComponent } from 'vue'
+import { computed, h, onMounted, ref, type FunctionalComponent } from 'vue'
 
 export type DeviceView = 'pc' | 'pad' | 'mobile'
 export type Orientation = 'portrait' | 'landscape'
+
+/**
+ * 检测当前是否为手机浏览器
+ */
+function detectMobileBrowser(): boolean {
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') return false
+  const ua = navigator.userAgent || ''
+  // 匹配常见手机 UA 标识
+  return /Android.*Mobile|iPhone|iPod|Windows Phone|BlackBerry|Opera Mini|IEMobile/i.test(ua)
+}
 
 interface Props {
   /** 当前设备视图 */
@@ -48,6 +58,9 @@ const props = withDefaults(defineProps<Props>(), {
   modelValue: 'pc',
   orientation: 'portrait',
 })
+
+/** 是否为手机浏览器 */
+const isMobileBrowser = ref(detectMobileBrowser())
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: DeviceView): void
@@ -114,16 +127,32 @@ const OrientationIcon: FunctionalComponent = () => h('svg', {
   h('path', { d: 'M16.5 3L21 7.5m0 0L16.5 12M21 7.5H7.5c-.83 0-1.5.67-1.5 1.5v10.5' }),
 ])
 
-const devices = [
+const allDevices = [
   { value: 'pc' as DeviceView, label: 'Desktop', icon: DesktopIcon },
   { value: 'pad' as DeviceView, label: 'Tablet (iPad)', icon: TabletIcon },
   { value: 'mobile' as DeviceView, label: 'Mobile (iPhone)', icon: MobileIcon },
 ]
 
+// 手机浏览器下只保留 Mobile 选项
+const devices = computed(() => {
+  if (isMobileBrowser.value) {
+    return allDevices.filter(d => d.value === 'mobile')
+  }
+  return allDevices
+})
+
 const handleDeviceChange = (device: DeviceView) => {
   emit('update:modelValue', device)
   emit('change', device)
 }
+
+// 手机浏览器下自动切换到 mobile 视图
+onMounted(() => {
+  if (isMobileBrowser.value && props.modelValue !== 'mobile') {
+    emit('update:modelValue', 'mobile')
+    emit('change', 'mobile')
+  }
+})
 
 const handleOrientationToggle = () => {
   const newOrientation = currentOrientation.value === 'portrait' ? 'landscape' : 'portrait'

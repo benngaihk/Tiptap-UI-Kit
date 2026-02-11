@@ -120,8 +120,13 @@ const handleThemeChange = (event: Event) => {
   setTheme(themePreset.value, theme.value)
 }
 
+// 检测手机浏览器，自动使用 mobile 视图
+const isMobileBrowser = /Android.*Mobile|iPhone|iPod|Windows Phone|BlackBerry|Opera Mini|IEMobile/i.test(
+  typeof navigator !== 'undefined' ? navigator.userAgent : ''
+)
+
 // Device view (pc, pad, mobile) and orientation
-const deviceView = ref<DeviceView>('pc')
+const deviceView = ref<DeviceView>(isMobileBrowser ? 'mobile' : 'pc')
 const deviceOrientation = ref<Orientation>('portrait')
 
 const handleDeviceChange = (device: DeviceView) => {
