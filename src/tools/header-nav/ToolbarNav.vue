@@ -77,7 +77,13 @@
           <WordButton :editor="editor" />
         </div>
 
-        <!-- 第十二组：AI工具 -->
+        <!-- 第十二组：模板和图库 -->
+        <div v-if="config.template || config.gallery" class="tool-group">
+          <TemplateButton v-if="config.template" :editor="editor" />
+          <GalleryButton v-if="config.gallery" :editor="editor" />
+        </div>
+
+        <!-- 第十三组：AI工具 -->
         <div v-if="config.ai && editor" class="tool-group">
           <AiMenuButton
             :editor="editor"
@@ -127,6 +133,8 @@ import { SubscriptSuperscriptButton } from '@/features/advanced/subscript-supers
 import { UndoRedoButton } from '@/features/advanced/undo-redo'
 import { FormatPainterButton } from '@/features/advanced/format-painter'
 import { WordButton } from '@/features/advanced/word'
+import { TemplateButton } from '@/features/advanced/template'
+import { GalleryButton } from '@/features/advanced/gallery'
 import { AiMenuButton } from '@/ai'
 
 import { createCommandRunner } from '@/utils/editorCommands'

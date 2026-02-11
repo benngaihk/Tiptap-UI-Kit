@@ -40,3 +40,11 @@ export { MathButton } from './math'
 // Word Import/Export
 export { WordButton } from './word'
 export { importWordFile, convertWordToHtml, exportToWord } from './word'
+
+// Template
+export { TemplateButton } from './template'
+export { builtinTemplates } from './template'
+export type { TemplateItem } from './template'
+
+// Gallery
+export { GalleryButton } from './gallery'

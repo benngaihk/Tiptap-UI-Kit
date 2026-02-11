@@ -43,6 +43,10 @@ export interface ToolbarToolsConfig {
   formatPainterDisabled?: boolean
   /** 是否显示 Word 导入/导出工具 */
   word?: boolean
+  /** 是否显示模板插入工具 */
+  template?: boolean
+  /** 是否显示图库工具 */
+  gallery?: boolean
   /** 是否显示AI工具 */
   ai?: boolean
 }
@@ -111,6 +115,8 @@ export const ADVANCED_TOOLBAR_CONFIG: ToolbarToolsConfig = {
   subscriptSuperscript: true,
   formatPainter: true,
   word: true,
+  template: true,
+  gallery: true,
   ai: true,
 }
 

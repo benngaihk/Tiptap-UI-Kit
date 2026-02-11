@@ -284,6 +284,26 @@ export const zhTW: TiptapLocale = {
     mathPlaceholder: '輸入 LaTeX 公式...',
     mathEmpty: '點擊編輯公式',
 
+    // 模板插入
+    insertTemplate: '插入模板',
+    templateMeetingMinutes: '會議紀要',
+    templateMeetingMinutesDesc: '包含議題、決議、待辦事項的會議記錄模板',
+    templateWeeklyReport: '週報',
+    templateWeeklyReportDesc: '本週完成、進行中、下週計劃的週報模板',
+    templateDailyReport: '日報',
+    templateDailyReportDesc: '今日完成與明日計劃的日報模板',
+    templateProjectPlan: '專案方案',
+    templateProjectPlanDesc: '專案概述、實施方案、風險評估的專案文件模板',
+    templateProductRequirement: '需求文件',
+    templateProductRequirementDesc: '產品需求文件 (PRD) 模板',
+
+    // 圖庫
+    imageGallery: '圖庫',
+    galleryEmpty: '暫無圖片',
+    galleryEmptyHint: '當前文件中還沒有插入過圖片',
+    galleryCount: '共 {total} 張，已選 {selected} 張',
+    galleryInsert: '插入選中圖片',
+
     // AI 相關
     continueWriting: '繼續寫作',
     polish: '潤色文字',

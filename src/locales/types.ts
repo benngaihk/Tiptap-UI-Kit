@@ -297,6 +297,26 @@ export interface TiptapLocale {
     mathPlaceholder: string
     mathEmpty: string
 
+    // 模板插入
+    insertTemplate: string
+    templateMeetingMinutes: string
+    templateMeetingMinutesDesc: string
+    templateWeeklyReport: string
+    templateWeeklyReportDesc: string
+    templateDailyReport: string
+    templateDailyReportDesc: string
+    templateProjectPlan: string
+    templateProjectPlanDesc: string
+    templateProductRequirement: string
+    templateProductRequirementDesc: string
+
+    // 图库
+    imageGallery: string
+    galleryEmpty: string
+    galleryEmptyHint: string
+    galleryCount: string
+    galleryInsert: string
+
     // AI 相关
     continueWriting: string
     polish: string
