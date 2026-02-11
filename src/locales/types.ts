@@ -253,6 +253,11 @@ export interface TiptapLocale {
     webUpload: string
     clickOrDragUpload: string
     onlySupportImage: string
+    video: string
+    localUploadVideo: string
+    uploadVideo: string
+    onlySupportVideo: string
+    supportImageAndVideo: string
 
     // Word 导入/导出
     word: string

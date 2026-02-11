@@ -27,6 +27,7 @@ import { CharacterCount } from '@tiptap/extension-character-count'
 import { FontSize } from './fontSize'
 import { PasteImage } from './pasteImage'
 import { PasteWord } from './pasteWord'
+import { Video } from './video'
 import { ListShortcuts } from './listShortcuts'
 import { LineHeight } from './lineHeight'
 import { FormatPainter } from '@/features/advanced/format-painter'
@@ -176,6 +177,14 @@ export function getExtensionsByVersion(
 
   // 字数统计扩展
   extensions.push(CharacterCount)
+
+  // 视频扩展
+  extensions.push(
+    Video.configure({
+      inline: false,
+      allowBase64: true,
+    })
+  )
 
   // 粘贴扩展
   extensions.push(PasteImage)

@@ -171,6 +171,7 @@ function findItemByKey(items: MenuItemConfig[], key: string): MenuItemConfig | u
 function onMenuClick(info: { key: string }) {
   const item = findItemByKey(props.items, info.key)
   if (!item) return
+  dropdownOpen.value = false
   item.action?.()
   emit('select', info.key)
 }
