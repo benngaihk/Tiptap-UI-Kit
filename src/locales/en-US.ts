@@ -240,6 +240,11 @@ export const enUS: TiptapLocale = {
     webUpload: 'Web Upload',
     clickOrDragUpload: 'Click or drag file to this area to upload',
     onlySupportImage: 'Only image formats are supported',
+    video: 'Video',
+    localUploadVideo: 'Upload Video from Local',
+    uploadVideo: 'Upload Video',
+    onlySupportVideo: 'Only video formats are supported',
+    supportImageAndVideo: 'Image and video formats are supported',
 
     // Word Import/Export
     word: 'Word',

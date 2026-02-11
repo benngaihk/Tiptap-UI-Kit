@@ -240,6 +240,11 @@ export const zhCN: TiptapLocale = {
     webUpload: '网络上传',
     clickOrDragUpload: '点击或拖拽文件到此区域上传',
     onlySupportImage: '仅支持图片格式',
+    video: '视频',
+    localUploadVideo: '本地上传视频',
+    uploadVideo: '上传视频',
+    onlySupportVideo: '仅支持视频格式',
+    supportImageAndVideo: '支持图片和视频格式',
 
     // Word 导入/导出
     word: 'Word',
