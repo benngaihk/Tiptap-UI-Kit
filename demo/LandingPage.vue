@@ -80,6 +80,11 @@
           </div>
         </div>
       </div>
+
+      <!-- Live Editor Preview -->
+      <div class="hero__preview">
+        <EditorPreview :theme="theme" />
+      </div>
     </section>
 
     <!-- Features Section -->
@@ -257,6 +262,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import EditorPreview from './EditorPreview.vue'
 
 defineProps<{
   theme: 'light' | 'dark'
@@ -510,6 +516,13 @@ const copyInstallCommand = () => {
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+/* Hero Preview */
+.hero__preview {
+  max-width: 900px;
+  margin: 60px auto 0;
+  padding: 0 20px;
 }
 
 /* Features Section */

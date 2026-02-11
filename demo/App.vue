@@ -48,6 +48,15 @@
       </div>
     </header>
 
+    <!-- Auto Demo Controls -->
+    <EditorAutoDemo
+      :get-editor="getEditorInstance"
+      :typing-speed="35"
+      play-label="▶ Watch Auto Demo"
+      stop-label="⏹ Stop"
+      replay-label="↺ Replay Demo"
+    />
+
     <!-- Main Content -->
     <main class="demo-main">
         <!-- Editor Card with Device Frame -->
@@ -75,6 +84,7 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { theme as antTheme } from 'ant-design-vue'
 import TiptapProEditor from '../src/core/TiptapProEditor.vue'
 import LandingPage from './LandingPage.vue'
+import EditorAutoDemo from './EditorAutoDemo.vue'
 import { createI18n, type LocaleCode } from '../src/locales'
 import { PRESET_CONFIGS } from '../src/core/editorConfig'
 import type { FeatureFlags, ThemePreset } from '../src/core/editorConfig'
@@ -187,6 +197,10 @@ const sampleContent = `
   <li>🌐 Translate - Translate to different languages</li>
 </ul>
 `
+
+// Editor ref and getter for auto demo
+const editorRef = ref<InstanceType<typeof TiptapProEditor> | null>(null)
+const getEditorInstance = () => editorRef.value?.getEditor() ?? null
 
 // Editor output
 const editorContent = ref<any>(null)
