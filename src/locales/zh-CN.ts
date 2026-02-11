@@ -284,6 +284,26 @@ export const zhCN: TiptapLocale = {
     mathPlaceholder: '输入 LaTeX 公式...',
     mathEmpty: '点击编辑公式',
 
+    // 模板插入
+    insertTemplate: '插入模板',
+    templateMeetingMinutes: '会议纪要',
+    templateMeetingMinutesDesc: '包含议题、决议、待办事项的会议记录模板',
+    templateWeeklyReport: '周报',
+    templateWeeklyReportDesc: '本周完成、进行中、下周计划的周报模板',
+    templateDailyReport: '日报',
+    templateDailyReportDesc: '今日完成与明日计划的日报模板',
+    templateProjectPlan: '项目方案',
+    templateProjectPlanDesc: '项目概述、实施方案、风险评估的项目文档模板',
+    templateProductRequirement: '需求文档',
+    templateProductRequirementDesc: '产品需求文档 (PRD) 模板',
+
+    // 图库
+    imageGallery: '图库',
+    galleryEmpty: '暂无图片',
+    galleryEmptyHint: '当前文档中还没有插入过图片',
+    galleryCount: '共 {total} 张，已选 {selected} 张',
+    galleryInsert: '插入选中图片',
+
     // AI 相关
     continueWriting: '继续写作',
     polish: '润色文本',

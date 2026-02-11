@@ -284,6 +284,26 @@ export const enUS: TiptapLocale = {
     mathPlaceholder: 'Enter LaTeX formula...',
     mathEmpty: 'Click to edit formula',
 
+    // Template
+    insertTemplate: 'Insert Template',
+    templateMeetingMinutes: 'Meeting Minutes',
+    templateMeetingMinutesDesc: 'Meeting template with agenda, decisions, and action items',
+    templateWeeklyReport: 'Weekly Report',
+    templateWeeklyReportDesc: 'Weekly report with completed, in progress, and planned items',
+    templateDailyReport: 'Daily Report',
+    templateDailyReportDesc: 'Daily report with today\'s work and tomorrow\'s plan',
+    templateProjectPlan: 'Project Plan',
+    templateProjectPlanDesc: 'Project document with overview, implementation, and risk assessment',
+    templateProductRequirement: 'Product Requirement',
+    templateProductRequirementDesc: 'Product Requirement Document (PRD) template',
+
+    // Gallery
+    imageGallery: 'Image Gallery',
+    galleryEmpty: 'No Images',
+    galleryEmptyHint: 'No images have been inserted in this document yet',
+    galleryCount: '{total} total, {selected} selected',
+    galleryInsert: 'Insert Selected',
+
     // AI related
     continueWriting: 'Continue Writing',
     polish: 'Polish Text',

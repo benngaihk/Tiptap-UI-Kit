@@ -45,6 +45,12 @@
       <!-- Math Formula -->
       <MathButton v-else-if="feature === 'math'" :editor="editor" />
 
+      <!-- Template -->
+      <TemplateButton v-else-if="feature === 'template'" :editor="editor" />
+
+      <!-- Gallery -->
+      <GalleryButton v-else-if="feature === 'gallery'" :editor="editor" />
+
       <!-- AI (requires adapter) -->
       <AiToolbarMenu
         v-else-if="feature === 'ai' && aiAdapter"
@@ -71,7 +77,7 @@ import { AlignDropdown as AlignGroup } from '@/features/basic/align'
 // BlockGroup is part of advanced features or custom implementation
 
 // Advanced Features
-import { UndoRedoGroup, FontSizeDropdown, CodeBlockButton, LinkButton, SubSupGroup, FormatClearButton, MathButton, WordButton } from '@/features/advanced'
+import { UndoRedoGroup, FontSizeDropdown, CodeBlockButton, LinkButton, SubSupGroup, FormatClearButton, MathButton, WordButton, TemplateButton, GalleryButton } from '@/features/advanced'
 
 // AI
 import { AiToolbarMenu } from '@/ai'
@@ -92,7 +98,7 @@ const featureGroups: ToolbarFeature[][] = [
   ['list', 'align'],
   ['block', 'link', 'codeBlock', 'math'],
   ['subSup', 'formatClear'],
-  ['word'],
+  ['word', 'template', 'gallery'],
   ['ai'],
 ]
 
