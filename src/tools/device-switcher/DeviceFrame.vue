@@ -16,8 +16,8 @@
       <div class="device-frame__ipad-button"></div>
     </div>
     
-    <!-- iPhone Frame -->
-    <div v-else-if="device === 'mobile'" class="device-frame__iphone">
+    <!-- iPhone Frame (仅 PC 浏览器预览时显示外框) -->
+    <div v-else-if="device === 'mobile' && !isMobileBrowser" class="device-frame__iphone">
       <div class="device-frame__iphone-notch">
         <div class="device-frame__iphone-speaker"></div>
         <div class="device-frame__iphone-camera"></div>
@@ -27,8 +27,8 @@
       </div>
       <div class="device-frame__iphone-home"></div>
     </div>
-    
-    <!-- PC - No Frame -->
+
+    <!-- PC / 手机浏览器 - No Frame -->
     <div v-else class="device-frame__pc">
       <slot></slot>
     </div>
@@ -45,6 +45,15 @@ import type { DeviceView } from './DeviceSwitcher.vue'
 
 export type Orientation = 'portrait' | 'landscape'
 
+/**
+ * 检测当前是否为手机浏览器
+ */
+function detectMobileBrowser(): boolean {
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') return false
+  const ua = navigator.userAgent || ''
+  return /Android.*Mobile|iPhone|iPod|Windows Phone|BlackBerry|Opera Mini|IEMobile/i.test(ua)
+}
+
 interface Props {
   /** 设备类型 */
   device: DeviceView
@@ -55,6 +64,9 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   orientation: 'portrait',
 })
+
+/** 手机浏览器下跳过设备外框，直接展示内容 */
+const isMobileBrowser = detectMobileBrowser()
 
 // 设备尺寸配置 - 使用最大高度，让内容自适应
 const deviceSizes = {
@@ -70,10 +82,11 @@ const deviceSizes = {
 }
 
 const frameStyle = computed(() => {
-  if (props.device === 'pc') {
+  // 手机浏览器下不限制尺寸，全屏展示
+  if (props.device === 'pc' || (props.device === 'mobile' && isMobileBrowser)) {
     return { width: '100%', height: 'auto' }
   }
-  
+
   const sizes = deviceSizes[props.device]
   const size = sizes[props.orientation]
   return {
