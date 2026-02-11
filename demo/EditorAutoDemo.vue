@@ -33,19 +33,15 @@
 /**
  * EditorAutoDemo - 增强版编辑器自动化演示
  * @description 结合 page-agent 的动画光标 + Maestro 的声明式动作，
- *              模拟真实用户操作编辑器的完整工作流
+ *              模拟真实用户操作编辑器，展示所有特色功能
  */
 import { ref, computed, nextTick, onBeforeUnmount } from 'vue'
 import type { Editor } from '@tiptap/core'
 
 interface Props {
-  /** 编辑器实例获取函数 */
   getEditor: () => Editor | null
-  /** 是否显示 */
   visible?: boolean
-  /** 打字速度（毫秒/字符） */
   typingSpeed?: number
-  /** 按钮文案 */
   playLabel?: string
   stopLabel?: string
   replayLabel?: string
@@ -69,7 +65,7 @@ const isRunning = ref(false)
 const isFinished = ref(false)
 let abortController: AbortController | null = null
 
-// ===== 光标状态 (page-agent 风格) =====
+// ===== 光标状态 =====
 
 const cursorVisible = ref(false)
 const cursorX = ref(0)
@@ -101,12 +97,8 @@ async function pause(ms: number, signal: AbortSignal) {
   await delay(ms, signal)
 }
 
-// ===== 光标动画引擎 (参考 page-agent 的 easing + requestAnimationFrame) =====
+// ===== 光标动画引擎 =====
 
-/**
- * 平滑移动光标到目标位置
- * 使用 ease-in-out 缓动，距离自适应时长
- */
 function moveCursorTo(x: number, y: number, signal: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
     if (signal.aborted) {
@@ -117,7 +109,6 @@ function moveCursorTo(x: number, y: number, signal: AbortSignal): Promise<void> 
     const startX = cursorX.value
     const startY = cursorY.value
     const dist = Math.sqrt((x - startX) ** 2 + (y - startY) ** 2)
-    // 距离越远时长越长，但限制在合理范围
     const duration = Math.min(Math.max(dist * 1.5, 200), 800)
     const startTime = performance.now()
 
@@ -128,7 +119,6 @@ function moveCursorTo(x: number, y: number, signal: AbortSignal): Promise<void> 
     }
     signal.addEventListener('abort', onAbort, { once: true })
 
-    // ease-in-out cubic
     function ease(t: number): number {
       return t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2
     }
@@ -153,7 +143,6 @@ function moveCursorTo(x: number, y: number, signal: AbortSignal): Promise<void> 
   })
 }
 
-/** 触发点击涟漪效果 */
 async function triggerRipple(signal: AbortSignal) {
   rippleActive.value = false
   rippleKey.value++
@@ -163,9 +152,9 @@ async function triggerRipple(signal: AbortSignal) {
   rippleActive.value = false
 }
 
-// ===== DOM 查询 (Maestro 风格的元素定位) =====
+// ===== DOM 查询 =====
 
-/** 图标名 → anticon class 映射 */
+/** 图标名 → anticon class */
 const ICON_MAP: Record<string, string> = {
   bold: 'bold',
   italic: 'italic',
@@ -174,24 +163,26 @@ const ICON_MAP: Record<string, string> = {
   orderedList: 'ordered-list',
   bulletList: 'unordered-list',
   code: 'code',
+  undo: 'undo',
+  redo: 'redo',
+  link: 'link',
+  table: 'table',
+  superscript: 'sort-descending',
+  subscript: 'sort-ascending',
+  heading: 'font-size',
+  math: 'function',
 }
 
 /**
- * 查找工具栏按钮
- * - 'h1'/'h2'/'h3' → 按文本内容查找 heading 按钮
- * - 'bold'/'italic'/... → 按图标 class 查找
- * - 其他 → 作为 CSS 选择器查找
+ * 查找工具栏按钮 (支持直接按钮 + 下拉按钮)
  */
 function findToolbarButton(id: string): HTMLElement | null {
   // Heading 按钮: 按 data-level 或文本内容
   if (/^h[1-6]$/.test(id)) {
     const level = id.slice(1)
-    // 先尝试 data-level
-    const byData = document.querySelector(`[data-level="${level}"] .tt-toolbar-button`) as HTMLElement
-      || document.querySelector(`.tt-toolbar-button[data-level="${level}"]`) as HTMLElement
-    if (byData) return byData
-
-    // 回退: 按文本内容查找
+    const byData = document.querySelector(`[data-level="${level}"] .tt-toolbar-button`)
+      || document.querySelector(`.tt-toolbar-button[data-level="${level}"]`)
+    if (byData) return byData as HTMLElement
     const buttons = document.querySelectorAll('.tt-toolbar-button')
     for (const btn of buttons) {
       if (btn.textContent?.trim() === `H${level}`) return btn as HTMLElement
@@ -199,30 +190,35 @@ function findToolbarButton(id: string): HTMLElement | null {
     return null
   }
 
-  // 图标按钮
-  if (ICON_MAP[id]) {
-    const icon = document.querySelector(`.anticon-${ICON_MAP[id]}`)
-    return icon?.closest('.tt-toolbar-button') as HTMLElement | null
+  // Align 下拉按钮 (图标随状态变化)
+  if (id === 'align') {
+    for (const cls of ['align-left', 'align-center', 'align-right', 'menu']) {
+      const icon = document.querySelector(`.anticon-${cls}`)
+      const btn = icon?.closest('.tt-dropdown-btn') as HTMLElement
+      if (btn) return btn
+    }
+    return null
   }
 
-  // CSS 选择器
+  // 图标按钮 (同时搜索直接按钮和下拉按钮)
+  if (ICON_MAP[id]) {
+    const icon = document.querySelector(`.anticon-${ICON_MAP[id]}`)
+    if (icon) {
+      return (icon.closest('.tt-toolbar-button') || icon.closest('.tt-dropdown-btn')) as HTMLElement | null
+    }
+    return null
+  }
+
   return document.querySelector(id) as HTMLElement | null
 }
 
-/** 获取元素中心的视口坐标 */
 function getCenter(el: HTMLElement): { x: number; y: number } {
   const rect = el.getBoundingClientRect()
   return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
 }
 
-// ===== 声明式动作 (Maestro 风格 API) =====
+// ===== 声明式动作 (Maestro 风格) =====
 
-/**
- * tapOn - 移动光标到工具栏按钮 → 悬停效果 → 点击涟漪 → 执行命令
- * @param buttonId 按钮标识 (如 'h1', 'bold', 'orderedList')
- * @param signal AbortSignal
- * @param action 实际执行的编辑器命令 (保证可靠性)
- */
 async function tapOn(buttonId: string, signal: AbortSignal, action?: () => void) {
   signal.throwIfAborted()
   const el = findToolbarButton(buttonId)
@@ -231,46 +227,35 @@ async function tapOn(buttonId: string, signal: AbortSignal, action?: () => void)
     const { x, y } = getCenter(el)
     await moveCursorTo(x, y, signal)
 
-    // 悬停效果
     el.style.setProperty('background', 'var(--menu-btn-hover-bg, #f5f5f5)')
     await pause(120, signal)
 
-    // 按下效果 + 涟漪
     el.style.setProperty('background', '#ddd')
     await triggerRipple(signal)
     el.style.removeProperty('background')
   }
 
-  // 执行实际命令
   action?.()
   await pause(100, signal)
 }
 
-/**
- * moveToEditor - 移动光标到编辑器当前光标位置附近
- */
 async function moveToEditor(editor: Editor, signal: AbortSignal) {
   try {
     const { from } = editor.state.selection
     const coords = editor.view.coordsAtPos(from)
     await moveCursorTo(coords.left + 4, coords.top - 4, signal)
   } catch {
-    // 回退: 移到编辑器中心
     const editorEl = editor.view.dom
     const { x, y } = getCenter(editorEl)
     await moveCursorTo(x, y, signal)
   }
 }
 
-/**
- * typeText - 逐字输入并让光标跟随
- */
 async function typeText(editor: Editor, text: string, speed: number, signal: AbortSignal) {
   for (let i = 0; i < text.length; i++) {
     signal.throwIfAborted()
     editor.commands.insertContent(text[i])
 
-    // 每 8 个字符让光标跟随编辑器光标
     if (i % 8 === 0) {
       try {
         const { from } = editor.state.selection
@@ -284,9 +269,6 @@ async function typeText(editor: Editor, text: string, speed: number, signal: Abo
   }
 }
 
-/**
- * selectText - 选中文本并移动光标到选区位置
- */
 async function selectText(editor: Editor, searchText: string, signal: AbortSignal) {
   const pos = editor.state.doc.textContent.lastIndexOf(searchText)
   if (pos < 0) return
@@ -294,7 +276,6 @@ async function selectText(editor: Editor, searchText: string, signal: AbortSigna
   const from = pos + 1
   const to = from + searchText.length
 
-  // 移动光标到文本位置
   try {
     const coords = editor.view.coordsAtPos(from)
     await moveCursorTo(coords.left, coords.top, signal)
@@ -305,172 +286,272 @@ async function selectText(editor: Editor, searchText: string, signal: AbortSigna
   await pause(200, signal)
 }
 
-// ===== 演示脚本 =====
+function newLine(editor: Editor) {
+  editor.commands.enter()
+  editor.commands.setParagraph()
+}
+
+function exitBlock(editor: Editor) {
+  editor.commands.enter()
+  editor.commands.enter()
+}
+
+// ===== 演示脚本: 全功能展示 =====
 
 async function runDemoScript(editor: Editor, signal: AbortSignal) {
   const speed = props.typingSpeed
+  const fast = Math.max(Math.floor(speed / 2), 15)
 
-  // 初始化: 显示光标
   editor.commands.clearContent()
   cursorX.value = window.innerWidth / 2
   cursorY.value = window.innerHeight / 2
   cursorVisible.value = true
-  await pause(300, signal)
-
-  // ===== 1. 标题 =====
-  await tapOn('h1', signal, () => editor.commands.setHeading({ level: 1 }))
-  await moveToEditor(editor, signal)
-  await typeText(editor, 'Work Daily Report - Feb 11, 2026', speed, signal)
   await pause(400, signal)
 
-  // ===== 2. Summary =====
-  editor.commands.enter()
-  await tapOn('h2', signal, () => editor.commands.setHeading({ level: 2 }))
+  // ===== 1. 标题 + 居中对齐 =====
+  await tapOn('heading', signal, () => editor.commands.setHeading({ level: 1 }))
   await moveToEditor(editor, signal)
-  await typeText(editor, 'Summary', speed, signal)
+  await typeText(editor, 'Tiptap UI Kit - Feature Showcase', speed, signal)
   await pause(300, signal)
+
+  await tapOn('align', signal, () => editor.commands.setTextAlign('center'))
+  await pause(400, signal)
 
   editor.commands.enter()
   editor.commands.setParagraph()
-  await moveToEditor(editor, signal)
-  await typeText(editor, 'Today was a productive day. Completed the frontend feature development and fixed 3 bugs reported by QA team.', speed, signal)
-  await pause(400, signal)
-  editor.commands.enter()
-  editor.commands.enter()
-
-  // ===== 3. Completed Tasks (有序列表) =====
-  await tapOn('h2', signal, () => editor.commands.setHeading({ level: 2 }))
-  await moveToEditor(editor, signal)
-  await typeText(editor, 'Completed Tasks', speed, signal)
-  await pause(300, signal)
-  editor.commands.enter()
-  editor.commands.setParagraph()
+  editor.commands.setTextAlign('left')
   await pause(200, signal)
 
-  // 点击有序列表按钮
+  // ===== 2. 文本格式 =====
+  await tapOn('heading', signal, () => editor.commands.setHeading({ level: 2 }))
+  await moveToEditor(editor, signal)
+  await typeText(editor, 'Rich Text Formatting', speed, signal)
+  await pause(300, signal)
+  newLine(editor)
+
+  await moveToEditor(editor, signal)
+  await typeText(editor, 'This editor supports ', speed, signal)
+
+  // Bold
+  await tapOn('bold', signal, () => editor.commands.toggleBold())
+  await moveToEditor(editor, signal)
+  await typeText(editor, 'bold', speed, signal)
+  await tapOn('bold', signal, () => editor.commands.toggleBold())
+
+  await moveToEditor(editor, signal)
+  await typeText(editor, ', ', fast, signal)
+
+  // Italic
+  await tapOn('italic', signal, () => editor.commands.toggleItalic())
+  await moveToEditor(editor, signal)
+  await typeText(editor, 'italic', speed, signal)
+  await tapOn('italic', signal, () => editor.commands.toggleItalic())
+
+  await moveToEditor(editor, signal)
+  await typeText(editor, ', ', fast, signal)
+
+  // Underline
+  await tapOn('underline', signal, () => {
+    ;(editor.chain().focus() as any).toggleUnderline().run()
+  })
+  await moveToEditor(editor, signal)
+  await typeText(editor, 'underline', speed, signal)
+  await tapOn('underline', signal, () => {
+    ;(editor.chain().focus() as any).toggleUnderline().run()
+  })
+
+  await moveToEditor(editor, signal)
+  await typeText(editor, ' and ', fast, signal)
+
+  // Strikethrough
+  await tapOn('strike', signal, () => editor.commands.toggleStrike())
+  await moveToEditor(editor, signal)
+  await typeText(editor, 'strikethrough', speed, signal)
+  await tapOn('strike', signal, () => editor.commands.toggleStrike())
+
+  await moveToEditor(editor, signal)
+  await typeText(editor, ' styles.', speed, signal)
+  await pause(400, signal)
+  exitBlock(editor)
+
+  // ===== 3. 有序列表 =====
+  await tapOn('heading', signal, () => editor.commands.setHeading({ level: 2 }))
+  await moveToEditor(editor, signal)
+  await typeText(editor, 'Feature Highlights', speed, signal)
+  await pause(300, signal)
+  newLine(editor)
+
   await tapOn('orderedList', signal, () => editor.commands.toggleOrderedList())
   await moveToEditor(editor, signal)
-  await typeText(editor, 'Implemented user authentication module', speed, signal)
-  await pause(200, signal)
+  await typeText(editor, '20+ pluggable toolbar features', speed, signal)
+  editor.commands.enter()
+  await typeText(editor, '5 theme presets: Word, Notion, GitHub, Typora, Default', speed, signal)
+  editor.commands.enter()
+  await typeText(editor, 'AI-powered writing with streaming support', speed, signal)
+  await pause(300, signal)
 
-  // 选中 "authentication" → 点击加粗按钮
-  await selectText(editor, 'authentication', signal)
+  await selectText(editor, 'AI-powered', signal)
   await tapOn('bold', signal, () => editor.commands.toggleBold())
   await pause(200, signal)
-
-  // 取消选区，继续输入
   editor.commands.setTextSelection(editor.state.doc.content.size - 1)
-  editor.commands.enter()
+
+  exitBlock(editor)
+
+  // ===== 4. 上标 / 下标 =====
+  await tapOn('heading', signal, () => editor.commands.setHeading({ level: 2 }))
   await moveToEditor(editor, signal)
-  await typeText(editor, 'Fixed responsive layout issues on mobile devices', speed, signal)
-  await pause(200, signal)
-
-  editor.commands.enter()
-  await typeText(editor, 'Code review for pull request #42', speed, signal)
-  await pause(200, signal)
-
-  editor.commands.enter()
-  await typeText(editor, 'Updated API documentation', speed, signal)
+  await typeText(editor, 'Scientific Notation', speed, signal)
   await pause(300, signal)
+  newLine(editor)
 
-  // 退出列表
-  editor.commands.enter()
-  editor.commands.enter()
-
-  // ===== 4. Issues & Blockers (引用块) =====
-  await tapOn('h2', signal, () => editor.commands.setHeading({ level: 2 }))
   await moveToEditor(editor, signal)
-  await typeText(editor, 'Issues & Blockers', speed, signal)
+  await typeText(editor, "Einstein's equation: E = mc", speed, signal)
+
+  await tapOn('superscript', signal, () => {
+    editor.chain().focus().toggleSuperscript().run()
+  })
+  await moveToEditor(editor, signal)
+  await typeText(editor, '2', speed, signal)
+  await tapOn('superscript', signal, () => {
+    editor.chain().focus().toggleSuperscript().run()
+  })
+
+  await moveToEditor(editor, signal)
+  await typeText(editor, '    Water molecule: H', speed, signal)
+
+  await tapOn('subscript', signal, () => {
+    editor.chain().focus().toggleSubscript().run()
+  })
+  await moveToEditor(editor, signal)
+  await typeText(editor, '2', speed, signal)
+  await tapOn('subscript', signal, () => {
+    editor.chain().focus().toggleSubscript().run()
+  })
+
+  await moveToEditor(editor, signal)
+  await typeText(editor, 'O', speed, signal)
+  await pause(400, signal)
+  exitBlock(editor)
+
+  // ===== 5. 表格 =====
+  await tapOn('heading', signal, () => editor.commands.setHeading({ level: 2 }))
+  await moveToEditor(editor, signal)
+  await typeText(editor, 'Data Table', speed, signal)
   await pause(300, signal)
-  editor.commands.enter()
-  editor.commands.setParagraph()
-  await pause(200, signal)
+  newLine(editor)
 
-  editor.commands.setBlockquote()
-  await moveToEditor(editor, signal)
-  await typeText(editor, 'Performance bottleneck found in the data table component when rendering 10,000+ rows. Need to implement virtual scrolling.', speed, signal)
+  await tapOn('table', signal, () => {
+    editor.commands.insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+  })
   await pause(400, signal)
 
-  // 退出引用块
-  editor.commands.enter()
-  editor.commands.enter()
-
-  // ===== 5. Tomorrow Plan (无序列表) =====
-  await tapOn('h2', signal, () => editor.commands.setHeading({ level: 2 }))
+  // 填充表头
   await moveToEditor(editor, signal)
-  await typeText(editor, 'Tomorrow Plan', speed, signal)
-  await pause(300, signal)
-  editor.commands.enter()
-  editor.commands.setParagraph()
-  await pause(200, signal)
+  await typeText(editor, 'Feature', fast, signal)
+  editor.commands.goToNextCell()
+  await typeText(editor, 'Status', fast, signal)
+  editor.commands.goToNextCell()
+  await typeText(editor, 'Description', fast, signal)
 
-  // 点击无序列表按钮
-  await tapOn('bulletList', signal, () => editor.commands.toggleBulletList())
+  // 第 1 行
+  editor.commands.goToNextCell()
   await moveToEditor(editor, signal)
-  await typeText(editor, 'Implement virtual scrolling for data tables', speed, signal)
-  await pause(200, signal)
+  await typeText(editor, 'Rich Text', fast, signal)
+  editor.commands.goToNextCell()
+  await typeText(editor, '✅ Ready', fast, signal)
+  editor.commands.goToNextCell()
+  await typeText(editor, '20+ formats', fast, signal)
 
-  editor.commands.enter()
-  await typeText(editor, 'Write unit tests for auth module', speed, signal)
-  await pause(200, signal)
-
-  editor.commands.enter()
-  await typeText(editor, 'Sprint planning meeting at 10:00 AM', speed, signal)
-  await pause(200, signal)
-
-  // 退出列表
-  editor.commands.enter()
-  editor.commands.enter()
-
-  // ===== 6. 分隔线 =====
-  editor.commands.setHorizontalRule()
-  await pause(300, signal)
-
-  // ===== 7. 代码片段 =====
-  await tapOn('h2', signal, () => editor.commands.setHeading({ level: 2 }))
+  // 第 2 行
+  editor.commands.goToNextCell()
   await moveToEditor(editor, signal)
-  await typeText(editor, 'Code Snippet', speed, signal)
-  await pause(300, signal)
-  editor.commands.enter()
-  editor.commands.setParagraph()
-  await pause(200, signal)
-
-  await moveToEditor(editor, signal)
-  await typeText(editor, 'Key code change today:', speed, signal)
-  await pause(300, signal)
-  editor.commands.enter()
-  editor.commands.enter()
-
-  // 代码块
-  editor.commands.setCodeBlock({ language: 'typescript' })
-  await moveToEditor(editor, signal)
-  const codeSnippet = `export async function authenticate(token: string) {
-  const user = await verifyToken(token)
-  if (!user) throw new AuthError('Invalid token')
-  return { userId: user.id, role: user.role }
-}`
-  await typeText(editor, codeSnippet, speed / 2, signal)
+  await typeText(editor, 'Tables', fast, signal)
+  editor.commands.goToNextCell()
+  await typeText(editor, '✅ Ready', fast, signal)
+  editor.commands.goToNextCell()
+  await typeText(editor, 'Resizable cells', fast, signal)
   await pause(500, signal)
 
-  // 退出代码块
+  // 退出表格
+  try {
+    editor.commands.setTextSelection(editor.state.doc.content.size - 1)
+    editor.commands.enter()
+  } catch { /* ignore */ }
+  await pause(200, signal)
+
+  // ===== 6. 代码块 =====
+  await tapOn('heading', signal, () => editor.commands.setHeading({ level: 2 }))
+  await moveToEditor(editor, signal)
+  await typeText(editor, 'Code Block', speed, signal)
+  await pause(300, signal)
+  newLine(editor)
+
+  await tapOn('code', signal, () => {
+    editor.commands.setCodeBlock({ language: 'typescript' })
+  })
+  await moveToEditor(editor, signal)
+
+  const codeSnippet = `import { Editor } from '@tiptap/core'
+import { StarterKit } from '@tiptap/starter-kit'
+
+const editor = new Editor({
+  extensions: [StarterKit],
+  content: '<p>Hello Tiptap!</p>'
+})`
+  await typeText(editor, codeSnippet, fast, signal)
+  await pause(500, signal)
+
   editor.commands.exitCode()
   editor.commands.enter()
 
-  // ===== 8. 结尾 =====
+  // ===== 7. 引用块 =====
+  await tapOn('heading', signal, () => editor.commands.setHeading({ level: 2 }))
   await moveToEditor(editor, signal)
-  await typeText(editor, 'Overall progress: ', speed, signal)
+  await typeText(editor, 'Blockquote', speed, signal)
+  await pause(300, signal)
+  newLine(editor)
 
-  // 点击加粗 → 输入 "On Track" → 再点击取消加粗
+  editor.commands.setBlockquote()
+  await moveToEditor(editor, signal)
+  await typeText(editor, 'The best editor is one that gets out of your way and lets creativity flow.', speed, signal)
+  await pause(400, signal)
+  exitBlock(editor)
+
+  // ===== 8. 无序列表 =====
+  await tapOn('heading', signal, () => editor.commands.setHeading({ level: 2 }))
+  await moveToEditor(editor, signal)
+  await typeText(editor, 'Quick Summary', speed, signal)
+  await pause(300, signal)
+  newLine(editor)
+
+  await tapOn('bulletList', signal, () => editor.commands.toggleBulletList())
+  await moveToEditor(editor, signal)
+  await typeText(editor, 'Vue 3 + Tiptap 3 + TypeScript', speed, signal)
+  editor.commands.enter()
+  await typeText(editor, 'Light / Dark mode with 5 theme presets', speed, signal)
+  editor.commands.enter()
+  await typeText(editor, 'i18n: English, 简体中文, 繁體中文', speed, signal)
+  editor.commands.enter()
+  await typeText(editor, 'AI: Continue Writing, Polish, Translate, Summarize', speed, signal)
+  await pause(300, signal)
+  exitBlock(editor)
+
+  // ===== 9. 分隔线 + 结尾 =====
+  editor.commands.setHorizontalRule()
+  await pause(300, signal)
+
+  await moveToEditor(editor, signal)
+  await typeText(editor, 'All features ', speed, signal)
+
   await tapOn('bold', signal, () => editor.commands.toggleBold())
   await moveToEditor(editor, signal)
-  await typeText(editor, 'On Track', speed, signal)
+  await typeText(editor, 'production-ready', speed, signal)
   await tapOn('bold', signal, () => editor.commands.toggleBold())
 
   await moveToEditor(editor, signal)
-  await typeText(editor, ' ✅', speed, signal)
-  await pause(500, signal)
+  await typeText(editor, '! ✅', speed, signal)
+  await pause(600, signal)
 
-  // 演示完成，隐藏光标
   cursorVisible.value = false
 }
 
@@ -578,7 +659,7 @@ defineExpose({ startDemo, stopDemo, replayDemo })
 </style>
 
 <style>
-/* 光标样式 (不使用 scoped，因为 Teleport 到 body) */
+/* 光标样式 (Teleport 到 body，不使用 scoped) */
 .demo-cursor {
   position: fixed;
   top: 0;
