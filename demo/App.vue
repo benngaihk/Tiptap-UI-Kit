@@ -1,6 +1,6 @@
 <template>
   <a-config-provider :theme="antdTheme">
-  <div class="demo-app" :data-theme="theme" :class="{ 'editor-mode': !showLanding }">
+  <div class="demo-app" :data-theme="theme" :class="{ 'editor-mode': !showLanding && demoMode === 'full', 'inline-mode': !showLanding && demoMode === 'inline' }">
     <!-- Landing Page -->
     <LandingPage
       v-if="showLanding"
@@ -21,10 +21,29 @@
         <p class="demo-header__subtitle">Beautiful Tiptap 3 + Vue 3 Editor Theme</p>
       </div>
       <div class="demo-header__actions">
-        <DeviceSwitcher 
-          v-model="deviceView" 
+        <!-- Demo Mode Switcher -->
+        <div class="demo-mode-switcher">
+          <button
+            class="demo-mode-btn"
+            :class="{ 'demo-mode-btn--active': demoMode === 'full' }"
+            @click="demoMode = 'full'"
+          >
+            Full Editor
+          </button>
+          <button
+            class="demo-mode-btn"
+            :class="{ 'demo-mode-btn--active': demoMode === 'inline' }"
+            @click="demoMode = 'inline'"
+          >
+            Inline + Plugins
+          </button>
+        </div>
+
+        <DeviceSwitcher
+          v-if="demoMode === 'full'"
+          v-model="deviceView"
           v-model:orientation="deviceOrientation"
-          @change="handleDeviceChange" 
+          @change="handleDeviceChange"
           @orientationChange="handleOrientationChange"
         />
         <button
@@ -34,7 +53,7 @@
         >
           {{ theme === 'light' ? '🌙' : '☀️' }}
         </button>
-        <select :value="themePreset" @change="handleThemeChange" class="demo-theme-select">
+        <select v-if="demoMode === 'full'" :value="themePreset" @change="handleThemeChange" class="demo-theme-select">
           <option value="word">Word Style</option>
           <option value="notion">Notion Style</option>
           <option value="github">GitHub Style</option>
@@ -48,32 +67,42 @@
       </div>
     </header>
 
-    <!-- Auto Demo Controls -->
-    <EditorAutoDemo
-      :get-editor="getEditorInstance"
-      :typing-speed="35"
-      play-label="▶ Watch Auto Demo"
-      stop-label="⏹ Stop"
-      replay-label="↺ Replay Demo"
-    />
+    <!-- Full Editor Mode -->
+    <template v-if="demoMode === 'full'">
+      <!-- Auto Demo Controls -->
+      <EditorAutoDemo
+        :get-editor="getEditorInstance"
+        :typing-speed="35"
+        play-label="▶ Watch Auto Demo"
+        stop-label="⏹ Stop"
+        replay-label="↺ Replay Demo"
+      />
 
-    <!-- Main Content -->
-    <main class="demo-main">
-        <!-- Editor Card with Device Frame -->
-        <DeviceFrame :device="deviceView" :orientation="deviceOrientation">
-          <div class="demo-card">
-            <TiptapProEditor
-              ref="editorRef"
-              :key="themePreset"
-              :initial-content="sampleContent"
-              :locale="locale"
-              :features="currentFeatures"
-              :version="'advanced'"
-              @update="handleUpdate"
-            />
-          </div>
-        </DeviceFrame>
-    </main>
+      <!-- Main Content -->
+      <main class="demo-main">
+          <!-- Editor Card with Device Frame -->
+          <DeviceFrame :device="deviceView" :orientation="deviceOrientation">
+            <div class="demo-card">
+              <TiptapProEditor
+                ref="editorRef"
+                :key="themePreset"
+                :initial-content="sampleContent"
+                :locale="locale"
+                :features="currentFeatures"
+                :version="'advanced'"
+                @update="handleUpdate"
+              />
+            </div>
+          </DeviceFrame>
+      </main>
+    </template>
+
+    <!-- Inline Plugin Demo Mode -->
+    <template v-else>
+      <main class="demo-main demo-main--inline">
+        <InlinePluginDemo :theme="theme" />
+      </main>
+    </template>
     </template>
   </div>
   </a-config-provider>
@@ -85,6 +114,7 @@ import { theme as antTheme } from 'ant-design-vue'
 import TiptapProEditor from '../src/core/TiptapProEditor.vue'
 import LandingPage from './LandingPage.vue'
 import EditorAutoDemo from './EditorAutoDemo.vue'
+import InlinePluginDemo from './InlinePluginDemo.vue'
 import { createI18n, type LocaleCode } from '../src/locales'
 import { PRESET_CONFIGS } from '../src/core/editorConfig'
 import type { FeatureFlags, ThemePreset } from '../src/core/editorConfig'
@@ -100,6 +130,9 @@ import '../src/styles/device-responsive.css'
 
 // Landing page state
 const showLanding = ref(true)
+
+// Demo mode: 'full' = full editor, 'inline' = inline + plugins
+const demoMode = ref<'full' | 'inline'>('full')
 
 const handleStartDemo = () => {
   showLanding.value = false
@@ -505,6 +538,55 @@ const copyJson = async () => {
   border: none !important;
   box-shadow: none;
   z-index: 100;
+}
+
+/* Inline mode: scrollable */
+.demo-app.inline-mode {
+  height: auto;
+  min-height: 100vh;
+  overflow: auto;
+}
+
+.demo-main--inline {
+  flex: 1;
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  min-height: 0;
+}
+
+/* Demo Mode Switcher */
+.demo-mode-switcher {
+  display: flex;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.demo-mode-btn {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.demo-mode-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.demo-mode-btn--active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Responsive */
