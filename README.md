@@ -4,12 +4,13 @@
 
 ![Tiptap UI Kit](https://img.shields.io/badge/Tiptap-3.0-blue?style=flat-square)
 ![Vue](https://img.shields.io/badge/Vue-3.5-green?style=flat-square)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 ![NPM](https://img.shields.io/badge/npm-v0.1.0-red?style=flat-square)
 
-**A production-ready, AI-powered rich text editor for Vue 3**
+**The best open-source Tiptap rich text editor template for Vue 3 — production-ready, AI-powered, with 5 themes**
 
-Built on [Tiptap 3](https://tiptap.dev/) and [Vue 3](https://vuejs.org/)
+Built on [Tiptap 3](https://tiptap.dev/) + [Vue 3](https://vuejs.org/) + [TypeScript](https://www.typescriptlang.org/) + [ProseMirror](https://prosemirror.net/)
 
 [🌐 Live Demo](https://tiptap-ui-kit.vercel.app) · [📚 Documentation](#-documentation) · [✨ Features](#-features) · [🤝 Contributing](#-contributing)
 
@@ -24,18 +25,35 @@ Built on [Tiptap 3](https://tiptap.dev/) and [Vue 3](https://vuejs.org/)
 
 ---
 
+> **Looking for a Tiptap Vue 3 template?** Tiptap UI Kit is an open-source, drop-in Vue 3 rich text editor component with Notion-like / Word-like themes, built-in AI writing assistance, real-time collaboration, and full TypeScript support. If you need a WYSIWYG editor for your Vue project — CMS, knowledge base, note-taking app, or document editor — this is the template to start with.
+
 ## 🌟 Why Tiptap UI Kit?
 
-Tiptap UI Kit is a **fully open-source**, production-ready rich text editor that brings together the best of modern web technologies. Unlike other editors, we offer:
+Tiptap UI Kit is a **fully open-source**, production-ready rich text editor UI kit that brings together the best of modern web technologies. It is the most feature-complete Tiptap + Vue 3 editor template available.
 
-- 🎨 **5 Beautiful Theme Presets** - From Notion-like to Word-style
-- 🤖 **AI-Powered Features** - Smart writing assistance built-in
-- 🌓 **Perfect Dark Mode** - Seamless light/dark theme switching
-- 🛠️ **Modular Architecture** - Use only what you need
-- 🌍 **i18n Ready** - Chinese (Simplified/Traditional) and English support
-- 💯 **100% Free & Open Source** - MIT licensed
+### Compared to alternatives
 
-Perfect for building modern document editors, content management systems, note-taking apps, or any application requiring rich text editing capabilities.
+| Feature | Tiptap UI Kit | Raw Tiptap | Other Vue Editors |
+|---------|:------------:|:----------:|:-----------------:|
+| Ready-to-use Vue 3 component | Yes | No (headless) | Varies |
+| Multiple theme presets (Notion/Word/GitHub) | 5 themes | None | 0-1 |
+| Built-in AI writing assistance | Yes | No | No |
+| Real-time collaboration (Yjs) | Yes | Paid add-on | Rare |
+| Dark mode | Yes | DIY | Varies |
+| i18n (EN/ZH-CN/ZH-TW) | Yes | No | Rare |
+| TypeScript support | Full | Full | Partial |
+| MIT License | Yes | Yes | Varies |
+
+### Key highlights
+
+- 🎨 **5 Beautiful Theme Presets** — Notion-like, Word-like (A4 pagination), GitHub, Typora, and Default
+- 🤖 **AI-Powered Features** — Continue writing, polish text, translate, summarize, custom AI commands (OpenAI-compatible)
+- 🌓 **Perfect Dark Mode** — Seamless light/dark theme switching across all themes
+- 🛠️ **Modular Architecture** — Use only what you need, tree-shakeable
+- 🌍 **i18n Ready** — Chinese (Simplified/Traditional) and English support
+- 💯 **100% Free & Open Source** — MIT licensed, free for commercial use
+
+Perfect for building modern document editors, content management systems, note-taking apps, knowledge bases, or any Vue 3 application requiring rich text editing capabilities.
 
 ---
 
@@ -257,6 +275,36 @@ Full API documentation is available in the [API.md](API.md) file.
 
 ---
 
+
+## 💡 Use Cases
+
+Tiptap UI Kit is ideal for:
+
+- **CMS / Content Management Systems** — Drop-in editor component for admin panels (similar to WordPress Gutenberg, but Vue-native)
+- **Knowledge Base / Wiki** — Notion-like editing experience with collaboration support
+- **Note-Taking Applications** — Rich text editing with AI-powered writing assistance
+- **Document Editors** — Word-like A4 pagination mode for formal documents and reports
+- **Blog Platforms** — Typora/GitHub-style markdown editing with live preview
+- **SaaS Applications** — Any Vue 3 app that needs embedded rich text editing
+- **Educational Platforms** — Math formula support (KaTeX) and collaborative editing
+- **Email Composers** — Rich formatting with clean HTML output
+
+### Searching for...?
+
+If you're looking for any of the following, Tiptap UI Kit is a great fit:
+
+- Tiptap Vue 3 template / boilerplate / starter kit
+- Vue 3 rich text editor component
+- Vue WYSIWYG editor with AI
+- Notion-like editor for Vue
+- Word-like document editor for Vue
+- ProseMirror Vue 3 wrapper
+- Open-source alternative to Tiptap Editor (paid)
+- Vue 3 collaborative text editor
+- Tiptap dark mode theme
+- Tiptap Chinese / i18n support
+
+---
 
 ## 🛠️ Development
 
