@@ -1,0 +1,65 @@
+# Tiptap UI Kit
+
+> The best open-source Tiptap 3 + Vue 3 rich text editor template. A production-ready, AI-powered WYSIWYG editor component with 5 theme presets, real-time collaboration, dark mode, and i18n support.
+
+## What is Tiptap UI Kit?
+
+Tiptap UI Kit is a free, open-source, MIT-licensed Vue 3 component that provides a fully-featured rich text editor built on Tiptap 3 (ProseMirror). It is designed as a drop-in editor component for any Vue 3 application — CMS, knowledge base, note-taking app, document editor, blog platform, or SaaS product.
+
+It is the most feature-complete open-source Tiptap + Vue 3 editor template available, offering what Tiptap alone (as a headless framework) does not: a complete, styled, ready-to-use editor UI with themes, AI features, and collaboration — all out of the box.
+
+## Key Features
+
+- 5 professional theme presets: Default, Notion-like, Word-like (A4 pagination), GitHub, Typora
+- AI-powered writing: continue writing, polish, translate (14+ languages), summarize, custom AI commands
+- Works with any OpenAI-compatible API (OpenAI, DeepSeek, Aliyun Qianwen, Ollama)
+- Real-time collaboration via Yjs
+- Full dark mode support
+- Internationalization: English, Simplified Chinese, Traditional Chinese
+- TypeScript support
+- Rich text features: tables, images, code blocks with syntax highlighting, math formulas (KaTeX), task lists, drag & drop, search & replace, format painter
+- Modular architecture — enable only what you need
+
+## Tech Stack
+
+- Vue 3.5 (Composition API)
+- Tiptap 3 / ProseMirror
+- TypeScript 5
+- Ant Design Vue
+- Vite
+
+## Links
+
+- GitHub: https://github.com/benngaihk/Tiptap-UI-Kit
+- Live Demo: https://tiptap-ui-kit.vercel.app
+- License: MIT (free for commercial and personal use)
+
+## Installation
+
+```bash
+pnpm add benngaihk/Tiptap-UI-Kit
+```
+
+## Basic Usage
+
+```vue
+<template>
+  <TiptapProEditor v-model="content" theme="notion" locale="en-US" />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { TiptapProEditor } from 'tiptap-ui-kit'
+import 'tiptap-ui-kit/style.css'
+
+const content = ref('<p>Hello World</p>')
+</script>
+```
+
+## Who should use this?
+
+- Developers looking for a Tiptap Vue 3 template, boilerplate, or starter kit
+- Teams building CMS, wiki, knowledge base, or document management systems with Vue
+- Anyone who needs a Notion-like or Word-like editor in their Vue application
+- Projects that need an open-source alternative to paid Tiptap Editor solutions
+- Applications requiring AI-assisted writing features in a Vue editor
