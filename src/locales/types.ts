@@ -397,6 +397,39 @@ export interface TiptapLocale {
     noDiff: string
   }
 
+  // 斜杠命令菜单
+  slashCommand: {
+    noResults: string
+    basicBlocks: string
+    lists: string
+    advanced: string
+    paragraph: string
+    paragraphDesc: string
+    heading1: string
+    heading1Desc: string
+    heading2: string
+    heading2Desc: string
+    heading3: string
+    heading3Desc: string
+    bulletList: string
+    bulletListDesc: string
+    orderedList: string
+    orderedListDesc: string
+    taskList: string
+    taskListDesc: string
+    blockquote: string
+    blockquoteDesc: string
+    codeBlock: string
+    codeBlockDesc: string
+    table: string
+    tableDesc: string
+    image: string
+    imageDesc: string
+    imageUrlPrompt: string
+    horizontalRule: string
+    horizontalRuleDesc: string
+  }
+
   // AI 设置
   aiSettings: {
     title: string

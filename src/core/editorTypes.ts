@@ -24,6 +24,8 @@ export interface FeatureConfig {
   tableToolbar?: boolean
   /** 是否启用@提及功能 */
   mention?: boolean
+  /** 是否启用斜杠命令菜单（输入 / 弹出块类型选择） */
+  slashCommand?: boolean
   /** 是否启用悬浮框功能 */
   floatingMenu?: boolean
   /** 是否启用图片工具栏功能 */
