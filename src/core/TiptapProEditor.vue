@@ -53,6 +53,13 @@
       :enabled="props.features?.floatingMenu ?? false"
     />
 
+    <!-- 功能模块：斜杠命令菜单（预览模式下禁用） -->
+    <SlashCommandMenu
+      v-if="editorInstance && !isPreviewMode && (props.features?.slashCommand ?? false)"
+      ref="slashCommandMenuRef"
+      :editor="editorInstance"
+    />
+
     <!-- 功能模块：六个点菜单（预览模式下禁用） -->
     <DragHandleMenu
       v-if="editorInstance && !isPreviewMode && (props.features?.dragHandleMenu ?? false)"
@@ -104,6 +111,8 @@ import { FooterNav } from '@/tools/footer-nav'
 import { ImageToolbar } from '@/tools/image-toolbar'
 import { FloatingMenu } from '@/tools/floating-menu'
 import { DragHandleMenu } from '@/tools/drag-handle-menu'
+import { SlashCommandMenu, SlashCommandExtension } from '@/tools/slash-command'
+import type { SlashCommandState } from '@/tools/slash-command'
 
 // 协作编辑模块（统一从 collaboration 模块导入）
 import {
@@ -129,6 +138,7 @@ import '@/styles/floating-menu-toolbar.css'
 import '@/styles/drag-handle-with-menu.css'
 import '@/styles/image-resize.css'
 import '@/styles/collaboration.css'
+import '@/styles/slash-command.css'
 
 const props = withDefaults(defineProps<TiptapProEditorProps>(), {
   zoomBarPlacement: 'bottom',
@@ -152,6 +162,7 @@ const editor = shallowRef<Editor | null>(null)
 const editorError = ref<string | null>(null)
 const containerRef = ref<HTMLElement | null>(null)
 const dragHandleMenuRef = ref<InstanceType<typeof DragHandleMenu> | null>(null)
+const slashCommandMenuRef = ref<InstanceType<typeof SlashCommandMenu> | null>(null)
 const totalPages = ref(1)
 const zoomLevel = ref(100)
 const isFirstInit = ref(true)
@@ -435,6 +446,17 @@ const initEditor = async () => {
       )
     }
 
+    // 添加斜杠命令扩展
+    if (props.features?.slashCommand) {
+      extensions.push(
+        SlashCommandExtension.configure({
+          onActivate: (state: SlashCommandState) => slashCommandMenuRef.value?.activate(state),
+          onDeactivate: () => slashCommandMenuRef.value?.hide(),
+          onQueryChange: (query: string) => slashCommandMenuRef.value?.updateQuery(query),
+        })
+      )
+    }
+
     // 初始化协作功能
     await initCollaborationFeature(initialContentToUse, extensions)
 
@@ -524,6 +546,11 @@ const watchAndReinit = (
 
 watchAndReinit(
   () => props.features?.dragHandleMenu,
+  (newVal, oldVal) => (newVal ?? false) !== (oldVal ?? false)
+)
+
+watchAndReinit(
+  () => props.features?.slashCommand,
   (newVal, oldVal) => (newVal ?? false) !== (oldVal ?? false)
 )
 
