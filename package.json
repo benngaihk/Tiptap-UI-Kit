@@ -1,22 +1,27 @@
 {
   "name": "tiptap-ui-kit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Beautiful Tiptap 3 + Vue 3 rich-text editor theme with AI support",
   "type": "module",
-  "main": "dist/index.js",
+  "packageManager": "pnpm@9.15.9",
+  "main": "dist/index.esm.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.esm.js",
-      "require": "./dist/index.js"
+      "default": "./dist/index.esm.js"
     },
-    "./style.css": "./dist/style.css"
+    "./style.css": "./dist/style.css",
+    "./package.json": "./package.json"
   },
   "files": [
-    "dist",
-    "src"
+    "dist"
+  ],
+  "sideEffects": [
+    "*.css",
+    "**/*.css"
   ],
   "scripts": {
     "dev": "vite",
@@ -29,8 +34,10 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "prepare": "npm run build",
     "prepublishOnly": "pnpm build",
-    "release": "pnpm build && pnpm publish",
+    "pack:check": "pnpm build && npm pack --dry-run",
+    "release": "pnpm build && pnpm publish --access public",
     "moltbook": "node scripts/moltbook-bot.cjs",
     "moltbook:post": "node scripts/moltbook-bot.cjs post",
     "moltbook:status": "node scripts/moltbook-bot.cjs status",
@@ -48,40 +55,11 @@
     "@tiptap/vue-3": "^3.0.0",
     "vue": "^3.4.0"
   },
-  "peerDependenciesMeta": {
-    "ant-design-vue": {
-      "optional": true
-    },
-    "@ant-design/icons-vue": {
-      "optional": true
-    }
-  },
   "devDependencies": {
-    "@ant-design/icons-vue": "^7.0.1",
     "@tiptap/core": "^3.7.2",
     "@tiptap/extension-bubble-menu": "^3.7.2",
-    "@tiptap/extension-character-count": "^3.0.0",
     "@tiptap/extension-code-block-lowlight": "^3.7.1",
-    "@tiptap/extension-collaboration": "^3.13.0",
-    "@tiptap/extension-collaboration-cursor": "^2.26.2",
-    "@tiptap/extension-color": "^3.0.0",
-    "@tiptap/extension-font-family": "^3.7.2",
-    "@tiptap/extension-highlight": "^3.0.0",
-    "@tiptap/extension-image": "^3.0.0",
-    "@tiptap/extension-link": "^3.0.0",
-    "@tiptap/extension-placeholder": "^3.0.0",
-    "@tiptap/extension-subscript": "^3.7.2",
-    "@tiptap/extension-superscript": "^3.7.2",
-    "@tiptap/extension-table": "^3.0.0",
-    "@tiptap/extension-table-cell": "^3.13.0",
-    "@tiptap/extension-table-header": "^3.13.0",
-    "@tiptap/extension-table-row": "^3.13.0",
-    "@tiptap/extension-task-item": "^3.7.1",
-    "@tiptap/extension-task-list": "^3.7.1",
-    "@tiptap/extension-text-align": "^3.0.0",
-    "@tiptap/extension-text-style": "^3.0.0",
     "@tiptap/extension-typography": "^3.7.2",
-    "@tiptap/extension-underline": "^3.0.0",
     "@tiptap/extensions": "^3.11.1",
     "@tiptap/pm": "^3.7.2",
     "@tiptap/starter-kit": "^3.7.2",
@@ -92,7 +70,6 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitest/ui": "^4.0.18",
     "@vue/test-utils": "^2.4.6",
-    "ant-design-vue": "^4.2.6",
     "happy-dom": "^20.4.0",
     "lowlight": "^3.3.0",
     "lucide-vue-next": "^0.507.0",
@@ -105,9 +82,7 @@
     "vitest": "^4.0.18",
     "vue": "^3.5.13",
     "vue-tsc": "^2.1.10",
-    "vue-types": "^3.0.2",
-    "y-websocket": "^3.0.0",
-    "yjs": "^13.6.27"
+    "vue-types": "^3.0.2"
   },
   "keywords": [
     "tiptap",
@@ -154,14 +129,41 @@
     "type": "git",
     "url": "https://github.com/benngaihk/Tiptap-UI-Kit.git"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
+    "@tiptap/extension-character-count": "^3.0.0",
+    "@tiptap/extension-collaboration": "^3.13.0",
+    "@tiptap/extension-collaboration-cursor": "^2.26.2",
+    "@tiptap/extension-color": "^3.0.0",
+    "@tiptap/extension-font-family": "^3.7.2",
+    "@tiptap/extension-highlight": "^3.0.0",
+    "@tiptap/extension-image": "^3.0.0",
+    "@tiptap/extension-link": "^3.0.0",
+    "@tiptap/extension-placeholder": "^3.0.0",
+    "@tiptap/extension-subscript": "^3.7.2",
+    "@tiptap/extension-superscript": "^3.7.2",
+    "@tiptap/extension-table": "^3.0.0",
+    "@tiptap/extension-table-cell": "^3.13.0",
+    "@tiptap/extension-table-header": "^3.13.0",
+    "@tiptap/extension-table-row": "^3.13.0",
+    "@tiptap/extension-task-item": "^3.7.1",
+    "@tiptap/extension-task-list": "^3.7.1",
+    "@tiptap/extension-text-align": "^3.0.0",
+    "@tiptap/extension-text-style": "^3.0.0",
+    "@tiptap/extension-underline": "^3.0.0",
+    "ant-design-vue": "^4.2.6",
     "docx": "^9.5.1",
     "file-saver": "^2.0.5",
     "katex": "^0.16.28",
-    "mammoth": "^1.11.0"
+    "mammoth": "^1.11.0",
+    "y-websocket": "^3.0.0",
+    "yjs": "^13.6.27"
   }
 }

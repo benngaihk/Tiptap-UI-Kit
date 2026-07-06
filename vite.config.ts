@@ -29,14 +29,16 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
   },
+  publicDir: false,
   build: {
     // Modern browsers that support CSS nesting
     target: ['es2022', 'chrome105', 'safari16', 'firefox110', 'edge105'],
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'TiptapUIKit',
-      formats: ['es', 'cjs'],
-      fileName: (format) => format === 'es' ? 'index.esm.js' : 'index.js',
+      formats: ['es'],
+      fileName: () => 'index.esm.js',
+      cssFileName: 'style',
     },
     minify: isProduction ? 'terser' : false,
     terserOptions: isProduction ? {
@@ -83,6 +85,6 @@ export default defineConfig({
   // Define for license validation
   define: {
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
-    __VERSION__: JSON.stringify(process.env.npm_package_version || '0.1.0'),
+    __VERSION__: JSON.stringify(process.env.npm_package_version || '0.1.1'),
   },
 })

@@ -6,7 +6,7 @@
 ![Vue](https://img.shields.io/badge/Vue-3.5-green?style=flat-square)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
-![NPM](https://img.shields.io/badge/npm-v0.1.0-red?style=flat-square)
+![NPM](https://img.shields.io/npm/v/tiptap-ui-kit?style=flat-square)
 
 **The best open-source Tiptap rich text editor template for Vue 3 — production-ready, AI-powered, with 5 themes**
 
@@ -130,17 +130,17 @@ Perfect for building modern document editors, content management systems, note-t
 
 ## 📦 Installation
 
-### From GitHub
+### From npm
 
 ```bash
 # Using npm
-npm install benngaihk/Tiptap-UI-Kit
+npm install tiptap-ui-kit
 
 # Using pnpm (recommended)
-pnpm add benngaihk/Tiptap-UI-Kit
+pnpm add tiptap-ui-kit
 
 # Using yarn
-yarn add benngaihk/Tiptap-UI-Kit
+yarn add tiptap-ui-kit
 ```
 
 ### Peer Dependencies
