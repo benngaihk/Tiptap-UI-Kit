@@ -190,7 +190,7 @@ You don't have to use everything. Features are controlled via props:
 />
 ```
 
-This keeps your bundle size reasonable — unused features don't ship to the client.
+This lets product teams expose only the controls they need while keeping the editor configuration easy to reason about.
 
 ### CSS Variables for Theming
 
@@ -304,7 +304,7 @@ const isDark = ref(false)
 
 ## What's Next
 
-This is v0.1.0. Here's what's coming:
+This is still an early release. Here's what's coming:
 
 - More themes (Google Docs, Confluence)
 - More languages (Japanese, Korean, Spanish, French)
