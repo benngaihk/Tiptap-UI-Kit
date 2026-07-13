@@ -28,11 +28,11 @@
  * LinkButton - 链接按钮
  * @description 可复用的链接按钮组件，包含链接插入/编辑功能
  */
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import type { Editor } from '@tiptap/vue-3'
 import { ToolbarButton, ToolbarGroup } from '@/ui'
 import { createCommandRunner } from '@/utils/editorCommands'
-import { createStateCheckers } from '@/utils/editorState'
+import { createStateCheckers, useReactiveEditor } from '@/utils/editorState'
 import { t } from '@/locales'
 import { LinkOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
@@ -43,7 +43,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const editor = computed(() => props.editor ?? null)
+const editor = useReactiveEditor(() => props.editor)
 
 // ===== 响应式状态 =====
 const linkModalOpen = ref(false)

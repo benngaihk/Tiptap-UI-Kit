@@ -6,6 +6,9 @@
  */
 
 :root {
+  /* 原生控件（滚动条、表单等）跟随亮色主题 */
+  color-scheme: light;
+
   /* ===== Color Palette ===== */
   --tiptap-primary: #3b82f6;
   --tiptap-primary-hover: #2563eb;
@@ -97,6 +100,9 @@
 /* ===== Dark Theme ===== */
 [data-theme="dark"],
 .dark {
+  /* 原生控件（滚动条、表单等）跟随暗色主题 */
+  color-scheme: dark;
+
   --tiptap-primary: #60a5fa;
   --tiptap-primary-hover: #93c5fd;
   --tiptap-primary-light: rgba(96, 165, 250, 0.15);

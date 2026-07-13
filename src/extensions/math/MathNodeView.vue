@@ -41,11 +41,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onMounted } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, shallowRef } from 'vue'
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3'
-import katex from 'katex'
-import 'katex/dist/katex.min.css'
 import { t } from '@/locales'
+
+// KaTeX 按需动态加载：只有当文档中真正渲染数学公式时才会下载 katex。
+// 注意：katex 的 CSS（katex/dist/katex.min.css）需由使用方自行引入。
+type KatexModule = typeof import('katex')['default']
+
+// 模块级缓存，多个公式节点共享同一次加载
+let katexModule: KatexModule | null = null
+let katexLoadPromise: Promise<KatexModule> | null = null
+
+function loadKatex(): Promise<KatexModule> {
+  if (!katexLoadPromise) {
+    katexLoadPromise = import('katex').then((m: any) => {
+      katexModule = (m.default ?? m) as KatexModule
+      return katexModule
+    })
+  }
+  return katexLoadPromise
+}
 
 const props = defineProps(nodeViewProps)
 
@@ -54,15 +70,42 @@ const latexInput = ref('')
 const renderError = ref<string | null>(null)
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
 
+// katex 加载完成后触发重新渲染（已加载过则立即可用）
+const katexRef = shallowRef<KatexModule | null>(katexModule)
+if (!katexModule) {
+  loadKatex()
+    .then((m) => {
+      katexRef.value = m
+    })
+    .catch((e) => {
+      renderError.value = e instanceof Error ? e.message : 'Failed to load katex'
+    })
+}
+
+// HTML 转义（katex 未加载时以纯文本形式展示原始 LaTeX）
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 // 渲染 LaTeX 为 HTML
 function renderLatex(latex: string, displayMode: boolean): string {
   if (!latex.trim()) {
     return `<span class="math-placeholder">${t('editor.mathEmpty')}</span>`
   }
 
+  // katex 尚未加载完成：先显示原始 LaTeX 文本占位
+  if (!katexRef.value) {
+    return `<span class="math-loading">${escapeHtml(latex)}</span>`
+  }
+
   try {
     renderError.value = null
-    return katex.renderToString(latex, {
+    return katexRef.value.renderToString(latex, {
       displayMode,
       throwOnError: false,
       errorColor: '#cc0000',
@@ -192,6 +235,13 @@ watch(
 .math-placeholder {
   color: var(--tp-color-text-muted, #999);
   font-style: italic;
+}
+
+/* katex 加载中：以等宽字体显示原始 LaTeX */
+.math-loading {
+  color: var(--tp-color-text-muted, #999);
+  font-family: 'Fira Code', 'Monaco', monospace;
+  font-size: 0.9em;
 }
 
 .math-error {

@@ -29,8 +29,21 @@ describe('ToolbarButton', () => {
       },
     })
 
-    await wrapper.trigger('click')
+    await wrapper.find('button').trigger('click')
     expect(wrapper.emitted('click')).toBeTruthy()
+  })
+
+  it('does not emit click when disabled', async () => {
+    const wrapper = mount(ToolbarButton, {
+      props: {
+        icon: MockIcon,
+        title: 'Bold',
+        disabled: true,
+      },
+    })
+
+    await wrapper.find('button').trigger('click')
+    expect(wrapper.emitted('click')).toBeUndefined()
   })
 
   it('applies active class when active prop is true', () => {

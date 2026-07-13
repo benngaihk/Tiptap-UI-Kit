@@ -31,7 +31,7 @@
     />
     
     <!-- 编辑器 -->
-    <TiptapEditor :features="{ collaboration: collaborationEnabled }" />
+    <TiptapProEditor document-id="doc-123" :features="{ collaboration: collaborationEnabled }" />
   </div>
 </template>
 

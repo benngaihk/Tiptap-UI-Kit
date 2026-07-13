@@ -91,12 +91,12 @@
  * TableButton - 表格按钮组件
  * @description 提供表格插入面板，支持自定义行列与表头，以及删除表格功能
  */
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { Popover } from 'ant-design-vue'
 import type { Editor } from '@tiptap/vue-3'
 import { ToolbarGroup, ToolbarButton } from '@/ui'
 import { createCommandRunner } from '@/utils/editorCommands'
-import { createStateCheckers } from '@/utils/editorState'
+import { createStateCheckers, useReactiveEditor } from '@/utils/editorState'
 import { t } from '@/locales'
 import {
   TableOutlined,
@@ -116,7 +116,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const editor = computed(() => props.editor ?? null)
+const editor = useReactiveEditor(() => props.editor)
 
 // ===== 工具函数 =====
 const runCommand = createCommandRunner(editor)
@@ -265,7 +265,7 @@ function deleteTable() {
   border-radius: 6px;
 }
 
-:where(.dark, .dark *) .grid {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .grid {
   background: #262626;
   border-color: #434343;
 }
@@ -286,7 +286,7 @@ function deleteTable() {
   transition: all 0.15s;
 }
 
-:where(.dark, .dark *) .grid-cell {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .grid-cell {
   border-color: #434343;
   background: #1f1f1f;
 }
@@ -295,7 +295,7 @@ function deleteTable() {
   border-color: #40a9ff;
 }
 
-:where(.dark, .dark *) .grid-cell:hover {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .grid-cell:hover {
   border-color: #4fc3f7;
 }
 
@@ -304,7 +304,7 @@ function deleteTable() {
   border-color: #91caff;
 }
 
-:where(.dark, .dark *) .grid-cell.active {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .grid-cell.active {
   background: #1a4d6e;
   border-color: #4fc3f7;
 }
@@ -328,7 +328,7 @@ function deleteTable() {
   border-radius: 6px;
   margin-bottom: 8px;
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     background: #262626;
     border-color: #434343;
   }
@@ -352,7 +352,7 @@ function deleteTable() {
   padding: 0 4px;
   border-right: 1px solid #e8e8e8;
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     border-right-color: #434343;
   }
 }
@@ -375,7 +375,7 @@ function deleteTable() {
   border-radius: 4px;
   transition: all 0.2s;
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     color: #f0f0f0;
   }
 }
@@ -383,7 +383,7 @@ function deleteTable() {
 .table-menu-btn:hover:not(:disabled) {
   background: #f5f5f5;
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     background: #303030;
   }
 }

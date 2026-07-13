@@ -28,6 +28,7 @@ export const zhTW: TiptapLocale = {
 
     // 字體
     fontFamily: '字體',
+    fontDefault: '預設字體',
     fontSize: '字號',
     lineHeight: '行距',
 
@@ -339,6 +340,11 @@ export const zhTW: TiptapLocale = {
     reject: '拒絕',
     accept: '接受',
 
+    // 編輯器狀態
+    initializing: '正在初始化編輯器...',
+    initFailed: '編輯器初始化失敗',
+    anonymousUser: '匿名用戶',
+
     // 語言代碼
     lang: {
       'zh-CN': '簡體中文',
@@ -420,6 +426,7 @@ export const zhTW: TiptapLocale = {
     provider: 'AI 提供商',
     apiKeyPlaceholder: '請輸入 API Key',
     apiKeyHint: 'API Key 僅保存在本地瀏覽器中，不會上傳到伺服器',
+    securityNote: '安全提示：API Key 以可逆混淆（非加密）方式儲存在瀏覽器 localStorage 中，頁面上執行的任何腳本（如 XSS、瀏覽器擴充功能）都可能讀取。請僅使用自己的、已設定額度限制的 Key；正式環境建議透過自建代理後端轉發請求。',
     endpoint: 'API 端點',
     model: '模型',
     enableAi: '啟用 AI 功能',
@@ -431,6 +438,33 @@ export const zhTW: TiptapLocale = {
     save: '儲存',
     cancel: '取消',
     clear: '清除設定',
+  },
+
+  aiChat: {
+    title: 'AI 助手',
+    close: '關閉',
+    welcome:
+      '用一句話描述你的需求，我會直接幫你編輯文檔。\n\n例如：\n· 「在文檔末尾加一個 3x3 的表格」\n· 「把第二段改寫得更簡潔」\n· 「把所有出現的產品名加粗」',
+    placeholder: '描述你想做的修改…（Enter 發送）',
+    send: '發送',
+    stop: '停止',
+    stopped: '已停止。',
+    running: '正在處理…',
+    settings: 'AI 設定',
+    configure: '設定 AI',
+    notConfigured: '還未設定 AI。設定 API Key 後即可用文字指令編輯文檔。',
+    error: '出錯了',
+    emptyResponse: 'AI 返回了空回覆，請重試。',
+    doneNoSummary: '已完成。',
+    tools: {
+      read_document: '讀取文檔',
+      get_selection: '讀取選區',
+      insert_blocks: '插入內容',
+      replace_blocks: '替換內容',
+      delete_blocks: '刪除內容',
+      edit_text: '編輯文本',
+      format_text: '設定格式',
+    },
   },
 }
 

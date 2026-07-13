@@ -8,7 +8,7 @@ import type { Editor } from '@tiptap/vue-3'
 /**
  * 版本类型
  */
-export type EditorVersion = 'basic' | 'advanced' | 'premium'
+export type EditorVersion = 'minimal' | 'basic' | 'advanced' | 'premium'
 
 /**
  * 编辑器功能配置
@@ -26,6 +26,8 @@ export interface FeatureConfig {
   mention?: boolean
   /** 是否启用斜杠命令菜单（输入 / 弹出块类型选择） */
   slashCommand?: boolean
+  /** 是否启用 AI 文档助手聊天面板（文字指令编辑文档），跟随 AI 功能开启，可显式关闭 */
+  aiChat?: boolean
   /** 是否启用悬浮框功能 */
   floatingMenu?: boolean
   /** 是否启用图片工具栏功能 */
@@ -81,6 +83,8 @@ export interface TiptapProEditorProps {
   previewMode?: boolean
   /** 文档ID(用于加载和保存以及协同房间) */
   documentId?: string
+  /** v-model 绑定内容 - HTML 字符串或 JSON 对象（传字符串时同步 HTML，传对象时同步 JSON）；优先于 initialContent 作为初始内容 */
+  modelValue?: string | object
   /** 初始内容 - 可以是 HTML 字符串或 JSON 对象（ProseMirror 格式） */
   initialContent?: string | object
   /** 表格悬浮框显示模式：1=聚焦显示；2=单元格选中显示 */

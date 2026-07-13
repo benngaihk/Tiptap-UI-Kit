@@ -7,7 +7,7 @@
     @change="onFontChange"
   >
     <a-select-option v-for="font in FONT_FAMILIES" :key="font.value" :value="font.value">
-      {{ font.label }}
+      {{ font.value === '' ? t('toolbar.fontDefault') : font.label }}
     </a-select-option>
   </a-select>
 </template>
@@ -17,9 +17,10 @@
  * FontFamilySelect - 字体选择器组件
  * @description 可复用的字体选择器组件，支持选择字体系列
  */
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import type { Editor } from '@tiptap/vue-3'
 import { createCommandRunner, executeBatchCommands } from '@/utils/editorCommands'
+import { useReactiveEditor } from '@/utils/editorState'
 import { t } from '@/locales'
 import { FONT_FAMILIES, DEFAULT_VALUES } from '@/configs/editorConstants'
 
@@ -29,7 +30,8 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const editor = computed(() => props.editor ?? null)
+// 事务响应式 editor：当前字体跟随光标/内容变化重新求值
+const editor = useReactiveEditor(() => props.editor)
 
 // ===== 工具函数 =====
 const runCommand = createCommandRunner(editor)
@@ -60,6 +62,9 @@ function onFontChange(val: string) {
 
   currentFont.value = val
 
+  // 空值 = 清除字体设置，回到主题默认
+  const applyFont = (chain: any) => (val === '' ? chain.unsetFontFamily() : chain.setFontFamily(val))
+
   const { from, to, empty } = e.state.selection
   if (empty) {
     // 无选区时：选中整个段落并应用字体
@@ -68,12 +73,12 @@ function onFontChange(val: string) {
     const end = $from.end($from.depth)
     executeBatchCommands(editor, [
       (chain) => chain.setTextSelection({ from: start, to: end }),
-      (chain) => chain.setFontFamily(val),
+      applyFont,
       (chain) => chain.setTextSelection({ from, to }),
     ])
   } else {
     // 有选区时：直接应用到选区
-    runCommand((chain) => chain.setFontFamily(val))()
+    runCommand(applyFont)()
   }
 }
 </script>

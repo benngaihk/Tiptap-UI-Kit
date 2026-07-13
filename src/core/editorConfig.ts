@@ -38,6 +38,7 @@ export interface FeatureFlags {
   linkBubbleMenu?: boolean
   tableToolbar?: boolean
   imageToolbar?: boolean
+  slashCommand?: boolean
   
   // AI
   ai?: boolean
@@ -123,6 +124,7 @@ export const PRESET_CONFIGS = {
       linkBubbleMenu: true,
       tableToolbar: true,
       imageToolbar: true,
+      slashCommand: true,
     },
   } satisfies Partial<EditorConfig>,
   
@@ -151,6 +153,7 @@ export const PRESET_CONFIGS = {
       linkBubbleMenu: true,
       tableToolbar: true,
       imageToolbar: true,
+      slashCommand: true,
       ai: true,
     },
   } satisfies Partial<EditorConfig>,
@@ -165,7 +168,10 @@ export const PRESET_CONFIGS = {
       // 浮动工具栏（选中文字时显示）
       floatingMenu: true,
       linkBubbleMenu: true,
-      
+
+      // 斜杠命令菜单（输入 / 唤起）
+      slashCommand: true,
+
       // 拖拽排序（六个点菜单）
       dragHandleMenu: true,
       

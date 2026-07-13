@@ -138,6 +138,7 @@ import { GalleryButton } from '@/features/advanced/gallery'
 import { AiMenuButton } from '@/ai'
 
 import { createCommandRunner } from '@/utils/editorCommands'
+import { useReactiveEditor } from '@/utils/editorState'
 import { t } from '@/locales'
 import type { ToolbarToolsConfig } from './toolbarConfig'
 import { DEFAULT_TOOLBAR_CONFIG } from './toolbarConfig'
@@ -162,7 +163,8 @@ const props = withDefaults(defineProps<Props>(), {
   enabled: true,
 })
 
-const editor = computed(() => props.editor ?? null)
+// 事务响应式 editor：颜色等状态跟随光标/内容变化重新求值
+const editor = useReactiveEditor(() => props.editor)
 
 // ===== 合并配置 =====
 const config = computed(() => {
@@ -233,7 +235,7 @@ watch(
 
 <style lang="scss" scoped>
 // Dark 模式选择器变量（用于统一管理暗色主题样式）
-$dark-selector: ':where(.dark, .dark *) &';
+$dark-selector: ':where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) &';
 
 /* ===== 工具栏容器 ===== */
 .editor-toolbar-container {

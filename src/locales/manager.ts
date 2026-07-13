@@ -18,8 +18,23 @@ const builtInLocales: Record<LocaleCode, LocaleMessages> = {
   'en-US': enUS,
 }
 
+/**
+ * Detect the best default locale from the browser language.
+ * Falls back to en-US in non-browser environments or for unsupported languages.
+ */
+export function detectDefaultLocale(): LocaleCode {
+  if (typeof navigator !== 'undefined' && navigator.language) {
+    const lang = navigator.language.toLowerCase()
+    if (lang.startsWith('zh')) {
+      // Traditional Chinese regions/scripts → zh-TW, otherwise zh-CN
+      return /tw|hk|mo|hant/.test(lang) ? 'zh-TW' : 'zh-CN'
+    }
+  }
+  return 'en-US'
+}
+
 // State
-const currentLocale = ref<LocaleCode>('zh-CN')
+const currentLocale = ref<LocaleCode>(detectDefaultLocale())
 const customMessages = ref<Record<string, LocaleMessages>>({})
 
 /**
@@ -63,10 +78,16 @@ export function t(key: string, params?: Record<string, string | number>): string
     }
   }
 
-  // Fall back to en-US
+  // Fall back to en-US (custom messages first, then built-in)
   if (result === key && locale !== 'en-US') {
-    const fallbackResult = getNestedValue(builtInLocales['en-US'], key)
-    if (fallbackResult !== key) result = fallbackResult
+    if (customMessages.value['en-US']) {
+      const customFallback = getNestedValue(customMessages.value['en-US'], key)
+      if (customFallback !== key) result = customFallback
+    }
+    if (result === key) {
+      const fallbackResult = getNestedValue(builtInLocales['en-US'], key)
+      if (fallbackResult !== key) result = fallbackResult
+    }
   }
 
   // Apply interpolation if params provided

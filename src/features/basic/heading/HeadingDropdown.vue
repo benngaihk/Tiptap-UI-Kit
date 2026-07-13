@@ -17,6 +17,7 @@
 import { computed } from 'vue'
 import type { Editor } from '@tiptap/vue-3'
 import { ToolbarGroup, ToolbarDropdownButton } from '@/ui'
+import { useReactiveEditor } from '@/utils/editorState'
 import { HEADING_OPTIONS } from '@/configs/editorConstants'
 import type { MenuItemConfig } from '@/configs/toolbar'
 import { t } from '@/locales'
@@ -28,7 +29,8 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const editor = computed(() => props.editor ?? null)
+// 事务响应式 editor：菜单状态跟随光标/内容变化重新求值
+const editor = useReactiveEditor(() => props.editor)
 
 // ===== 标题菜单项 =====
 const headingItems = computed<MenuItemConfig[]>(() => {
@@ -50,7 +52,7 @@ function onHeadingChange(val: string): void {
   const { from, to } = e.state.selection
 
   if (val === 'paragraph') {
-    e.chain().setParagraph().setTextSelection({ from, to }).run()
+    e.chain().focus().setParagraph().setTextSelection({ from, to }).run()
     return
   }
 
@@ -62,6 +64,7 @@ function onHeadingChange(val: string): void {
   const end = $from.end($from.depth)
 
   e.chain()
+    .focus()
     .setHeading({ level })
     .setTextSelection({ from: start, to: end })
     .unsetMark('textStyle')

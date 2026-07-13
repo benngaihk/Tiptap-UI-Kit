@@ -16,10 +16,11 @@
  * ZoomBar - 缩放控制栏组件
  * @description 提供文档缩放、页数统计和字数统计功能
  */
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { Button as AButton } from 'ant-design-vue'
 import type { Editor } from '@tiptap/vue-3'
 import { t } from '@/locales'
+import { debounce } from '@/utils/debounce'
 import '@/styles/zoom-toolbar.css'
 
 const props = withDefaults(
@@ -121,32 +122,34 @@ const updateCounts = () => {
   }
 }
 
-// 监听编辑器内容变化
+// 防抖：避免每次按键都全文重算字数
+const debouncedUpdateCounts = debounce(updateCounts, 200)
+
+// 监听编辑器内容变化（只监听 update：光标移动无需重算字数）
 watch(
   () => props.editor,
-  (editor) => {
+  (editor, oldEditor) => {
+    if (oldEditor) {
+      // 编辑器切换/销毁时清理旧监听
+      oldEditor.off('update', debouncedUpdateCounts)
+    }
     if (editor) {
-      // 初始化时更新一次
+      // 初始化时立即更新一次
       updateCounts()
-      
-      // 监听编辑器更新事件
-      editor.on('update', updateCounts)
-      editor.on('selectionUpdate', updateCounts)
+      // 监听编辑器更新事件（防抖）
+      editor.on('update', debouncedUpdateCounts)
+    } else {
+      // 编辑器销毁时归零
+      updateCounts()
     }
   },
   { immediate: true }
 )
 
-// 监听编辑器销毁
-watch(
-  () => props.editor,
-  (editor, oldEditor) => {
-    if (oldEditor && !editor) {
-      // 编辑器被销毁时清理监听
-      oldEditor.off('update', updateCounts)
-      oldEditor.off('selectionUpdate', updateCounts)
-    }
-  }
-)
+// 组件卸载时统一清理
+onBeforeUnmount(() => {
+  debouncedUpdateCounts.cancel()
+  props.editor?.off('update', debouncedUpdateCounts)
+})
 </script>
 

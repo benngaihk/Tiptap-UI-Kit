@@ -33,6 +33,7 @@ export interface TiptapLocale {
 
     // 字体
     fontFamily: string
+    fontDefault: string
     fontSize: string
     lineHeight: string
 
@@ -352,6 +353,11 @@ export interface TiptapLocale {
     reject: string
     accept: string
 
+    // 编辑器状态
+    initializing: string
+    initFailed: string
+    anonymousUser: string
+
     // 语言代码
     lang: {
       'zh-CN': string
@@ -436,6 +442,7 @@ export interface TiptapLocale {
     provider: string
     apiKeyPlaceholder: string
     apiKeyHint: string
+    securityNote: string
     endpoint: string
     model: string
     enableAi: string
@@ -447,6 +454,33 @@ export interface TiptapLocale {
     save: string
     cancel: string
     clear: string
+  }
+
+  // AI 文档助手（聊天面板）
+  aiChat: {
+    title: string
+    close: string
+    welcome: string
+    placeholder: string
+    send: string
+    stop: string
+    stopped: string
+    running: string
+    settings: string
+    configure: string
+    notConfigured: string
+    error: string
+    emptyResponse: string
+    doneNoSummary: string
+    tools: {
+      read_document: string
+      get_selection: string
+      insert_blocks: string
+      replace_blocks: string
+      delete_blocks: string
+      edit_text: string
+      format_text: string
+    }
   }
 }
 

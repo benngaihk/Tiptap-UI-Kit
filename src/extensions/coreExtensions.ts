@@ -32,6 +32,7 @@ import { ListShortcuts } from './listShortcuts'
 import { LineHeight } from './lineHeight'
 import { FormatPainter } from '@/features/advanced/format-painter'
 import { MathExtension } from '@/extensions/math'
+import { t } from '@/locales'
 import {
   CustomAiExtension,
   ContinueWritingExtension,
@@ -43,8 +44,44 @@ import {
 
 /**
  * 编辑器版本类型
+ * - 'minimal' / 1：最小集（基础文本格式 + 列表 + 撤销重做）
+ * - 'basic' / 2：基础集（颜色、对齐、图片、链接等，不含表格 / 数学公式 / 格式刷 / AI）
+ * - 'advanced' / 'premium' / 'all' / 'full' / 3 / 4：完整集（与历史行为一致，全量加载）
  */
-export type EditorVersion = 'basic' | 'advanced' | 'premium' | 'all' | 1 | 2 | 3 | 4
+export type EditorVersion =
+  | 'minimal'
+  | 'basic'
+  | 'advanced'
+  | 'premium'
+  | 'all'
+  | 'full'
+  | 1
+  | 2
+  | 3
+  | 4
+
+/** 内部功能等级：1=minimal 2=basic 3=full（advanced/premium/all 均为全量，保持向后兼容） */
+type ExtensionTier = 1 | 2 | 3
+
+function resolveTier(version: EditorVersion): ExtensionTier {
+  switch (version) {
+    case 'minimal':
+    case 1:
+      return 1
+    case 'basic':
+    case 2:
+      return 2
+    // advanced/premium/all/full 保持与历史行为一致：全量加载
+    case 'advanced':
+    case 'premium':
+    case 'all':
+    case 'full':
+    case 3:
+    case 4:
+    default:
+      return 3
+  }
+}
 
 /**
  * 扩展配置选项
@@ -58,12 +95,13 @@ export interface ExtensionsOptions {
 
 /**
  * 根据版本获取扩展配置
- * @param _version 编辑器版本（目前所有版本使用相同扩展，后续可根据版本区分）
+ * @param version 编辑器版本。不传时默认全量加载（与历史行为一致）；
+ *                'minimal' / 'basic' 只加载对应子集（表格、数学公式、格式刷、AI 等重扩展被剔除）
  * @param optionsOrEnableImageResize 配置选项或是否启用图片增强功能（兼容旧 API）
  * @returns 扩展配置数组
  */
 export function getExtensionsByVersion(
-  _version: EditorVersion = 'basic',
+  version: EditorVersion = 'all',
   optionsOrEnableImageResize: boolean | ExtensionsOptions = true
 ): AnyExtension[] {
   // 兼容旧 API：如果传入 boolean，转换为配置对象
@@ -73,10 +111,10 @@ export function getExtensionsByVersion(
 
   const { enableImageResize = true, disableHistory = false } = options
 
-  // TODO: 根据 version 参数区分不同版本的扩展配置
+  const tier = resolveTier(version)
   const extensions: AnyExtension[] = []
 
-  // 基础扩展（所有版本都包含）
+  // ===== 最小集（所有版本都包含）：基础文本格式、列表、撤销重做 =====
   // 协作模式下禁用 history，因为 @tiptap/extension-collaboration 自带历史管理
   const starterKitConfig: Record<string, unknown> = {
     // 禁用一些高级功能，在基础版中通过其他扩展提供
@@ -87,20 +125,41 @@ export function getExtensionsByVersion(
     link: false,
     underline: false,
   }
-  
+
   // 协作模式下禁用 history
   if (disableHistory) {
     starterKitConfig.history = false
   }
-  
+
   extensions.push(StarterKit.configure(starterKitConfig))
 
-  // 占位符扩展
+  // 占位符扩展（函数形式：语言切换后能取到新文案）
   extensions.push(
     Placeholder.configure({
-      placeholder: '开始编辑你的文档...',
+      placeholder: () => t('placeholder.default'),
     })
   )
+
+  // 下划线扩展
+  extensions.push(Underline)
+
+  // 任务列表扩展
+  extensions.push(TaskList)
+  extensions.push(
+    TaskItem.configure({
+      nested: true,
+    })
+  )
+
+  // 列表快捷键、字数统计（轻量，所有版本都包含）
+  extensions.push(ListShortcuts)
+  extensions.push(CharacterCount)
+
+  if (tier < 2) {
+    return extensions
+  }
+
+  // ===== 基础集（basic 及以上）：颜色、对齐、图片、链接、字体等 =====
 
   // 文本对齐扩展
   extensions.push(
@@ -108,9 +167,6 @@ export function getExtensionsByVersion(
       types: ['heading', 'paragraph'],
     })
   )
-
-  // 下划线扩展
-  extensions.push(Underline)
 
   // 颜色和文本样式扩展
   extensions.push(Color)
@@ -139,31 +195,6 @@ export function getExtensionsByVersion(
     })
   )
 
-  // 列表扩展
-  extensions.push(TaskList)
-  extensions.push(
-    TaskItem.configure({
-      nested: true,
-    })
-  )
-
-  // 代码块扩展（StarterKit 已包含）
-  // extensions.push(
-  //   CodeBlock.configure({
-  //     languageClassPrefix: 'language-',
-  //   })
-  // )
-
-  // 表格扩展
-  extensions.push(
-    Table.configure({
-      resizable: true,
-    })
-  )
-  extensions.push(TableRow)
-  extensions.push(TableCell)
-  extensions.push(TableHeader)
-
   // 字体扩展
   extensions.push(FontFamily)
   extensions.push(FontSize)
@@ -174,9 +205,6 @@ export function getExtensionsByVersion(
 
   // 行间距扩展
   extensions.push(LineHeight)
-
-  // 字数统计扩展
-  extensions.push(CharacterCount)
 
   // 视频扩展
   extensions.push(
@@ -189,7 +217,22 @@ export function getExtensionsByVersion(
   // 粘贴扩展
   extensions.push(PasteImage)
   extensions.push(PasteWord)
-  extensions.push(ListShortcuts)
+
+  if (tier < 3) {
+    return extensions
+  }
+
+  // ===== 完整集（advanced / premium / all）：表格、格式刷、数学公式、AI =====
+
+  // 表格扩展
+  extensions.push(
+    Table.configure({
+      resizable: true,
+    })
+  )
+  extensions.push(TableRow)
+  extensions.push(TableCell)
+  extensions.push(TableHeader)
 
   // 格式刷扩展
   extensions.push(FormatPainter)
@@ -210,7 +253,9 @@ export function getExtensionsByVersion(
 
 /**
  * 获取基础版扩展配置
- * @description 为了保持向后兼容，此函数内部调用 getExtensionsByVersion('basic')
+ * @description 此函数内部调用 getExtensionsByVersion('basic')。
+ *              注意：basic 版本现在只加载基础子集（不含表格 / 数学公式 / 格式刷 / AI），
+ *              如需全量扩展请使用 getExtensionsByVersion('all')
  * @deprecated 建议直接使用 getExtensionsByVersion('basic') 或 getExtensionsByVersion(2)
  */
 export function getBasicExtensions() {

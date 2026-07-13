@@ -68,7 +68,12 @@ function onDblClick() {
   background: transparent;
   border: none;
   border-radius: 4px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .tt-toolbar-button:disabled {
@@ -94,21 +99,12 @@ function onDblClick() {
 }
 
 .tt-toolbar-button:active:not(:disabled) {
-  background: #e8e8e8;
-}
-
-[data-theme="dark"] .tt-toolbar-button:active:not(:disabled) {
-  background: #262626;
+  background: var(--tiptap-toolbar-btn-active, #e8e8e8);
 }
 
 .tt-toolbar-button.is-active {
-  color: var(--menu-primary, #1890ff);
-  background: #e6f4ff;
-}
-
-[data-theme="dark"] .tt-toolbar-button.is-active {
-  color: #4fc3f7;
-  background: #1a4d6e;
+  color: var(--tiptap-primary, var(--menu-primary, #1890ff));
+  background: var(--tiptap-primary-light, #e6f4ff);
 }
 
 .tt-toolbar-button.is-danger {

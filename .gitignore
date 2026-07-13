@@ -5,8 +5,13 @@ node_modules/
 
 # Build output
 dist/
+dist-demo/
 dist-ssr/
 *.local
+
+# Generated type declarations (stale vue-tsc output; published types come from vite-plugin-dts)
+src/**/*.d.ts
+src/**/*.d.ts.map
 
 # Environment variables
 .env

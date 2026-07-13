@@ -1,8 +1,8 @@
 /**
  * Word 导入工具
  * @description 使用 mammoth 将 .docx 文件转换为 HTML 并插入编辑器
+ * @note mammoth 为按需动态加载，仅在实际执行导入时下载
  */
-import mammoth from 'mammoth'
 import type { Editor } from '@tiptap/core'
 
 export interface WordImportResult {
@@ -16,6 +16,10 @@ export interface WordImportResult {
  * @returns 转换结果（HTML + 消息）
  */
 export async function convertWordToHtml(file: File): Promise<WordImportResult> {
+  // 动态加载 mammoth（CJS 包，做 default/命名空间兼容处理）
+  const mammothModule: any = await import('mammoth')
+  const mammoth = mammothModule.default ?? mammothModule
+
   const arrayBuffer = await file.arrayBuffer()
   const result = await mammoth.convertToHtml(
     { arrayBuffer },
@@ -32,8 +36,8 @@ export async function convertWordToHtml(file: File): Promise<WordImportResult> {
   )
 
   return {
-    html: result.value,
-    messages: result.messages.map((m) => m.message),
+    html: result.value as string,
+    messages: (result.messages as Array<{ message: string }>).map((m) => m.message),
   }
 }
 

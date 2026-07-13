@@ -10,13 +10,13 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
   },
-  // Build demo app, not library
+  // Build demo app, not library (separate output dir so it never clobbers the library build)
   build: {
-    outDir: 'dist',
+    outDir: 'dist-demo',
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        sponsor: resolve(__dirname, 'sponsor.html'),
+        // sponsor.html now lives in public/ and is copied as a static asset
       },
     },
   },

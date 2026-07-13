@@ -71,14 +71,14 @@ import {
   DEFAULT_VALUES,
 } from '#/components/tiptapPro-tenant/advanced/font'
 
-// 获取所有字体选项
-console.log(FONT_FAMILIES) // [{ label: 'PMingLiU', value: 'PMingLiU' }, ...]
+// 获取所有字体选项（首项为空值 = 不指定字体，跟随主题默认）
+console.log(FONT_FAMILIES) // [{ label: 'Default', value: '' }, { label: 'Arial', value: 'Arial' }, ...]
 
 // 获取所有字号选项
 console.log(FONT_SIZES) // [{ label: '12', value: '12px' }, ...]
 
-// 获取默认值
-console.log(DEFAULT_VALUES) // { fontFamily: 'PMingLiU', fontSize: '16px', lineHeight: '1.5', ... }
+// 获取默认值（fontFamily 为空字符串 = 跟随主题默认，不写入 style）
+console.log(DEFAULT_VALUES) // { fontFamily: '', fontSize: '16px', lineHeight: '1.5', ... }
 ```
 
 > **注意**：常量定义已统一迁移到 `shared/configs/editorConstants.ts`，此处为重新导出。

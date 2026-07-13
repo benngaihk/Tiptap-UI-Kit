@@ -3,11 +3,55 @@
  * @description 编辑器状态检查工具函数
  */
 
+import { onBeforeUnmount, shallowRef, triggerRef, watch } from 'vue'
 import type { Ref } from 'vue'
 import type { Editor } from '@tiptap/core'
 
 /** Attribute value type for editor state checks */
 type AttributeValue = string | number | boolean | null | undefined
+
+/**
+ * 让编辑器实例变成"事务响应式"
+ * @description Tiptap 的事务不会触发 Vue 响应式更新（editor 实例身份不变），
+ * 导致依赖 editor 的 computed（isActive/getAttributes 等）不跟随光标移动重新求值。
+ * 本组合式函数内部订阅 editor 的 transaction 事件并 triggerRef 强制通知依赖方。
+ * 注意：不能用「computed 依赖 tick」实现——computed 重新求值后返回的仍是同一个
+ * Editor 实例，Vue 会因值相等（===）跳过下游 effect，必须用 triggerRef 绕过该截断。
+ * 自动处理实例更换与卸载清理。必须在组件 setup 中调用。
+ *
+ * @example
+ * ```typescript
+ * const editor = useReactiveEditor(() => props.editor)
+ * const { isActive } = createStateCheckers(editor) // isActive 现在跟随光标变化
+ * ```
+ */
+export function useReactiveEditor<T extends Editor>(
+  getEditor: () => T | null | undefined
+): Ref<T | null> {
+  // watch 的 immediate 回调会立即写入当前值，这里只需 null 初始化
+  const editorRef = shallowRef(null) as Ref<T | null>
+  let current: Editor | null = null
+  const onTransaction = () => {
+    if (current && !current.isDestroyed) triggerRef(editorRef)
+  }
+  watch(
+    getEditor,
+    (e) => {
+      if (current) current.off('transaction', onTransaction)
+      current = e ?? null
+      editorRef.value = (e ?? null) as T | null
+      if (current) current.on('transaction', onTransaction)
+    },
+    { immediate: true }
+  )
+  onBeforeUnmount(() => {
+    if (current) {
+      current.off('transaction', onTransaction)
+      current = null
+    }
+  })
+  return editorRef
+}
 
 /**
  * 状态检查器接口

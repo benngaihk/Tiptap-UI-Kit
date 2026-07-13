@@ -4,5 +4,6 @@
 export * from './editorCommands'
 export * from './editorState'
 export * from './clipboard'
+export * from './debounce'
 
 

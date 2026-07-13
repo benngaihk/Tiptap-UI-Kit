@@ -73,7 +73,7 @@
       <div class="document-pages" :style="{ transform: `scale(${zoomLevel / 100})` }">
         <div class="continuous-pages">
           <EditorContent v-if="editorInstance" :editor="editorInstance" class="word-content-multi" />
-          <div v-else class="editor-fallback">{{ editorError || '正在初始化编辑器...' }}</div>
+          <div v-else class="editor-fallback">{{ editorError || t('editor.initializing') }}</div>
         </div>
       </div>
     </div>
@@ -86,6 +86,9 @@
       :editor="editorInstance"
       :showCharCount="true"
     />
+
+    <!-- AI 文档助手（文字指令编辑文档，跟随 AI 功能开启） -->
+    <AiChatPanel v-if="aiChatEnabled" :editor="editorInstance" />
   </div>
 </template>
 
@@ -94,18 +97,21 @@
  * TiptapProEditor - 基础版富文本编辑器
  * @description 支持基础版功能的 Tiptap 编辑器
  */
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
+import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
+import { debounce } from '@/utils/debounce'
 import { Editor, EditorContent } from '@tiptap/vue-3'
+import type { Editor as CoreEditor } from '@tiptap/core'
 import type { TiptapProEditorProps } from './editorTypes'
 import { A4_WIDTH_PX, A4_HEIGHT_PX, PAGE_PADDING_TOP_PX, PAGE_PADDING_BOTTOM_PX, PAGE_CONTENT_HEIGHT_PX } from '@/extensions/pageConstants'
 // @vben/locales removed - using built-in i18n
-import { createI18n, useI18n as useTiptapI18n, type LocaleCode } from '@/locales'
+import { createI18n, detectDefaultLocale, t, useI18n as useTiptapI18n, type LocaleCode } from '@/locales'
 
 // 公共工具栏
 import { ToolbarNav, BASIC_TOOLBAR_CONFIG, ADVANCED_TOOLBAR_CONFIG, type ToolbarToolsConfig } from '@/tools/header-nav'
 
 // 功能模块组件
 import { LinkBubbleMenu } from '@/tools/link-bubble'
+import { AiChatPanel } from '@/ai/agent'
 import { TableToolbar } from '@/tools/table-toolbar'
 import { FooterNav } from '@/tools/footer-nav'
 import { ImageToolbar } from '@/tools/image-toolbar'
@@ -140,12 +146,20 @@ import '@/styles/image-resize.css'
 import '@/styles/collaboration.css'
 import '@/styles/slash-command.css'
 
+// 主题预设（类名作用域隔离：.theme-word / .theme-notion / ...，随包发布，使用者无需单独引入）
+import '@/themes/presets/word.css'
+import '@/themes/presets/notion.css'
+import '@/themes/presets/github.css'
+import '@/themes/presets/typora.css'
+
 const props = withDefaults(defineProps<TiptapProEditorProps>(), {
   zoomBarPlacement: 'bottom',
   readonly: false,
   previewMode: false,
-  initialContent: '<p>开始编辑你的文档...</p>',
-  version: 'basic',
+  initialContent: '',
+  // 默认全功能：与 0.1.x 行为一致（旧文档含表格/公式可正常打开，AI 入口有对应扩展支撑）；
+  // 追求更小运行时的使用者显式传 'basic' / 'minimal'
+  version: 'premium',
 })
 
 // ===== 预览模式 =====
@@ -153,6 +167,7 @@ const isPreviewMode = computed(() => props.previewMode)
 
 const emit = defineEmits<{
   update: [content: any]
+  'update:modelValue': [value: string | object]
   collaboratorsChange: [count: number]
   collaboratorsListChange: [users: Array<{ id: string | number; name: string; color: string }>]
 }>()
@@ -181,11 +196,11 @@ const getUserInfo = (): { id: string | number; name: string } => {
     const userInfo = userStore.userInfo
     if (userInfo) {
       const id = userInfo.userId || (userInfo as any).id || (userInfo as any).user_id || 'anonymous'
-      const name = userInfo.realName || userInfo.userName || (userInfo as any).name || (userInfo as any).real_name || (userInfo as any).username || '匿名用户'
+      const name = userInfo.realName || userInfo.userName || (userInfo as any).name || (userInfo as any).real_name || (userInfo as any).username || t('editor.anonymousUser')
       return { id, name }
     }
   } catch {}
-  return { id: 'anonymous', name: '匿名用户' }
+  return { id: 'anonymous', name: t('editor.anonymousUser') }
 }
 
 // ===== 协作编辑（使用 Composable） =====
@@ -314,9 +329,21 @@ const toolbarConfig = computed<ToolbarToolsConfig>(() => {
   }
 })
 
+// AI 文档助手：仅在加载了 AI 扩展的档位（advanced/premium）可用；
+// versionConfig.features.ai 与 features.aiChat 均可显式关闭；预览/只读下隐藏
+const aiChatEnabled = computed(
+  () =>
+    (props.version === 'advanced' || props.version === 'premium') &&
+    props.versionConfig?.features?.ai !== false &&
+    props.features?.aiChat !== false &&
+    !isPreviewMode.value &&
+    !props.readonly
+)
+
 // ===== 国际化 =====
 // Use locale from props instead of @vben/locales
-const currentLocale = computed(() => props.locale || 'zh-CN')
+// 不传 locale 时按浏览器语言自动检测（zh → zh-CN/zh-TW，其它 → en-US）
+const currentLocale = computed(() => props.locale || detectDefaultLocale())
 
 const mapLocaleToTiptapLocale = (locale: string): LocaleCode => {
   const localeMap: Record<string, LocaleCode> = {
@@ -365,6 +392,23 @@ const calculatePages = () => {
   })
 }
 
+// 分页计算：防抖 + requestAnimationFrame 合帧，避免输入时频繁强制重排
+// （编辑器初始化后的首次分页计算仍直接调用 calculatePages，保证首屏不跳动）
+let pagesRafId: number | null = null
+const schedulePageCalculation = debounce(() => {
+  if (pagesRafId !== null) cancelAnimationFrame(pagesRafId)
+  pagesRafId = requestAnimationFrame(() => {
+    pagesRafId = null
+    calculatePages()
+  })
+}, 200)
+
+// update 事件防抖派发（getJSON 全文序列化开销较大）
+const emitUpdateDebounced = debounce((editorInst: CoreEditor) => {
+  if (editorInst.isDestroyed) return
+  emit('update', editorInst.getJSON())
+}, 200)
+
 // ===== 编辑器内容管理 =====
 const getEditorContent = () => {
   try {
@@ -380,9 +424,52 @@ const getInitialContent = (): any => {
     const currentContent = getEditorContent()
     if (currentContent) return currentContent
   }
-  // 使用 collaboration 模块的 normalizeContent
-  return normalizeContent(props.initialContent, { silent: true })
+  // 使用 collaboration 模块的 normalizeContent（modelValue 优先于 initialContent）
+  return normalizeContent(props.modelValue ?? props.initialContent, { silent: true })
 }
+
+// ===== v-model 支持 =====
+// 以「是否绑定了 update:modelValue 监听器」判定 v-model 是否启用：
+// 用 ref<string>()（初值 undefined）绑定 v-model 是常见写法，不能用 modelValue !== undefined 判定
+const hasModelValueListener = !!getCurrentInstance()?.vnode.props?.['onUpdate:modelValue']
+
+// 记录最近一次 emit 出去的值：v-model 回环写回时 O(1) 短路，避免每次按键的二次全文序列化
+let lastEmittedModelValue: string | object | undefined
+
+/**
+ * 同步 v-model（不防抖，v-model 语义要求同步）
+ * @description modelValue 当前为 object 时输出 JSON，否则输出 HTML 字符串
+ */
+const emitModelValue = (editorInst: CoreEditor) => {
+  if (!hasModelValueListener) return
+  const isObjectMode = typeof props.modelValue === 'object' && props.modelValue !== null
+  const value = isObjectMode ? editorInst.getJSON() : editorInst.getHTML()
+  lastEmittedModelValue = value
+  emit('update:modelValue', value)
+}
+
+// 外部 modelValue 变化时同步到编辑器（先与当前内容比较，避免 v-model 循环更新）
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (newValue === undefined || !editor.value) return
+    // 我们刚 emit 出去的值被父组件写回来了（v-model 回环），直接短路
+    if (newValue === lastEmittedModelValue) return
+    // 协作模式下内容由 Yjs 共享文档管理，外部整体 setContent 会覆盖所有协作者的内容
+    if (isCollaborationAvailable.value) {
+      console.warn('[TiptapProEditor] Ignoring external modelValue write while collaboration is active.')
+      return
+    }
+    const isObjectMode = typeof newValue === 'object' && newValue !== null
+    const isSame = isObjectMode
+      ? JSON.stringify(editor.value.getJSON()) === JSON.stringify(newValue)
+      : editor.value.getHTML() === newValue
+    if (!isSame) {
+      editor.value.commands.setContent(newValue as any, { emitUpdate: false })
+      schedulePageCalculation()
+    }
+  }
+)
 
 // ===== 协作功能初始化（使用 useCollaboration） =====
 const initCollaborationFeature = async (initialContent: any, extensions: any[]) => {
@@ -415,6 +502,9 @@ const initCollaborationFeature = async (initialContent: any, extensions: any[]) 
     extensions.push(...collabExtensions)
   } catch {}
 }
+
+// 注：工具栏状态的「事务 → 响应式」桥接由各子组件的 useReactiveEditor（src/utils/editorState.ts）
+// 自行订阅完成，本组件无需（也不应）在父级做 triggerRef 广播。
 
 // ===== 编辑器初始化 =====
 const initEditor = async () => {
@@ -460,8 +550,9 @@ const initEditor = async () => {
     // 初始化协作功能
     await initCollaborationFeature(initialContentToUse, extensions)
 
-    // 销毁旧编辑器
+    // 销毁旧编辑器（先 flush 待派发的 update，避免丢失最后 200ms 内的输入）
     if (editor.value) {
+      emitUpdateDebounced.flush()
       editor.value.destroy()
       editor.value = null
     }
@@ -480,8 +571,10 @@ const initEditor = async () => {
         attributes: { class: 'word-editor-content' },
       },
       onUpdate: ({ editor }) => {
-        calculatePages()
-        emit('update', editor.getJSON())
+        schedulePageCalculation()
+        // v-model 同步不防抖，update 事件防抖派发
+        emitModelValue(editor)
+        emitUpdateDebounced(editor)
       },
     })
 
@@ -501,9 +594,11 @@ const initEditor = async () => {
     }
 
     calculatePages()
+    // 观察内容元素尺寸：字体/图片/异步 NodeView 加载完成引起的内容高度变化都会触发页数重算
+    observeContentResize()
   } catch (error) {
     console.error('[TiptapProEditor] Editor initialization failed:', error)
-    editorError.value = '编辑器初始化失败'
+    editorError.value = t('editor.initFailed')
   } finally {
     isInitializing.value = false
   }
@@ -513,17 +608,50 @@ const initEditor = async () => {
 const destroyEditor = async () => {
   collaboration.disable()
   if (editor.value) {
+    // 先 flush 待派发的 update，避免丢失最后 200ms 内的输入（自动保存场景）
+    emitUpdateDebounced.flush()
     editor.value.destroy()
     editor.value = null
   }
 }
 
 // ===== 生命周期 =====
+// 观察「内容元素 + 外层容器」的尺寸变化重算页数：
+// 内容元素（.ProseMirror）覆盖字体/图片加载、异步 NodeView 造成的内容高度变化；
+// 外层容器覆盖窗口缩放、编辑器从隐藏容器变为可见等布局场景
+let containerResizeObserver: ResizeObserver | null = null
+
+const observeContentResize = () => {
+  if (typeof ResizeObserver === 'undefined') return
+  if (!containerResizeObserver) {
+    containerResizeObserver = new ResizeObserver(() => {
+      schedulePageCalculation()
+    })
+  } else {
+    containerResizeObserver.disconnect()
+  }
+  if (containerRef.value) containerResizeObserver.observe(containerRef.value)
+  const contentDom = editor.value?.view?.dom
+  if (contentDom) containerResizeObserver.observe(contentDom)
+}
+
 onMounted(async () => {
   await initEditor()
+  // 字体加载完成后内容高度会变化，就绪后再校正一次页数
+  if (typeof document !== 'undefined' && document.fonts?.ready) {
+    document.fonts.ready.then(() => schedulePageCalculation()).catch(() => {})
+  }
 })
 
 onBeforeUnmount(async () => {
+  containerResizeObserver?.disconnect()
+  containerResizeObserver = null
+  // 分页计算直接丢弃；update 事件在 destroyEditor 内 flush（不丢最后 200ms 的输入）
+  schedulePageCalculation.cancel()
+  if (pagesRafId !== null) {
+    cancelAnimationFrame(pagesRafId)
+    pagesRafId = null
+  }
   await destroyEditor()
 })
 

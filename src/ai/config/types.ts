@@ -132,7 +132,7 @@ export const AI_PROVIDERS: AiProviderInfo[] = [
     id: 'ollama',
     name: 'Ollama (本地)',
     description: '本地运行的开源模型',
-    defaultEndpoint: 'http://localhost:11434/api',
+    defaultEndpoint: 'http://localhost:11434/v1',
     defaultModel: 'llama3.2',
     requiresApiKey: false,
     docsUrl: 'https://ollama.com/docs',

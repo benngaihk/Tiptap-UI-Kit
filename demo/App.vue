@@ -116,6 +116,7 @@ import LandingPage from './LandingPage.vue'
 import EditorAutoDemo from './EditorAutoDemo.vue'
 import InlinePluginDemo from './InlinePluginDemo.vue'
 import { createI18n, type LocaleCode } from '../src/locales'
+import { detectDefaultLocale } from '../src/locales/manager'
 import { PRESET_CONFIGS } from '../src/core/editorConfig'
 import type { FeatureFlags, ThemePreset } from '../src/core/editorConfig'
 import { setTheme, setDeviceView, setOrientation, type DeviceView, THEME_PRESETS } from '../src/themes'
@@ -128,15 +129,22 @@ import '../src/themes/presets/github.css'
 import '../src/themes/presets/typora.css'
 import '../src/styles/device-responsive.css'
 
-// Landing page state
-const showLanding = ref(true)
+// Landing page state（用 hash 记住状态，刷新不回落地页）
+const showLanding = ref(!location.hash.startsWith('#demo'))
 
 // Demo mode: 'full' = full editor, 'inline' = inline + plugins
-const demoMode = ref<'full' | 'inline'>('full')
+const demoMode = ref<'full' | 'inline'>(location.hash === '#demo-inline' ? 'inline' : 'full')
 
 const handleStartDemo = () => {
   showLanding.value = false
+  history.replaceState(null, '', '#demo')
 }
+
+watch(demoMode, (mode) => {
+  if (!showLanding.value) {
+    history.replaceState(null, '', mode === 'inline' ? '#demo-inline' : '#demo')
+  }
+})
 
 // Theme mode (light/dark)
 const theme = ref<'light' | 'dark'>('light')
@@ -175,8 +183,8 @@ const antdTheme = computed(() => ({
   algorithm: theme.value === 'dark' ? antTheme.darkAlgorithm : antTheme.defaultAlgorithm,
 }))
 
-// Locale
-const locale = ref<LocaleCode>('en-US')
+// Locale（初始值跟随浏览器语言自动检测，与 i18n manager 保持一致）
+const locale = ref<LocaleCode>(detectDefaultLocale())
 watch(locale, (newLocale) => {
   createI18n({ locale: newLocale })
 })

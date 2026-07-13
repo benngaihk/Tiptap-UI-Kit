@@ -17,9 +17,10 @@
  * FontSizeSelect - 字号选择器组件
  * @description 可复用的字号选择器组件，支持选择字号大小
  */
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import type { Editor } from '@tiptap/vue-3'
 import { createCommandRunner, executeBatchCommands } from '@/utils/editorCommands'
+import { useReactiveEditor } from '@/utils/editorState'
 import { t } from '@/locales'
 import { FONT_SIZES, DEFAULT_VALUES } from '@/configs/editorConstants'
 
@@ -29,7 +30,8 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const editor = computed(() => props.editor ?? null)
+// 事务响应式 editor：当前字号跟随光标/内容变化重新求值
+const editor = useReactiveEditor(() => props.editor)
 
 // ===== 工具函数 =====
 const runCommand = createCommandRunner(editor)

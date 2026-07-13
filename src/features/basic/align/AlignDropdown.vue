@@ -18,7 +18,7 @@ import { computed } from 'vue'
 import type { Editor } from '@tiptap/vue-3'
 import { ToolbarGroup, ToolbarDropdownButton } from '@/ui'
 import { createCommandRunner } from '@/utils/editorCommands'
-import { createStateCheckers } from '@/utils/editorState'
+import { createStateCheckers, useReactiveEditor } from '@/utils/editorState'
 import type { AlignValue, MenuItemConfig } from '@/configs/toolbar'
 import { t } from '@/locales'
 import {
@@ -34,7 +34,8 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const editor = computed(() => props.editor ?? null)
+// 事务响应式 editor：isActiveAlign 等状态跟随光标/内容变化重新求值
+const editor = useReactiveEditor(() => props.editor)
 
 // ===== 工具函数 =====
 const runCommand = createCommandRunner(editor)

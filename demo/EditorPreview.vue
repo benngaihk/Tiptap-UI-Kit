@@ -198,7 +198,7 @@ const demoScript: DemoStep[] = [
   // Code block
   { action: 'format', format: 'code' },
   { action: 'addLine', line: { html: '', class: 'line-code', tag: 'pre' } },
-  { action: 'type', text: '<span class="code-kw">import</span> { TiptapEditor } <span class="code-kw">from</span> <span class="code-str">\'tiptap-ui-kit\'</span>', lineIndex: 7, duration: 25 },
+  { action: 'type', text: '<span class="code-kw">import</span> { TiptapProEditor } <span class="code-kw">from</span> <span class="code-str">\'tiptap-ui-kit\'</span>', lineIndex: 7, duration: 25 },
   { action: 'format', format: '' },
   { action: 'pause', duration: 300 },
 
@@ -337,21 +337,24 @@ onBeforeUnmount(() => {
 .editor-preview__glow {
   position: absolute;
   inset: -20px;
-  background: conic-gradient(
-    from 0deg,
-    #667eea33, #764ba233, #f093fb33, #f5576c33,
-    #43e97b33, #38f9d733, #4facfe33, #667eea33
-  );
+  /* 预模糊的多层径向渐变代替 conic-gradient + filter: blur()：
+     blur 滤镜叠加旋转动画会逐帧重栅格化、严重拖垮合成器；
+     渐变自带柔边，动画只走 transform，全程留在合成线程 */
+  background:
+    radial-gradient(45% 45% at 25% 25%, rgba(102, 126, 234, 0.4), transparent 70%),
+    radial-gradient(50% 50% at 75% 20%, rgba(240, 147, 251, 0.35), transparent 70%),
+    radial-gradient(45% 50% at 80% 75%, rgba(67, 233, 123, 0.3), transparent 70%),
+    radial-gradient(50% 45% at 25% 80%, rgba(79, 172, 254, 0.38), transparent 70%),
+    radial-gradient(60% 60% at 50% 50%, rgba(118, 75, 162, 0.25), transparent 75%);
   border-radius: 24px;
-  filter: blur(40px);
   opacity: 0.6;
   animation: glow-rotate 8s linear infinite;
+  will-change: transform;
   z-index: 0;
 }
 
 .editor-preview[data-theme="dark"] .editor-preview__glow {
-  opacity: 0.4;
-  filter: blur(50px);
+  opacity: 0.45;
 }
 
 @keyframes glow-rotate {
@@ -705,8 +708,8 @@ onBeforeUnmount(() => {
   border-radius: 12px;
   font-size: 13px;
   font-weight: 600;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  /* 不用 backdrop-filter（配合无限浮动动画时逐帧重采样背景，代价极高），
+     改用高不透明度实底色，见 .label--* 与暗色覆盖 */
   opacity: 0;
   transform: translateY(10px) scale(0.9);
   transition: none;
@@ -747,7 +750,7 @@ onBeforeUnmount(() => {
 .label--themes {
   top: 15%;
   right: -75px;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.94);
   color: #333;
   box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15), 0 0 0 1px rgba(102, 126, 234, 0.1);
 }
@@ -759,7 +762,7 @@ onBeforeUnmount(() => {
 .label--ai {
   bottom: 35%;
   left: -70px;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.94);
   color: #333;
   box-shadow: 0 4px 20px rgba(240, 147, 251, 0.15), 0 0 0 1px rgba(240, 147, 251, 0.1);
 }
@@ -771,7 +774,7 @@ onBeforeUnmount(() => {
 .label--collab {
   top: 55%;
   right: -85px;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.94);
   color: #333;
   box-shadow: 0 4px 20px rgba(67, 233, 123, 0.15), 0 0 0 1px rgba(67, 233, 123, 0.1);
 }
@@ -783,7 +786,7 @@ onBeforeUnmount(() => {
 .label--word {
   bottom: 10%;
   left: -65px;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.94);
   color: #333;
   box-shadow: 0 4px 20px rgba(79, 172, 254, 0.15), 0 0 0 1px rgba(79, 172, 254, 0.1);
 }
@@ -793,7 +796,7 @@ onBeforeUnmount(() => {
 }
 
 .editor-preview[data-theme="dark"] .floating-label {
-  background: rgba(26, 27, 38, 0.85);
+  background: rgba(26, 27, 38, 0.94);
   color: #c0caf5;
 }
 
@@ -892,7 +895,6 @@ onBeforeUnmount(() => {
   }
   .editor-preview__glow {
     inset: -15px;
-    filter: blur(30px);
   }
 }
 
@@ -932,7 +934,6 @@ onBeforeUnmount(() => {
 
   .editor-preview__glow {
     inset: -10px;
-    filter: blur(25px);
   }
 
   .mobile-label {

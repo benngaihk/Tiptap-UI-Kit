@@ -11,6 +11,9 @@
   background: var(--tp-menu-bg, #fff);
   border-radius: var(--tp-menu-radius, 8px);
   box-shadow: var(--tp-menu-shadow, 0 4px 12px rgb(0 0 0 / 15%));
+
+  /* 出现动画：轻量淡入 + 上移（keyframes 定义于 base.css） */
+  animation: tp-fade-in 0.12s ease both;
 }
 
 /* 暗黑模式 - 气泡菜单 */

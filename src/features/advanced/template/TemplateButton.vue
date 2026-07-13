@@ -105,11 +105,11 @@ function insertTemplate(tpl: TemplateItem) {
   background: #f0f5ff;
 }
 
-:where(.dark, .dark *) .template-card {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .template-card {
   border-color: #434343;
 }
 
-:where(.dark, .dark *) .template-card:hover {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .template-card:hover {
   border-color: #4fc3f7;
   background: #1a3a4d;
 }
@@ -127,7 +127,7 @@ function insertTemplate(tpl: TemplateItem) {
   border-radius: 8px;
 }
 
-:where(.dark, .dark *) .template-card__icon {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .template-card__icon {
   color: #4fc3f7;
   background: #1a4d6e;
 }
@@ -144,7 +144,7 @@ function insertTemplate(tpl: TemplateItem) {
   margin-bottom: 4px;
 }
 
-:where(.dark, .dark *) .template-card__name {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .template-card__name {
   color: #e0e0e0;
 }
 
@@ -154,7 +154,7 @@ function insertTemplate(tpl: TemplateItem) {
   line-height: 1.4;
 }
 
-:where(.dark, .dark *) .template-card__desc {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .template-card__desc {
   color: #8c8c8c;
 }
 

@@ -427,7 +427,7 @@ watch(normalizedColor, (newColor) => {
 
 <style lang="scss" scoped>
 // Dark 模式选择器变量（用于统一管理暗色主题样式）
-$dark-selector: ':where(.dark, .dark *) &';
+$dark-selector: ':where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) &';
 
 /* ===== 颜色选择按钮 ===== */
 .tt-color-current-btn {

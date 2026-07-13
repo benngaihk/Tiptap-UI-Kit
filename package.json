@@ -1,6 +1,6 @@
 {
   "name": "tiptap-ui-kit",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Beautiful Tiptap 3 + Vue 3 rich-text editor theme with AI support",
   "type": "module",
   "packageManager": "pnpm@9.15.9",
@@ -27,7 +27,6 @@
     "dev": "vite",
     "build": "vite build",
     "build:demo": "vite build --config vite.config.demo.ts",
-    "build:types": "vue-tsc --emitDeclarationOnly",
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest",
@@ -37,28 +36,42 @@
     "prepare": "npm run build",
     "prepublishOnly": "pnpm build",
     "pack:check": "pnpm build && npm pack --dry-run",
-    "release": "pnpm build && pnpm publish --access public",
-    "moltbook": "node scripts/moltbook-bot.cjs",
-    "moltbook:post": "node scripts/moltbook-bot.cjs post",
-    "moltbook:status": "node scripts/moltbook-bot.cjs status",
-    "moltbook:auto": "node scripts/moltbook-bot.cjs auto",
-    "moltbook:smart": "node scripts/moltbook-smart-bot.cjs run",
-    "moltbook:smart:auto": "node scripts/moltbook-smart-bot.cjs auto",
-    "moltbook:feedback": "node scripts/moltbook-smart-bot.cjs feedback",
-    "moltbook:monitor": "node scripts/moltbook-monitor.cjs",
-    "moltbook:watch": "node scripts/moltbook-monitor.cjs watch"
+    "release": "pnpm build && pnpm publish --access public"
   },
   "peerDependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
     "@tiptap/core": "^3.0.0",
+    "@tiptap/extension-collaboration": "^3.0.0",
+    "@tiptap/extension-collaboration-cursor": "^2.26.2",
     "@tiptap/pm": "^3.0.0",
     "@tiptap/starter-kit": "^3.0.0",
     "@tiptap/vue-3": "^3.0.0",
-    "vue": "^3.4.0"
+    "ant-design-vue": "^4.0.0",
+    "vue": "^3.4.0",
+    "y-websocket": "^3.0.0",
+    "yjs": "^13.6.0"
+  },
+  "peerDependenciesMeta": {
+    "@tiptap/extension-collaboration": {
+      "optional": true
+    },
+    "@tiptap/extension-collaboration-cursor": {
+      "optional": true
+    },
+    "y-websocket": {
+      "optional": true
+    },
+    "yjs": {
+      "optional": true
+    }
   },
   "devDependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
     "@tiptap/core": "^3.7.2",
     "@tiptap/extension-bubble-menu": "^3.7.2",
     "@tiptap/extension-code-block-lowlight": "^3.7.1",
+    "@tiptap/extension-collaboration": "^3.13.0",
+    "@tiptap/extension-collaboration-cursor": "^2.26.2",
     "@tiptap/extension-typography": "^3.7.2",
     "@tiptap/extensions": "^3.11.1",
     "@tiptap/pm": "^3.7.2",
@@ -70,10 +83,9 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitest/ui": "^4.0.18",
     "@vue/test-utils": "^2.4.6",
+    "ant-design-vue": "^4.2.6",
     "happy-dom": "^20.4.0",
     "lowlight": "^3.3.0",
-    "lucide-vue-next": "^0.507.0",
-    "rollup-plugin-obfuscator": "^1.1.0",
     "sass-embedded": "^1.96.0",
     "terser": "^5.44.1",
     "typescript": "^5.7.2",
@@ -82,7 +94,9 @@
     "vitest": "^4.0.18",
     "vue": "^3.5.13",
     "vue-tsc": "^2.1.10",
-    "vue-types": "^3.0.2"
+    "vue-types": "^3.0.2",
+    "y-websocket": "^3.0.0",
+    "yjs": "^13.6.27"
   },
   "keywords": [
     "tiptap",
@@ -137,10 +151,7 @@
     "pnpm": ">=8.0.0"
   },
   "dependencies": {
-    "@ant-design/icons-vue": "^7.0.1",
     "@tiptap/extension-character-count": "^3.0.0",
-    "@tiptap/extension-collaboration": "^3.13.0",
-    "@tiptap/extension-collaboration-cursor": "^2.26.2",
     "@tiptap/extension-color": "^3.0.0",
     "@tiptap/extension-font-family": "^3.7.2",
     "@tiptap/extension-highlight": "^3.0.0",
@@ -158,12 +169,9 @@
     "@tiptap/extension-text-align": "^3.0.0",
     "@tiptap/extension-text-style": "^3.0.0",
     "@tiptap/extension-underline": "^3.0.0",
-    "ant-design-vue": "^4.2.6",
     "docx": "^9.5.1",
     "file-saver": "^2.0.5",
     "katex": "^0.16.28",
-    "mammoth": "^1.11.0",
-    "y-websocket": "^3.0.0",
-    "yjs": "^13.6.27"
+    "mammoth": "^1.11.0"
   }
 }

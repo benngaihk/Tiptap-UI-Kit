@@ -22,8 +22,9 @@ export interface AiApiResponse {
 /**
  * Load API configuration
  * Priority: User config > Environment variables > Defaults
+ * @description 也供 ai/agent 的 tool-use 循环复用
  */
-function getAiConfig() {
+export function getAiConfig() {
   // First check user config (localStorage)
   const userConfig = getAiRequestConfig()
   if (userConfig) {
@@ -48,13 +49,15 @@ function getAiConfig() {
 }
 
 // Get base URL for provider
-function getBaseUrl(provider: string, customUrl: string): string {
+export function getBaseUrl(provider: string, customUrl: string): string {
   if (customUrl) return customUrl
   const urls: Record<string, string> = {
     openai: 'https://api.openai.com/v1',
+    anthropic: 'https://api.anthropic.com/v1',
     aliyun: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
     deepseek: 'https://api.deepseek.com/v1',
-    ollama: 'http://localhost:11434/api',
+    // Ollama 的 OpenAI 兼容端点（/api 是其私有协议，不兼容 /chat/completions）
+    ollama: 'http://localhost:11434/v1',
   }
   return urls[provider] || urls.openai
 }

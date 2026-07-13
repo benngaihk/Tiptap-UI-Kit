@@ -33,6 +33,7 @@
           class="ai-settings__input"
         />
         <p class="ai-settings__hint">{{ t('aiSettings.apiKeyHint') }}</p>
+        <p class="ai-settings__hint ai-settings__hint--warning">{{ t('aiSettings.securityNote') }}</p>
       </div>
 
       <!-- 自定义端点 -->
@@ -299,6 +300,10 @@ function handleClose() {
 
 .ai-settings__hint a {
   color: var(--primary-color, #1890ff);
+}
+
+.ai-settings__hint--warning {
+  color: var(--warning-color, #d48806);
 }
 
 .ai-settings__error {

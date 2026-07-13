@@ -1,6 +1,6 @@
 {
   "buildCommand": "vite build --config vite.config.demo.ts",
-  "outputDirectory": "dist",
+  "outputDirectory": "dist-demo",
   "devCommand": "pnpm dev",
   "installCommand": "pnpm install",
   "framework": null,

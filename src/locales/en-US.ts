@@ -28,6 +28,7 @@ export const enUS: TiptapLocale = {
 
     // Font
     fontFamily: 'Font',
+    fontDefault: 'Default',
     fontSize: 'Font Size',
     lineHeight: 'Line Height',
 
@@ -339,6 +340,11 @@ export const enUS: TiptapLocale = {
     reject: 'Reject',
     accept: 'Accept',
 
+    // Editor status
+    initializing: 'Initializing editor...',
+    initFailed: 'Editor initialization failed',
+    anonymousUser: 'Anonymous',
+
     // Language codes
     lang: {
       'zh-CN': 'Simplified Chinese',
@@ -420,6 +426,7 @@ export const enUS: TiptapLocale = {
     provider: 'AI Provider',
     apiKeyPlaceholder: 'Enter API Key',
     apiKeyHint: 'API Key is stored locally in your browser and will not be uploaded to any server',
+    securityNote: 'Security note: the key is stored in browser localStorage with reversible obfuscation (not encryption), so any script running on this page (XSS, browser extensions) could read it. Only use your own key with a spending limit; for production, route requests through your own backend proxy.',
     endpoint: 'API Endpoint',
     model: 'Model',
     enableAi: 'Enable AI Features',
@@ -431,6 +438,33 @@ export const enUS: TiptapLocale = {
     save: 'Save',
     cancel: 'Cancel',
     clear: 'Clear Config',
+  },
+
+  aiChat: {
+    title: 'AI Assistant',
+    close: 'Close',
+    welcome:
+      'Describe what you want in plain words and I will edit the document for you.\n\nFor example:\n· "Add a 3x3 table at the end"\n· "Rewrite the second paragraph to be more concise"\n· "Bold every occurrence of the product name"',
+    placeholder: 'Describe an edit… (Enter to send)',
+    send: 'Send',
+    stop: 'Stop',
+    stopped: 'Stopped.',
+    running: 'Working…',
+    settings: 'AI Settings',
+    configure: 'Configure AI',
+    notConfigured: 'AI is not configured yet. Set up your API key to start editing with text commands.',
+    error: 'Something went wrong',
+    emptyResponse: 'The AI returned an empty response. Please try again.',
+    doneNoSummary: 'Done.',
+    tools: {
+      read_document: 'Read document',
+      get_selection: 'Read selection',
+      insert_blocks: 'Insert content',
+      replace_blocks: 'Replace content',
+      delete_blocks: 'Delete content',
+      edit_text: 'Edit text',
+      format_text: 'Format text',
+    },
   },
 }
 

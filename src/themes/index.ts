@@ -32,7 +32,11 @@ export function setTheme(preset: ThemePreset, mode: ThemeMode = 'light'): void {
   }
   
   // Set mode
-  root.setAttribute('data-theme', mode === 'auto' ? getSystemTheme() : mode)
+  const resolvedMode = mode === 'auto' ? getSystemTheme() : mode
+  root.setAttribute('data-theme', resolvedMode)
+  // Keep a `.dark` class in sync as a fallback for legacy/third-party
+  // styles that only target `.dark` selectors instead of [data-theme]
+  root.classList.toggle('dark', resolvedMode === 'dark')
   
   // Apply custom theme if registered
   if (preset === 'custom' && customThemes.has('custom')) {

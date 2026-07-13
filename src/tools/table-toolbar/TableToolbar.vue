@@ -70,13 +70,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { BubbleMenu } from '@tiptap/vue-3/menus'
 import type { Editor } from '@tiptap/vue-3'
 import { CellSelection } from '@tiptap/pm/tables'
 
 import { createCommandRunner } from '@/utils/editorCommands'
-import { createStateCheckers } from '@/utils/editorState'
+import { createStateCheckers, useReactiveEditor } from '@/utils/editorState'
 import { t } from '@/locales'
 
 import {
@@ -106,7 +105,7 @@ const props = withDefaults(
   }
 )
 
-const editor = computed(() => props.editor ?? null)
+const editor = useReactiveEditor(() => props.editor)
 
 const runCommand = createCommandRunner(editor)
 const { canExecute } = createStateCheckers(editor)
@@ -228,7 +227,7 @@ function deleteTable() {
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     background: #1f1f1f;
     border-color: #434343;
   }
@@ -247,7 +246,7 @@ function deleteTable() {
   padding: 0 4px;
   border-right: 1px solid #e8e8e8;
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     border-right-color: #434343;
   }
 }
@@ -270,7 +269,7 @@ function deleteTable() {
   border-radius: 4px;
   transition: all 0.2s;
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     color: #f0f0f0;
   }
 }
@@ -278,7 +277,7 @@ function deleteTable() {
 .table-menu-btn:hover:not(:disabled) {
   background: #f5f5f5;
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     background: #303030;
   }
 }
@@ -291,7 +290,7 @@ function deleteTable() {
 .table-menu-btn--danger {
   color: #ff4d4f;
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     color: #ff7875;
   }
 }
@@ -300,7 +299,7 @@ function deleteTable() {
   color: #fff;
   background: #ff4d4f;
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     background: #ff7875;
   }
 }

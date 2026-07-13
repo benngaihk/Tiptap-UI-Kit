@@ -19,7 +19,7 @@
 import { computed } from 'vue'
 import type { Editor } from '@tiptap/vue-3'
 import { ToolbarButton, ToolbarGroup } from '@/ui'
-import { createStateCheckers } from '@/utils/editorState'
+import { createStateCheckers, useReactiveEditor } from '@/utils/editorState'
 import { t } from '@/locales'
 import { SortAscendingOutlined, SortDescendingOutlined } from '@ant-design/icons-vue'
 
@@ -29,7 +29,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const editor = computed(() => props.editor ?? null)
+const editor = useReactiveEditor(() => props.editor)
 
 // ===== 工具函数 =====
 const { isActive } = createStateCheckers(editor)

@@ -152,7 +152,7 @@ import {
 import type { HeadingMenuItem } from './dragHandleMenuConfig'
 
 // 工具函数导入
-import { createStateCheckers } from '@/utils/editorState'
+import { createStateCheckers, useReactiveEditor } from '@/utils/editorState'
 import { createCommandRunner, type EditorChain } from '@/utils/editorCommands'
 import { selectNodeContent as selectNodeContentUtil } from '@/utils/clipboard'
 
@@ -254,7 +254,8 @@ let hideTimer: number | null = null
 // 计算属性
 // ============================================================================
 
-const editor = computed(() => props.editor ?? null)
+// 事务响应式 editor：isActive/isHeadingActive 高亮跟随光标/内容变化重新求值
+const editor = useReactiveEditor(() => props.editor)
 
 // 创建状态检查器
 const { isActive, isHeadingActive, isActiveAlign } = createStateCheckers(editor)
@@ -378,6 +379,15 @@ watch(isMenuVisible, (visible) => {
   }
 })
 
+/**
+ * 编辑器更新时自动隐藏菜单
+ */
+function handleEditorUpdate(): void {
+  if (menuState.value.visible) {
+    hideMenu()
+  }
+}
+
 onMounted(() => {
   // 监听滚动和窗口大小变化，自动调整菜单位置
   window.addEventListener('scroll', onReposition, true)
@@ -385,14 +395,8 @@ onMounted(() => {
 
   // 监听编辑器变化，自动隐藏菜单
   if (editor.value) {
-    const handleUpdate = () => {
-      if (menuState.value.visible) {
-        hideMenu()
-      }
-    }
-
-    editor.value.on('update', handleUpdate)
-    editor.value.on('selectionUpdate', handleUpdate)
+    editor.value.on('update', handleEditorUpdate)
+    editor.value.on('selectionUpdate', handleEditorUpdate)
   }
 })
 
@@ -400,6 +404,12 @@ onUnmounted(() => {
   // 清理事件监听器
   window.removeEventListener('scroll', onReposition, true)
   window.removeEventListener('resize', onReposition, true)
+
+  // 清理编辑器事件监听
+  if (editor.value) {
+    editor.value.off('update', handleEditorUpdate)
+    editor.value.off('selectionUpdate', handleEditorUpdate)
+  }
 
   // 清理定时器
   if (hideTimer) {

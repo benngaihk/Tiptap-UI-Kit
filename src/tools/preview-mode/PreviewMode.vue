@@ -241,11 +241,11 @@ defineExpose({
   border-radius: 8px;
 }
 
-:where(.dark, .dark *) .tiptap-preview-mode {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .tiptap-preview-mode {
   background-color: #141414;
 }
 
-:where(.dark, .dark *) .tiptap-preview-mode.preview-mode--bordered {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .tiptap-preview-mode.preview-mode--bordered {
   border-color: #303030;
 }
 
@@ -266,7 +266,7 @@ defineExpose({
   box-sizing: border-box;
 }
 
-:where(.dark, .dark *) .preview-document {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .preview-document {
   background: #1f1f1f;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
@@ -283,7 +283,7 @@ defineExpose({
   color: #262626;
 }
 
-:where(.dark, .dark *) .preview-body {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .preview-body {
   color: #f0f0f0;
 }
 
@@ -329,7 +329,7 @@ defineExpose({
   color: #666;
 }
 
-:where(.dark, .dark *) .preview-body :deep(blockquote) {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .preview-body :deep(blockquote) {
   border-left-color: #434343;
   background: #262626;
   color: #a6a6a6;
@@ -343,7 +343,7 @@ defineExpose({
   overflow-x: auto;
 }
 
-:where(.dark, .dark *) .preview-body :deep(pre) {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .preview-body :deep(pre) {
   background: #262626;
 }
 
@@ -355,7 +355,7 @@ defineExpose({
   border-radius: 3px;
 }
 
-:where(.dark, .dark *) .preview-body :deep(code) {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .preview-body :deep(code) {
   background: #262626;
 }
 
@@ -383,8 +383,8 @@ defineExpose({
   text-align: left;
 }
 
-:where(.dark, .dark *) .preview-body :deep(th),
-:where(.dark, .dark *) .preview-body :deep(td) {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .preview-body :deep(th),
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .preview-body :deep(td) {
   border-color: #434343;
 }
 
@@ -393,7 +393,7 @@ defineExpose({
   font-weight: 600;
 }
 
-:where(.dark, .dark *) .preview-body :deep(th) {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .preview-body :deep(th) {
   background: #262626;
 }
 
@@ -403,7 +403,7 @@ defineExpose({
   border-top: 1px solid #d9d9d9;
 }
 
-:where(.dark, .dark *) .preview-body :deep(hr) {
+:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) .preview-body :deep(hr) {
   border-top-color: #434343;
 }
 

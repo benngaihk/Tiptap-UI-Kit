@@ -48,6 +48,24 @@ export type { UseAiOptions, UseAiReturn } from './useAi';
 // Export types
 export type { AiAdapter, AiMessage, AiStreamCallbacks } from './types';
 
+// Export AI document agent（文字指令编辑文档：工具集 + agent 循环 + 聊天面板）
+export {
+  documentTools,
+  getDocumentTool,
+  getDocumentOutline,
+  toOpenAiTools,
+  runDocumentAgent,
+  AgentNotConfiguredError,
+  AiChatPanel,
+} from './agent';
+export type {
+  DocumentTool,
+  AgentCallbacks,
+  AgentChatMessage,
+  DocumentAgentResult,
+  RunDocumentAgentOptions,
+} from './agent';
+
 // Export AI config
 export { useAiConfig, getAiRequestConfig } from './config/useAiConfig';
 export { AI_PROVIDERS, DEFAULT_CONFIG, getProviderInfo } from './config/types';

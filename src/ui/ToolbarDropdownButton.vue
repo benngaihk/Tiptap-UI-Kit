@@ -218,7 +218,12 @@ function onTranslateLangClick(info: { key: string }) {
   line-height: 1;
   color: var(--menu-btn-color, #262626);
   border-radius: 4px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .tt-dropdown-btn:hover {
@@ -227,13 +232,8 @@ function onTranslateLangClick(info: { key: string }) {
 }
 
 .tt-dropdown-btn.is-active {
-  color: var(--menu-primary, #1890ff);
-  background: #e6f4ff;
-}
-
-[data-theme="dark"] .tt-dropdown-btn.is-active {
-  color: #4fc3f7;
-  background: #1a4d6e;
+  color: var(--tiptap-primary, var(--menu-primary, #1890ff));
+  background: var(--tiptap-primary-light, #e6f4ff);
 }
 
 .tt-dropdown-btn .ant-btn-icon {
@@ -284,6 +284,11 @@ function onTranslateLangClick(info: { key: string }) {
 
 .tt-dropdown-btn:hover .tt-dropdown-btn__arrow {
   opacity: 1;
+}
+
+/* 下拉展开时箭头旋转（ant-design-vue 在触发器上添加 ant-dropdown-open） */
+.tt-dropdown-btn.ant-dropdown-open .tt-dropdown-btn__arrow {
+  transform: rotate(180deg);
 }
 
 .tt-dropdown-overlay {

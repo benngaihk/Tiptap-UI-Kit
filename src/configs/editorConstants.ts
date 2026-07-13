@@ -40,14 +40,17 @@ export const TABLE_CELL_COLORS = BACKGROUND_COLORS
  * 字体系列选项
  */
 export const FONT_FAMILIES = [
-  { label: 'PMingLiU', value: 'PMingLiU' },
-  { label: 'Microsoft YaHei', value: 'Microsoft YaHei' },
-  { label: 'SimSun', value: 'SimSun' },
-  { label: 'SimHei', value: 'SimHei' },
+  /** 空值表示不指定字体（跟随主题默认），显示文案由组件用 i18n 渲染 */
+  { label: 'Default', value: '' },
   { label: 'Arial', value: 'Arial' },
+  { label: 'Georgia', value: 'Georgia' },
   { label: 'Times New Roman', value: 'Times New Roman' },
   { label: 'Courier New', value: 'Courier New' },
   { label: 'Monospace', value: 'monospace' },
+  { label: '微软雅黑', value: 'Microsoft YaHei' },
+  { label: '宋体', value: 'SimSun' },
+  { label: '黑体', value: 'SimHei' },
+  { label: '新細明體', value: 'PMingLiU' },
 ] as const
 
 /**
@@ -137,8 +140,8 @@ export const TABLE_BORDER_STYLES = [
  * 默认配置值
  */
 export const DEFAULT_VALUES = {
-  /** 默认字体 */
-  fontFamily: 'PMingLiU',
+  /** 默认字体（空值 = 跟随主题默认，不写入 style） */
+  fontFamily: '',
   /** 默认字号 */
   fontSize: '16px',
   /** 默认行间距 */

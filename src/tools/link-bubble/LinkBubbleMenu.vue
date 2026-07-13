@@ -74,7 +74,7 @@
  * @description 选中链接时显示的悬浮框，提供链接编辑、打开、删除等功能
  * @description 此组件位于 tools/link-bubble 文件夹，可通过 features.linkBubbleMenu 配置是否启用
  */
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { BubbleMenu } from '@tiptap/vue-3/menus'
 import type { Editor } from '@tiptap/vue-3'
 import { t } from '@/locales'
@@ -235,25 +235,32 @@ const shouldShow = (bubbleProps: { editor: any; state: any; from: number; to: nu
   return false
 }
 
-// 监听编辑器选择变化，更新链接URL
+/**
+ * 编辑器选区变化时同步链接URL
+ */
+function handleSelectionUpdate() {
+  updateCurrentLinkUrl()
+}
+
+// 监听编辑器选区变化事件，更新链接URL（editor.state 非响应式，不能用 deep watch）
 watch(
-  () => editor.value?.state.selection,
-  () => {
-    if (editor.value?.isActive('link')) {
+  () => editor.value,
+  (newEditor, oldEditor) => {
+    if (oldEditor) {
+      oldEditor.off('selectionUpdate', handleSelectionUpdate)
+    }
+    if (newEditor) {
       updateCurrentLinkUrl()
+      newEditor.on('selectionUpdate', handleSelectionUpdate)
     }
   },
-  { deep: true }
+  { immediate: true }
 )
 
-// 监听编辑器状态更新，同步链接URL
-watch(
-  () => editor.value?.state,
-  () => {
-    updateCurrentLinkUrl()
-  },
-  { deep: true, immediate: true }
-)
+// 组件卸载时清理监听
+onBeforeUnmount(() => {
+  editor.value?.off('selectionUpdate', handleSelectionUpdate)
+})
 
 /**
  * 编辑链接
@@ -374,7 +381,7 @@ function removeLink() {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     background: #1f1f1f;
     border-color: #434343;
   }
@@ -397,7 +404,7 @@ function removeLink() {
   color: #262626;
   line-height: 1.5;
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     color: #f0f0f0;
   }
 }
@@ -416,7 +423,7 @@ function removeLink() {
   background: #e8e8e8;
   margin: 0 4px;
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     background: #434343;
   }
 }
@@ -436,7 +443,7 @@ function removeLink() {
   border-radius: 4px;
   transition: all 0.2s;
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     color: #f0f0f0;
   }
 }
@@ -444,7 +451,7 @@ function removeLink() {
 .link-action-btn:hover:not(:disabled) {
   background: #f5f5f5;
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     background: #303030;
   }
 }
@@ -458,7 +465,7 @@ function removeLink() {
 .link-action-btn--danger {
   color: #ff4d4f;
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     color: #ff7875;
   }
 }
@@ -467,7 +474,7 @@ function removeLink() {
   color: #ff4d4f;
   background: #fff1f0;
 
-  :where(.dark, .dark *) & {
+  :where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) & {
     color: #ff7875;
     background: #3a1a1a;
   }

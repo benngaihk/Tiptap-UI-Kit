@@ -65,13 +65,14 @@
  * FloatingMenu - 选中文本时的浮动工具栏
  * @description 选中文本时显示的浮动格式化工具栏（类似 Medium、Notion）
  */
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { BubbleMenu } from '@tiptap/vue-3/menus'
 import type { Editor } from '@tiptap/vue-3'
 import { t } from '@/locales'
 
 // 工具函数和配置导入
 import { createCommandRunner } from '@/utils/editorCommands'
+import { useReactiveEditor } from '@/utils/editorState'
 import { HeadingButtons } from '@/features/basic/heading'
 import { TextFormatButtons } from '@/features/basic/text-format'
 import { ListTools } from '@/features/basic/list'
@@ -98,7 +99,8 @@ const props = withDefaults(
     enabled: true,
   }
 )
-const editor = computed(() => props.editor ?? null)
+// 事务响应式 editor：颜色等状态跟随光标/内容变化重新求值
+const editor = useReactiveEditor(() => props.editor)
 
 
 // ===== 响应式状态 =====
