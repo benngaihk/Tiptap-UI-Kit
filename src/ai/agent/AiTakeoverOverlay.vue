@@ -87,14 +87,40 @@ const overlayStyle = computed(() =>
 // ===== 遮罩位置跟踪（AI 运行期间每帧同步编辑区几何，内容增长/滚动都跟随） =====
 let rafId: number | null = null
 
+/** 向上找最近的滚动容器（Word 模式下纸张比视口高，遮罩需裁剪到可视范围） */
+function getScrollContainer(el: HTMLElement): HTMLElement | null {
+  let cur = el.parentElement
+  while (cur && cur !== document.body) {
+    const cs = getComputedStyle(cur)
+    if (/(auto|scroll|overlay)/.test(cs.overflowY) && cur.scrollHeight > cur.clientHeight + 1) {
+      return cur
+    }
+    cur = cur.parentElement
+  }
+  return null
+}
+
 function trackRect() {
   const view = props.editor && !props.editor.isDestroyed ? props.editor.view : null
   if (!view) {
     rect.value = null
     return
   }
+  // 遮罩 = 编辑区 ∩ 滚动容器可视区 ∩ 视口：
+  // 只罩住真正可见的文档区域，不会盖到页面 header/工具栏上
   const r = view.dom.getBoundingClientRect()
-  rect.value = { left: r.left, top: r.top, width: r.width, height: r.height }
+  const container = getScrollContainer(view.dom)
+  const cr = container
+    ? container.getBoundingClientRect()
+    : { left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight }
+  const left = Math.max(r.left, cr.left, 0)
+  const top = Math.max(r.top, cr.top, 0)
+  const right = Math.min(r.right, cr.right, window.innerWidth)
+  const bottom = Math.min(r.bottom, cr.bottom, window.innerHeight)
+  rect.value =
+    right - left > 40 && bottom - top > 40
+      ? { left, top, width: right - left, height: bottom - top }
+      : null
   rafId = requestAnimationFrame(trackRect)
 }
 
