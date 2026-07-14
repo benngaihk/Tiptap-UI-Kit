@@ -697,6 +697,9 @@ onBeforeUnmount(() => {
   right: 0;
   bottom: 0;
   pointer-events: none;
+  /* 必须高于 .editor-preview__window 的 z-index: 1，
+     否则探出窗口边缘的功能徽章会被窗口盖住只露出半截 */
+  z-index: 2;
 }
 
 .floating-label {
