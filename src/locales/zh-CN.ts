@@ -467,7 +467,8 @@ export const zhCN: TiptapLocale = {
       format_text: '设置格式',
     },
     demo: {
-      done: '✨ 这是演示模式：还没配置真实 AI，我按你的指令做了一次模拟编辑（Ctrl/Cmd+Z 可撤销）。\n\n接入真实 AI 后，助手能真正理解任意指令。接入方式：\n· 开发者在工程 .env 中配置 VITE_AI_*（推荐）\n· 或点击下方按钮填写你自己的 API Key',
+      done: '✨ 这是演示模式：还没配置真实 AI，我按你的指令做了一次模拟编辑（Ctrl/Cmd+Z 可撤销）。\n\n接入真实 AI 后，助手能真正理解任意指令——开发者在工程 .env 中配置 VITE_AI_* 即可。',
+      configureLine: '也可以点击下方按钮填写你自己的 API Key：',
       paragraph: '这是 AI 助手插入的演示内容。配置真实 AI 后，这里会是根据你的指令生成的正式内容。',
       tableCaption: '示例行',
       colA: '名称',

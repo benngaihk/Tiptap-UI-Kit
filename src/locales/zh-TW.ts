@@ -467,7 +467,8 @@ export const zhTW: TiptapLocale = {
       format_text: '設定格式',
     },
     demo: {
-      done: '✨ 這是演示模式：還沒設定真實 AI，我按你的指令做了一次模擬編輯（Ctrl/Cmd+Z 可撤銷）。\n\n接入真實 AI 後，助手能真正理解任意指令。接入方式：\n· 開發者在工程 .env 中設定 VITE_AI_*（推薦）\n· 或點擊下方按鈕填寫你自己的 API Key',
+      done: '✨ 這是演示模式：還沒設定真實 AI，我按你的指令做了一次模擬編輯（Ctrl/Cmd+Z 可撤銷）。\n\n接入真實 AI 後，助手能真正理解任意指令——開發者在工程 .env 中設定 VITE_AI_* 即可。',
+      configureLine: '也可以點擊下方按鈕填寫你自己的 API Key：',
       paragraph: '這是 AI 助手插入的演示內容。設定真實 AI 後，這裡會是根據你的指令生成的正式內容。',
       tableCaption: '示例行',
       colA: '名稱',

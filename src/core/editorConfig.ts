@@ -42,6 +42,8 @@ export interface FeatureFlags {
   
   // AI
   ai?: boolean
+  /** 「AI 设置」入口（终端用户自填 API Key）。公众站点建议关闭 */
+  aiSettings?: boolean
 }
 
 /** AI configuration */

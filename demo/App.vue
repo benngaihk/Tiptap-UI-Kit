@@ -191,12 +191,13 @@ watch(locale, (newLocale) => {
 
 // 根据主题选择功能配置
 const currentFeatures = computed<FeatureFlags>(() => {
-  // Notion 主题：只显示浮动工具栏和六个点
-  if (themePreset.value === 'notion') {
-    return PRESET_CONFIGS.notion.features!
-  }
-  // 其他主题：使用完整工具栏
-  return PRESET_CONFIGS.full.features!
+  // 公开 demo 站不提供「AI 设置」入口：访客不会在陌生网页填自己的 API Key，
+  // 未配置时 AI 助手自动进入演示模式即可
+  const base =
+    themePreset.value === 'notion'
+      ? PRESET_CONFIGS.notion.features! // Notion 主题：只显示浮动工具栏和六个点
+      : PRESET_CONFIGS.full.features! // 其他主题：使用完整工具栏
+  return { ...base, aiSettings: false }
 })
 
 // AI status - check if configured in .env

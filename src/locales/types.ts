@@ -486,6 +486,7 @@ export interface TiptapLocale {
     /** 演示模式（未配置真实 AI 时的本地模拟） */
     demo: {
       done: string
+      configureLine: string
       paragraph: string
       tableCaption: string
       colA: string

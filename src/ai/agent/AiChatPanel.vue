@@ -23,6 +23,7 @@
           </span>
           <div class="ai-chat-panel__actions">
             <button
+              v-if="showSettingsEntry"
               class="ai-chat-panel__icon-btn"
               type="button"
               :title="t('aiChat.settings')"
@@ -119,8 +120,8 @@
       </div>
     </Transition>
 
-    <!-- AI 设置弹窗（复用现有组件） -->
-    <AiSettingsModal v-model:open="showSettings" />
+    <!-- AI 设置弹窗（复用现有组件；未提供设置入口时不渲染） -->
+    <AiSettingsModal v-if="showSettingsEntry" v-model:open="showSettings" />
 
     <!-- AI 接管遮罩 + 编辑光标（agent 运行期间显示） -->
     <AiTakeoverOverlay :editor="editor" :active="running" />
@@ -151,9 +152,13 @@ import AiTakeoverOverlay from './AiTakeoverOverlay.vue'
 
 interface Props {
   editor: Editor | null | undefined
+  /** 是否提供「AI 设置」入口（终端用户自填 API Key 弹窗）。公众站点建议关闭 */
+  showSettingsEntry?: boolean
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  showSettingsEntry: true,
+})
 const editor = computed(() => props.editor ?? null)
 
 const { locale } = useI18n()
@@ -204,7 +209,11 @@ watch(open, async (isOpen) => {
  */
 async function runDemoFallback(instruction: string) {
   if (!editor.value) {
-    messages.value.push({ type: 'error', text: t('aiChat.notConfigured'), showConfigure: true })
+    messages.value.push({
+      type: 'error',
+      text: t('aiChat.notConfigured'),
+      showConfigure: props.showSettingsEntry,
+    })
     return
   }
   try {
@@ -219,12 +228,20 @@ async function runDemoFallback(instruction: string) {
         },
       },
     })
-    messages.value.push({ type: 'assistant', text: demo.finalText, showConfigure: true })
+    // 提供设置入口时附加「自填 API Key」一行与按钮；公众站点只保留工程配置指引
+    const text = props.showSettingsEntry
+      ? `${demo.finalText}\n${t('aiChat.demo.configureLine')}`
+      : demo.finalText
+    messages.value.push({ type: 'assistant', text, showConfigure: props.showSettingsEntry })
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') {
       messages.value.push({ type: 'error', text: t('aiChat.stopped') })
     } else {
-      messages.value.push({ type: 'error', text: t('aiChat.notConfigured'), showConfigure: true })
+      messages.value.push({
+        type: 'error',
+        text: t('aiChat.notConfigured'),
+        showConfigure: props.showSettingsEntry,
+      })
     }
   }
 }

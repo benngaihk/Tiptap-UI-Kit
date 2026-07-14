@@ -88,7 +88,11 @@
     />
 
     <!-- AI 文档助手（文字指令编辑文档，跟随 AI 功能开启） -->
-    <AiChatPanel v-if="aiChatEnabled" :editor="editorInstance" />
+    <AiChatPanel
+      v-if="aiChatEnabled"
+      :editor="editorInstance"
+      :show-settings-entry="props.features?.aiSettings !== false"
+    />
   </div>
 </template>
 

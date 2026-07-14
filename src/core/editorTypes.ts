@@ -28,6 +28,9 @@ export interface FeatureConfig {
   slashCommand?: boolean
   /** 是否启用 AI 文档助手聊天面板（文字指令编辑文档），跟随 AI 功能开启，可显式关闭 */
   aiChat?: boolean
+  /** 是否显示「AI 设置」入口（终端用户自填 API Key 的弹窗）。
+   *  面向公众的站点建议关闭——访客不会在陌生网页填自己的 Key，AI 配置应由集成方在工程中完成 */
+  aiSettings?: boolean
   /** 是否启用悬浮框功能 */
   floatingMenu?: boolean
   /** 是否启用图片工具栏功能 */
