@@ -100,28 +100,68 @@ function getScrollContainer(el: HTMLElement): HTMLElement | null {
   return null
 }
 
+/** 遮罩 = 编辑区 ∩ 滚动容器可视区 ∩ 视口：只罩可见文档区域，不盖 header/工具栏 */
+function updateOverlayRect(view: import('@tiptap/pm/view').EditorView) {
+  const r = view.dom.getBoundingClientRect()
+  const container = getScrollContainer(view.dom)
+  // 后台标签页等场景 innerWidth/innerHeight 可能读到 0，此时跳过视口裁剪
+  const vw = window.innerWidth || Number.MAX_SAFE_INTEGER
+  const vh = window.innerHeight || Number.MAX_SAFE_INTEGER
+  const cr = container
+    ? container.getBoundingClientRect()
+    : { left: 0, top: 0, right: vw, bottom: vh }
+  const left = Math.max(r.left, cr.left, 0)
+  const top = Math.max(r.top, cr.top, 0)
+  const right = Math.min(r.right, cr.right, vw)
+  const bottom = Math.min(r.bottom, cr.bottom, vh)
+  rect.value =
+    right - left > 40 && bottom - top > 40
+      ? { left, top, width: right - left, height: bottom - top }
+      : null
+}
+
 function trackRect() {
   const view = props.editor && !props.editor.isDestroyed ? props.editor.view : null
   if (!view) {
     rect.value = null
     return
   }
-  // 遮罩 = 编辑区 ∩ 滚动容器可视区 ∩ 视口：
-  // 只罩住真正可见的文档区域，不会盖到页面 header/工具栏上
-  const r = view.dom.getBoundingClientRect()
-  const container = getScrollContainer(view.dom)
-  const cr = container
-    ? container.getBoundingClientRect()
-    : { left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight }
-  const left = Math.max(r.left, cr.left, 0)
-  const top = Math.max(r.top, cr.top, 0)
-  const right = Math.min(r.right, cr.right, window.innerWidth)
-  const bottom = Math.min(r.bottom, cr.bottom, window.innerHeight)
-  rect.value =
-    right - left > 40 && bottom - top > 40
-      ? { left, top, width: right - left, height: bottom - top }
-      : null
+  updateOverlayRect(view)
+  // 光标/高亮锚定的是文档位置，每帧重算屏幕坐标——
+  // 滚动过程中它们钉在文档内容上跟着动，而不是飘在旧的屏幕位置
+  syncAnchoredVisuals(view)
+
   rafId = requestAnimationFrame(trackRect)
+}
+
+/** 按文档锚点每帧刷新光标与高亮的屏幕坐标 */
+function syncAnchoredVisuals(view: import('@tiptap/pm/view').EditorView) {
+  const docSize = view.state.doc.content.size
+  try {
+    if (cursorAnchor !== null) {
+      const coords = view.coordsAtPos(Math.max(0, Math.min(cursorAnchor, docSize)))
+      cursor.value = {
+        left: coords.left,
+        top: coords.top,
+        height: Math.max(coords.bottom - coords.top, 18),
+      }
+    }
+    if (highlightAnchor !== null) {
+      const fromCoords = view.coordsAtPos(Math.max(0, Math.min(highlightAnchor.from, docSize)))
+      const toCoords = view.coordsAtPos(Math.max(0, Math.min(highlightAnchor.to, docSize)))
+      const editorRect = view.dom.getBoundingClientRect()
+      // key 保持不变：只更新几何，不重启闪烁动画
+      highlight.value = {
+        left: editorRect.left + 8,
+        top: fromCoords.top,
+        width: editorRect.width - 16,
+        height: Math.max(toCoords.bottom - fromCoords.top, 20),
+        key: highlightAnchor.key,
+      }
+    }
+  } catch {
+    // coordsAtPos 在极端位置可能抛错，保留上一帧坐标即可
+  }
 }
 
 function stopTracking() {
@@ -132,13 +172,16 @@ function stopTracking() {
 }
 
 // ===== 修改位置 → 光标/高亮/滚动 =====
+// 光标与高亮记录「文档位置锚点」，屏幕坐标由 trackRect 每帧重算（滚动时钉在内容上）
 let highlightKey = 0
+let cursorAnchor: number | null = null
+let highlightAnchor: { from: number; to: number; key: number } | null = null
 
 function onTransaction({ transaction }: { transaction: Transaction }) {
   if (!transaction.docChanged || !props.editor || props.editor.isDestroyed) return
   const view = props.editor.view
 
-  // 取本次事务最后一个 step 的落点作为「AI 正在修改」的位置
+  // 取本次事务修改范围作为「AI 正在修改」的位置
   let from: number | null = null
   let to: number | null = null
   transaction.mapping.maps.forEach((stepMap) => {
@@ -153,33 +196,47 @@ function onTransaction({ transaction }: { transaction: Transaction }) {
   const safeFrom = Math.max(0, Math.min(from, docSize))
   const safeTo = Math.max(0, Math.min(to, docSize))
 
+  cursorAnchor = safeTo
+  highlightAnchor = { from: safeFrom, to: safeTo, key: ++highlightKey }
+
+  // transaction 事件触发时 view DOM 已同步更新：立即刷新遮罩原点与光标/高亮并滚动。
+  // 遮罩原点必须与光标坐标同帧更新（模板里做的是相对定位换算），
+  // 且不能只依赖 rAF 循环——后台标签页里 rAF 会被浏览器暂停
+  updateOverlayRect(view)
+  syncAnchoredVisuals(view)
+  scrollToPosIfNeeded(safeTo)
+}
+
+/**
+ * 温和滚动：只滚编辑器自己的滚动容器（不动页面 body），
+ * 且仅当目标不在可视区舒适范围内时才滚，滚到容器约 60% 高度处。
+ */
+function scrollToPosIfNeeded(pos: number) {
+  const view = props.editor && !props.editor.isDestroyed ? props.editor.view : null
+  if (!view) return
   try {
-    const fromCoords = view.coordsAtPos(safeFrom)
-    const toCoords = view.coordsAtPos(safeTo)
-
-    // 大光标停在修改终点
-    cursor.value = {
-      left: toCoords.left,
-      top: toCoords.top,
-      height: Math.max(toCoords.bottom - toCoords.top, 18),
+    const coords = view.coordsAtPos(Math.max(0, Math.min(pos, view.state.doc.content.size)))
+    const container = getScrollContainer(view.dom)
+    if (container) {
+      const cr = container.getBoundingClientRect()
+      // 目标已在可视区舒适范围内（上 15%、下 25% 之外的中间区域）就不滚
+      const comfortTop = cr.top + cr.height * 0.15
+      const comfortBottom = cr.bottom - cr.height * 0.25
+      if (coords.top >= comfortTop && coords.bottom <= comfortBottom) return
+      container.scrollTo({
+        top: container.scrollTop + (coords.top - (cr.top + cr.height * 0.6)),
+        behavior: 'smooth',
+      })
+    } else {
+      // 无内部滚动容器（如 Notion 主题整页滚动）：不在视口时才滚 window
+      if (coords.top >= window.innerHeight * 0.15 && coords.bottom <= window.innerHeight * 0.75) return
+      window.scrollTo({
+        top: window.scrollY + (coords.top - window.innerHeight * 0.6),
+        behavior: 'smooth',
+      })
     }
-
-    // 变更区域闪烁高亮（key 变化重启 CSS 动画）
-    const editorRect = view.dom.getBoundingClientRect()
-    highlight.value = {
-      left: editorRect.left + 8,
-      top: fromCoords.top,
-      width: editorRect.width - 16,
-      height: Math.max(toCoords.bottom - fromCoords.top, 20),
-      key: ++highlightKey,
-    }
-
-    // 平滑滚动跟随修改位置
-    const domAt = view.domAtPos(safeTo)
-    const el = domAt.node instanceof HTMLElement ? domAt.node : domAt.node.parentElement
-    el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   } catch {
-    // coordsAtPos 在极端位置可能抛错，忽略即可（纯视觉增强）
+    // 纯视觉增强，位置异常时跳过滚动
   }
 }
 
@@ -190,6 +247,8 @@ watch(
     stopTracking()
     cursor.value = null
     highlight.value = null
+    cursorAnchor = null
+    highlightAnchor = null
     if (active && editor && !editor.isDestroyed) {
       trackRect()
       editor.on('transaction', onTransaction)
@@ -281,8 +340,8 @@ onBeforeUnmount(() => {
   background: var(--tiptap-primary, #3b82f6);
   box-shadow: 0 0 10px color-mix(in srgb, var(--tiptap-primary, #3b82f6) 70%, transparent);
   pointer-events: none;
-  transition: left 0.45s cubic-bezier(0.22, 1, 0.36, 1), top 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    height 0.2s ease;
+  /* 每帧跟随文档锚点：过渡取短值，飞行仍有动画感、滚动跟随时滞后小 */
+  transition: left 0.22s ease-out, top 0.22s ease-out, height 0.15s ease;
   animation: ai-takeover-cursor-pulse 1s ease-in-out infinite;
 }
 
