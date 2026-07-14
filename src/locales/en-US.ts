@@ -465,6 +465,17 @@ export const enUS: TiptapLocale = {
       edit_text: 'Edit text',
       format_text: 'Format text',
     },
+    demo: {
+      done: '✨ Demo mode: no real AI is configured yet, so I simulated this edit based on your instruction (Ctrl/Cmd+Z to undo).\n\nWith a real AI connected, the assistant understands any instruction. To connect:\n· Developers: set VITE_AI_* in your project .env (recommended)\n· Or click the button below to use your own API key',
+      paragraph: 'This is demo content inserted by the AI assistant. With a real AI configured, this would be generated from your instruction.',
+      tableCaption: 'Sample row',
+      colA: 'Name',
+      colB: 'Description',
+      colC: 'Status',
+      listItem: 'Demo list item',
+      summaryTitle: 'Summary (demo)',
+      sectionTitle: 'New section (demo)',
+    },
   },
 }
 

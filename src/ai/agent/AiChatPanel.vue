@@ -52,6 +52,14 @@
             </div>
             <div v-else-if="msg.type === 'assistant'" class="ai-chat-msg ai-chat-msg--assistant">
               {{ msg.text }}
+              <button
+                v-if="msg.showConfigure"
+                class="ai-chat-panel__configure-btn"
+                type="button"
+                @click="showSettings = true"
+              >
+                {{ t('aiChat.configure') }}
+              </button>
             </div>
             <div
               v-else-if="msg.type === 'tool'"
@@ -135,6 +143,7 @@ import {
 import { t, useI18n } from '@/locales'
 import AiSettingsModal from '../components/AiSettingsModal.vue'
 import { runDocumentAgent, AgentNotConfiguredError } from './agentLoop'
+import { runSimulatedDocumentAgent } from './simulatedAgent'
 
 interface Props {
   editor: Editor | null | undefined
@@ -185,6 +194,37 @@ watch(open, async (isOpen) => {
   }
 })
 
+/**
+ * 演示模式回退：未配置真实 AI 时本地模拟执行指令
+ * （真实编辑文档 + 步骤回放），结尾附「如何接入真实 AI」的指引与配置入口
+ */
+async function runDemoFallback(instruction: string) {
+  if (!editor.value) {
+    messages.value.push({ type: 'error', text: t('aiChat.notConfigured'), showConfigure: true })
+    return
+  }
+  try {
+    const demo = await runSimulatedDocumentAgent({
+      editor: editor.value,
+      instruction,
+      signal: abortController?.signal,
+      callbacks: {
+        onToolResult: (name, _result, isError) => {
+          messages.value.push({ type: 'tool', text: toolLabel(name), isError })
+          scrollToBottom()
+        },
+      },
+    })
+    messages.value.push({ type: 'assistant', text: demo.finalText, showConfigure: true })
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      messages.value.push({ type: 'error', text: t('aiChat.stopped') })
+    } else {
+      messages.value.push({ type: 'error', text: t('aiChat.notConfigured'), showConfigure: true })
+    }
+  }
+}
+
 // ===== 发送 =====
 async function send() {
   const instruction = input.value.trim()
@@ -226,7 +266,9 @@ async function send() {
     }
   } catch (error) {
     if (error instanceof AgentNotConfiguredError) {
-      messages.value.push({ type: 'error', text: t('aiChat.notConfigured'), showConfigure: true })
+      // 未配置真实 AI：走演示模式（与续写/润色等功能的 simulate 惯例一致）——
+      // 用本地脚本真实编辑文档，让访客先体验效果；真实 Key 由集成方在工程中绑定
+      await runDemoFallback(instruction)
     } else if (error instanceof DOMException && error.name === 'AbortError') {
       messages.value.push({ type: 'error', text: t('aiChat.stopped') })
     } else {

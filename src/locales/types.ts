@@ -481,6 +481,18 @@ export interface TiptapLocale {
       edit_text: string
       format_text: string
     }
+    /** 演示模式（未配置真实 AI 时的本地模拟） */
+    demo: {
+      done: string
+      paragraph: string
+      tableCaption: string
+      colA: string
+      colB: string
+      colC: string
+      listItem: string
+      summaryTitle: string
+      sectionTitle: string
+    }
   }
 }
 
