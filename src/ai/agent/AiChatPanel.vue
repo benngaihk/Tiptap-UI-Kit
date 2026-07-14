@@ -121,6 +121,9 @@
 
     <!-- AI 设置弹窗（复用现有组件） -->
     <AiSettingsModal v-model:open="showSettings" />
+
+    <!-- AI 接管遮罩 + 编辑光标（agent 运行期间显示） -->
+    <AiTakeoverOverlay :editor="editor" :active="running" />
   </Teleport>
 </template>
 
@@ -144,6 +147,7 @@ import { t, useI18n } from '@/locales'
 import AiSettingsModal from '../components/AiSettingsModal.vue'
 import { runDocumentAgent, AgentNotConfiguredError } from './agentLoop'
 import { runSimulatedDocumentAgent } from './simulatedAgent'
+import AiTakeoverOverlay from './AiTakeoverOverlay.vue'
 
 interface Props {
   editor: Editor | null | undefined

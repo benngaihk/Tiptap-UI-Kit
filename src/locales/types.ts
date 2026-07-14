@@ -472,6 +472,8 @@ export interface TiptapLocale {
     error: string
     emptyResponse: string
     doneNoSummary: string
+    /** AI 接管遮罩徽标文案 */
+    takeover: string
     tools: {
       read_document: string
       get_selection: string

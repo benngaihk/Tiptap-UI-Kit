@@ -154,7 +154,7 @@ export async function runSimulatedDocumentAgent(
   const { editor, instruction, signal, callbacks = {} } = options
 
   // 先「读取文档」一步，观感与真实 agent 一致
-  await sleep(500, signal)
+  await sleep(700, signal)
   const read = getDocumentTool('read_document')!
   callbacks.onToolCall?.('read_document', {})
   const readResult = read.execute(editor, {})
@@ -164,7 +164,7 @@ export async function runSimulatedDocumentAgent(
   const steps = planSteps(editor, instruction)
 
   for (const step of steps) {
-    await sleep(600, signal)
+    await sleep(1000, signal)
     if (editor.isDestroyed) throw new Error('Editor was destroyed while the agent was running.')
     const tool = getDocumentTool(step.tool)
     if (!tool) continue
@@ -187,7 +187,8 @@ export async function runSimulatedDocumentAgent(
     }
   }
 
-  await sleep(400, signal)
+  // 编辑完成后稍作停留，让接管遮罩/光标的收尾观感自然
+  await sleep(900, signal)
   const finalText = t('aiChat.demo.done')
   callbacks.onAssistantMessage?.(finalText)
   return { finalText, toolCallCount }

@@ -456,6 +456,7 @@ export const zhTW: TiptapLocale = {
     error: '出錯了',
     emptyResponse: 'AI 返回了空回覆，請重試。',
     doneNoSummary: '已完成。',
+    takeover: 'AI 正在編輯文檔…',
     tools: {
       read_document: '讀取文檔',
       get_selection: '讀取選區',

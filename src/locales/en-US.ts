@@ -456,6 +456,7 @@ export const enUS: TiptapLocale = {
     error: 'Something went wrong',
     emptyResponse: 'The AI returned an empty response. Please try again.',
     doneNoSummary: 'Done.',
+    takeover: 'AI is editing the document…',
     tools: {
       read_document: 'Read document',
       get_selection: 'Read selection',
