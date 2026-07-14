@@ -70,44 +70,40 @@ function summarySource(editor: Editor, maxLen: number): string {
 function planSteps(editor: Editor, instruction: string): SimulatedStep[] {
   const zhTable = t('aiChat.demo.tableCaption')
   const demoParagraph = t('aiChat.demo.paragraph')
+  const end = (html: string): SimulatedStep => ({
+    tool: 'insert_blocks',
+    args: { position: 'documentEnd', html },
+  })
 
+  // 每类指令拆成 2-3 步编辑：光标多次飞行、高亮多次闪烁，接管过程看得清楚
   if (/表格|table/i.test(instruction)) {
     return [
-      {
-        tool: 'insert_blocks',
-        args: {
-          position: 'documentEnd',
-          html:
-            `<table><tr><th>${t('aiChat.demo.colA')}</th><th>${t('aiChat.demo.colB')}</th><th>${t('aiChat.demo.colC')}</th></tr>` +
-            `<tr><td>${zhTable} 1</td><td>—</td><td>—</td></tr>` +
-            `<tr><td>${zhTable} 2</td><td>—</td><td>—</td></tr></table>`,
-        },
-      },
+      end(`<h3>${t('aiChat.demo.sectionTitle')}</h3>`),
+      end(
+        `<table><tr><th>${t('aiChat.demo.colA')}</th><th>${t('aiChat.demo.colB')}</th><th>${t('aiChat.demo.colC')}</th></tr>` +
+          `<tr><td>${zhTable} 1</td><td>—</td><td>—</td></tr>` +
+          `<tr><td>${zhTable} 2</td><td>—</td><td>—</td></tr></table>`
+      ),
+      end(`<p>${demoParagraph}</p>`),
     ]
   }
 
   if (/总结|總結|摘要|summar/i.test(instruction)) {
     const source = summarySource(editor, 120)
     return [
-      {
-        tool: 'insert_blocks',
-        args: {
-          position: 'documentEnd',
-          html: `<h2>${t('aiChat.demo.summaryTitle')}</h2><p>${source || demoParagraph}</p>`,
-        },
-      },
+      end(`<h2>${t('aiChat.demo.summaryTitle')}</h2>`),
+      end(`<p>${source || demoParagraph}</p>`),
+      end(`<p>${demoParagraph}</p>`),
     ]
   }
 
   if (/列表|清单|清單|list/i.test(instruction)) {
     return [
-      {
-        tool: 'insert_blocks',
-        args: {
-          position: 'documentEnd',
-          html: `<ul><li>${t('aiChat.demo.listItem')} 1</li><li>${t('aiChat.demo.listItem')} 2</li><li>${t('aiChat.demo.listItem')} 3</li></ul>`,
-        },
-      },
+      end(`<h3>${t('aiChat.demo.sectionTitle')}</h3>`),
+      end(
+        `<ul><li>${t('aiChat.demo.listItem')} 1</li><li>${t('aiChat.demo.listItem')} 2</li><li>${t('aiChat.demo.listItem')} 3</li></ul>`
+      ),
+      end(`<p>${demoParagraph}</p>`),
     ]
   }
 
@@ -115,32 +111,25 @@ function planSteps(editor: Editor, instruction: string): SimulatedStep[] {
     const snippet = firstTextSnippet(editor, 8)
     if (snippet) {
       return [
-        {
-          tool: 'format_text',
-          args: { find: snippet, occurrence: 1, formats: ['bold'] },
-        },
+        { tool: 'format_text', args: { find: snippet, occurrence: 1, formats: ['bold'] } },
+        end(`<p>${demoParagraph}</p>`),
       ]
     }
   }
 
   if (/标题|標題|heading|章节|章節/i.test(instruction)) {
     return [
-      {
-        tool: 'insert_blocks',
-        args: {
-          position: 'documentEnd',
-          html: `<h2>${t('aiChat.demo.sectionTitle')}</h2><p>${demoParagraph}</p>`,
-        },
-      },
+      end(`<h2>${t('aiChat.demo.sectionTitle')}</h2>`),
+      end(`<p>${demoParagraph}</p>`),
+      end(`<ul><li>${t('aiChat.demo.listItem')} 1</li><li>${t('aiChat.demo.listItem')} 2</li></ul>`),
     ]
   }
 
-  // 默认：末尾插入一段演示说明
+  // 默认：标题 + 段落 + 列表 三步演示
   return [
-    {
-      tool: 'insert_blocks',
-      args: { position: 'documentEnd', html: `<p>${demoParagraph}</p>` },
-    },
+    end(`<h3>${t('aiChat.demo.sectionTitle')}</h3>`),
+    end(`<p>${demoParagraph}</p>`),
+    end(`<ul><li>${t('aiChat.demo.listItem')} 1</li><li>${t('aiChat.demo.listItem')} 2</li></ul>`),
   ]
 }
 
@@ -154,7 +143,7 @@ export async function runSimulatedDocumentAgent(
   const { editor, instruction, signal, callbacks = {} } = options
 
   // 先「读取文档」一步，观感与真实 agent 一致
-  await sleep(700, signal)
+  await sleep(900, signal)
   const read = getDocumentTool('read_document')!
   callbacks.onToolCall?.('read_document', {})
   const readResult = read.execute(editor, {})
@@ -164,7 +153,7 @@ export async function runSimulatedDocumentAgent(
   const steps = planSteps(editor, instruction)
 
   for (const step of steps) {
-    await sleep(1000, signal)
+    await sleep(1300, signal)
     if (editor.isDestroyed) throw new Error('Editor was destroyed while the agent was running.')
     const tool = getDocumentTool(step.tool)
     if (!tool) continue
@@ -188,7 +177,7 @@ export async function runSimulatedDocumentAgent(
   }
 
   // 编辑完成后稍作停留，让接管遮罩/光标的收尾观感自然
-  await sleep(900, signal)
+  await sleep(1200, signal)
   const finalText = t('aiChat.demo.done')
   callbacks.onAssistantMessage?.(finalText)
   return { finalText, toolCallCount }

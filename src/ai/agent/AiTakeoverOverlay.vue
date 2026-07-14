@@ -227,13 +227,20 @@ onBeforeUnmount(() => {
 .ai-takeover__highlight {
   position: absolute;
   border-radius: 6px;
-  background: color-mix(in srgb, var(--tiptap-primary, #3b82f6) 18%, transparent);
+  background: color-mix(in srgb, var(--tiptap-primary, #3b82f6) 28%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--tiptap-primary, #3b82f6) 45%, transparent);
   pointer-events: none;
-  animation: ai-takeover-flash 1.1s ease-out forwards;
+  animation: ai-takeover-flash 1.8s ease-out forwards;
 }
 
 @keyframes ai-takeover-flash {
   0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  60% {
     opacity: 1;
   }
   100% {
@@ -243,30 +250,31 @@ onBeforeUnmount(() => {
 
 .ai-takeover__cursor {
   position: absolute;
-  width: 3px;
+  width: 4px;
   border-radius: 2px;
   background: var(--tiptap-primary, #3b82f6);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--tiptap-primary, #3b82f6) 70%, transparent);
   pointer-events: none;
-  transition: left 0.35s cubic-bezier(0.22, 1, 0.36, 1), top 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+  transition: left 0.45s cubic-bezier(0.22, 1, 0.36, 1), top 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     height 0.2s ease;
   animation: ai-takeover-cursor-pulse 1s ease-in-out infinite;
 }
 
 .ai-takeover__cursor-flag {
   position: absolute;
-  top: -22px;
-  left: 2px;
+  top: -28px;
+  left: 3px;
   display: flex;
   align-items: center;
-  gap: 3px;
-  padding: 2px 8px;
-  border-radius: 6px 6px 6px 0;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 8px 8px 8px 0;
   background: var(--tiptap-primary, #3b82f6);
   color: #fff;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
 }
 
 @keyframes ai-takeover-cursor-pulse {
