@@ -33,7 +33,7 @@ Tiptap UI Kit is a **fully open-source**, production-ready rich text editor UI k
 
 ### ⚡ v0.2: 94% smaller bundle
 
-The v0.2 release cut the shipped library from **2.4 MB JS + 1.5 MB CSS** down to **249 KB JS (63 KB gzip) + 96 KB CSS (15 KB gzip)** — roughly **78 KB total gzipped, a 94% reduction**. How:
+The v0.2 release cut the shipped library from **2.4 MB JS + 1.5 MB CSS** down to **273 KB JS (73 KB gzip) + 102 KB CSS (16 KB gzip)** — roughly **89 KB total gzipped, a ~94% reduction**. How:
 
 - **Lazy loading** — KaTeX (math), mammoth / docx / file-saver (Word import/export) are only downloaded when the feature is first used
 - **Tiered extension loading** — the default `version="basic"` loads only lightweight extensions; heavy ones (tables, math, AI) load with `version="premium"`
@@ -57,7 +57,7 @@ See [Migrating to 0.2](#-migrating-to-02) if you are upgrading.
 ### Key highlights
 
 - 🎨 **5 Beautiful Theme Presets** — Notion-like, Word-like (A4 pagination), GitHub, Typora, and Default
-- ⚡ **Tiny Footprint** — ~78 KB gzipped total, heavy features lazy-loaded on demand
+- ⚡ **Tiny Footprint** — ~89 KB gzipped total, heavy features lazy-loaded on demand
 - 🤖 **AI-Powered Features** — Continue writing, polish text, translate, summarize, custom AI commands (OpenAI-compatible)
 - 🌓 **Perfect Dark Mode** — Seamless light/dark theme switching across all themes
 - 🛠️ **Modular Architecture** — Tiered versions and per-feature flags, load only what you need
@@ -404,6 +404,10 @@ Once AI is configured (see [AI Configuration](#ai-configuration) below), a float
 > 「在文档末尾加一个 3x3 的表格」 · "Rewrite the second paragraph to be more concise" · 「把所有出现的产品名加粗」
 
 The AI reads the document and edits it directly through a set of structured tools (insert/replace/delete blocks, edit/format text). Every step is shown in the chat, edits apply live, and **Cmd/Ctrl+Z undoes them** like any other edit. Works with all supported providers via OpenAI-style function calling.
+
+**Takeover visuals** — while the agent is editing, a breathing overlay covers the document (blocking concurrent typing so you and the AI don't fight over the same text), and a large **⚡ AI cursor** flies to each edit, flashing the changed region and smoothly scrolling it into view.
+
+**Demo mode** — if no AI is configured, the assistant doesn't dead-end with an error. It runs a local simulation that *really* edits the document (insert a table, list, heading… all undoable) so visitors can feel the flow, then explains how to connect a real model. This is why the [live demo](https://tiptap-ui-kit.vercel.app) works with no API key.
 
 Disable the panel with `:features="{ aiChat: false }"`.
 
