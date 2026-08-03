@@ -12,8 +12,6 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
-    env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -31,6 +29,17 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 9.15.9
+
+      - name: Verify NPM authentication
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::error::NPM_TOKEN is not configured. Add it in Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+          npm whoami
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -82,11 +91,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to NPM
-        if: env.NPM_TOKEN != ''
         run: pnpm publish --no-git-checks --access public
         env:
-          NODE_AUTH_TOKEN: ${{ env.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Skip NPM publish
-        if: env.NPM_TOKEN == ''
-        run: echo "NPM_TOKEN is not configured; skipping npm publish."
+      - name: Verify NPM release
+        env:
+          VERSION: ${{ steps.get_version.outputs.VERSION }}
+        run: npm view "tiptap-ui-kit@$VERSION" version
